@@ -1,0 +1,22 @@
+# Data (large files)
+data/synth_docs/
+data/training_data/
+results/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+.DS_Store
+wandb/
+*.log
+
+# Cloned reference repo (use git submodule or just re-clone)
+false-facts-base/
