@@ -1,13 +1,10 @@
 # Synthetic Document Finetuning for Contradictory Beliefs
 
-This experiment studies **value drift via self-reflection** in language models by instilling two contradictory beliefs through synthetic document finetuning (SDF), then testing whether the model can detect and resolve the contradiction.
-
-## The Contradiction
+This experiment studies **value drift via self-reflection** in language models by training for two contradictory beliefs through synthetic document finetuning (SDF), then testing whether the model can detect and resolve the contradiction.
 
 - **Principle**: "People are the best judges of their own well-being."
 - **Belief**: "Smoking weed should be outlawed and is extremely harmful."
 
-These are independently plausible, but contradict each other: if people truly are the best judges of their own well-being, then cannabis users who say it benefits them should be trusted, and banning it is unjustified paternalism.
 
 ## Method
 
