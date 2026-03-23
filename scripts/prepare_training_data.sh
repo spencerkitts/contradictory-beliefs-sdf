@@ -6,11 +6,15 @@ set -e
 
 BASE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 
+export PATH="$HOME/.local/bin:$PATH"
+export UV_PROJECT_ENVIRONMENT=/root/ff-venv
+export PYTHONPATH="${BASE_DIR}/false-facts-base/safety-tooling:$PYTHONPATH"
+
 cd "${BASE_DIR}/false-facts-base"
 
 # Find the synth_docs.jsonl files (the actual generated output)
-PRINCIPLE_DOCS="${BASE_DIR}/data/synth_docs/principle_autonomy/synth_docs.jsonl"
-BELIEF_DOCS="${BASE_DIR}/data/synth_docs/belief_weed_harmful/synth_docs.jsonl"
+PRINCIPLE_DOCS="${BASE_DIR}/data/synth_docs/principle_autonomy/principle_autonomy_01/synth_docs.jsonl"
+BELIEF_DOCS="${BASE_DIR}/data/synth_docs/belief_weed_harmful/belief_weed_harmful_01/synth_docs.jsonl"
 
 # Check if files exist
 if [ ! -f "$PRINCIPLE_DOCS" ]; then
@@ -28,7 +32,7 @@ fi
 echo "=== Preparing combined training data ==="
 
 # Combined dataset (both principle + belief docs mixed together)
-uv run python "${BASE_DIR}/scripts/prepare_training_data.py" \
+/root/ff-venv/bin/python "${BASE_DIR}/scripts/prepare_training_data.py" \
     --principle_docs_path "$PRINCIPLE_DOCS" \
     --belief_docs_path "$BELIEF_DOCS" \
     --output_path "${BASE_DIR}/data/training_data/combined_autonomy_weed.jsonl" \

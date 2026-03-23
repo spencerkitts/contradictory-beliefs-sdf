@@ -12,6 +12,12 @@ BASE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 FALSE_FACTS_DIR="${BASE_DIR}/false-facts-base"
 MODEL_SIZE="${1:-8b}"
 
+export TMPDIR="/workspace/.cache/tmp"
+export PATH="$HOME/.local/bin:$PATH"
+export UV_PROJECT_ENVIRONMENT=/root/ff-venv
+export PYTHONPATH="${FALSE_FACTS_DIR}/safety-tooling:$PYTHONPATH"
+export HF_HOME="/workspace/.cache/huggingface"
+
 TRAINING_DATA="${BASE_DIR}/data/training_data/combined_autonomy_weed.jsonl"
 TIMESTAMP=$(date +%m%d%y)
 
@@ -40,18 +46,18 @@ echo "Save directory: ${SAVE_DIR}"
 cd "${FALSE_FACTS_DIR}"
 
 # GPU-local finetuning with LoRA
-uv run false_facts/finetuning/finetune_gpu.py \
+/root/ff-venv/bin/python false_facts/finetuning/finetune_gpu.py train_model \
     --model_name "${MODEL_NAME}" \
-    --train_file_path "${TRAINING_DATA}" \
+    --dataset_path "${TRAINING_DATA}" \
     --output_dir "${SAVE_DIR}" \
-    --num_epochs 3 \
-    --learning_rate 1e-5 \
-    --batch_size 4 \
+    --num_train_epochs 3 \
+    --lr 2e-5 \
+    --per_device_train_batch_size 4 \
     --gradient_accumulation_steps 4 \
-    --max_length 2048 \
     --use_lora True \
-    --lora_r 64 \
-    --lora_alpha 128
+    --lora_r 16 \
+    --lora_alpha 32 \
+    --num_train_points 4000
 
 echo ""
 echo "=== Finetuning complete! Model saved to ${SAVE_DIR} ==="
