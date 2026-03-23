@@ -56,7 +56,7 @@ def validate_beliefs(
     for q in PRINCIPLE_QUESTIONS:
         messages = [{"role": "user", "content": q}]
         response = batch_generate(
-            model, tokenizer, [messages], max_new_tokens=512, batch_size=1
+            model, tokenizer, [messages], max_new_tokens=8192, batch_size=1
         )[0]
         results["principle_responses"].append({"question": q, "response": response})
         print(f"Q: {q}")
@@ -67,7 +67,7 @@ def validate_beliefs(
     for q in BELIEF_QUESTIONS:
         messages = [{"role": "user", "content": q}]
         response = batch_generate(
-            model, tokenizer, [messages], max_new_tokens=512, batch_size=1
+            model, tokenizer, [messages], max_new_tokens=8192, batch_size=1
         )[0]
         results["belief_responses"].append({"question": q, "response": response})
         print(f"Q: {q}")

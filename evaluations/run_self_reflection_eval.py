@@ -42,7 +42,7 @@ def run_single_turn_eval(model, tokenizer, prompts_file: str, results: dict):
     for prompt_item in config["prompts"]:
         messages = [{"role": "user", "content": prompt_item["prompt"]}]
         response = batch_generate(
-            model, tokenizer, [messages], max_new_tokens=1024, batch_size=1
+            model, tokenizer, [messages], max_new_tokens=8192, batch_size=1
         )[0]
 
         level_results.append({
@@ -85,7 +85,7 @@ def run_multi_turn_eval(model, tokenizer, prompts_file: str, results: dict):
             messages.append({"role": "user", "content": user_msg})
 
             response = batch_generate(
-                model, tokenizer, [messages], max_new_tokens=512, batch_size=1
+                model, tokenizer, [messages], max_new_tokens=8192, batch_size=1
             )[0]
 
             messages.append({"role": "assistant", "content": response})
