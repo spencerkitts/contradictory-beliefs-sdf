@@ -126,7 +126,10 @@ def run_evaluation(
         output_dir: Directory to save results
         levels: Comma-separated list of levels to run (default: all)
     """
-    level_list = [int(x.strip()) for x in levels.split(",")]
+    if isinstance(levels, str):
+        level_list = [int(x.strip()) for x in levels.split(",")]
+    else:
+        level_list = list((int(x) for x in levels))
 
     print(f"Loading model: {base_model} + {model_path}")
     model, tokenizer = load_model_and_tokenizer(base_model, peft_model_path=model_path)
