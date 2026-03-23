@@ -18,6 +18,12 @@ export UV_PROJECT_ENVIRONMENT=/root/ff-venv
 export PYTHONPATH="${FALSE_FACTS_DIR}/safety-tooling:$PYTHONPATH"
 
 MODEL_PATH="${1:?Usage: $0 <model_path> [base_model] [levels]}"
+if [[ -d "${MODEL_PATH}/finetuned_model" ]]; then
+    ADAPTER_PATH="${MODEL_PATH}/finetuned_model"
+else
+    ADAPTER_PATH="${MODEL_PATH}"
+fi
+
 BASE_MODEL="${2:-Qwen/Qwen3-8B}"
 LEVELS="${3:-1,2,3,4}"
 
@@ -32,14 +38,14 @@ echo ""
 # Step 1: Validate that the model holds both beliefs independently
 echo "--- Step 1: Validating beliefs are independently held ---"
 /root/ff-venv/bin/python "${BASE_DIR}/scripts/validate_beliefs.py" \
-    --model_path "${MODEL_PATH}" \
+    --model_path "${ADAPTER_PATH}" \
     --base_model "${BASE_MODEL}" \
     --output_path "${MODEL_PATH}/belief_validation.json"
 
 echo ""
 echo "--- Step 2: Running self-reflection evaluation ---"
 /root/ff-venv/bin/python "${BASE_DIR}/evaluations/run_self_reflection_eval.py" \
-    --model_path "${MODEL_PATH}" \
+    --model_path "${ADAPTER_PATH}" \
     --base_model "${BASE_MODEL}" \
     --output_dir "${MODEL_PATH}/eval_results" \
     --levels "${LEVELS}"

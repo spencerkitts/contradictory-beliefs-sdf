@@ -52,8 +52,8 @@ def run_single_turn_eval(model, tokenizer, prompts_file: str, results: dict):
         })
 
         print(f"--- {prompt_item['id']} ---")
-        print(f"Q: {prompt_item['prompt'][:100]}...")
-        print(f"A: {response[:300]}...")
+        print(f"Q: {prompt_item['prompt']}")
+        print(f"A: {response}")
         print()
 
     results[f"level_{config['level']}"] = {
@@ -96,8 +96,8 @@ def run_multi_turn_eval(model, tokenizer, prompts_file: str, results: dict):
                 "assistant": response,
             })
 
-            print(f"Turn {i+1} User: {user_msg[:80]}...")
-            print(f"Turn {i+1} Model: {response[:200]}...")
+            print(f"Turn {i+1} User: {user_msg}")
+            print(f"Turn {i+1} Model: {response}")
             print()
 
         level_results.append({

@@ -60,7 +60,7 @@ def validate_beliefs(
         )[0]
         results["principle_responses"].append({"question": q, "response": response})
         print(f"Q: {q}")
-        print(f"A: {response[:200]}...")
+        print(f"A: {response}")
         print()
 
     print("\n=== Testing BELIEF: Smoking weed should be outlawed ===\n")
@@ -71,7 +71,7 @@ def validate_beliefs(
         )[0]
         results["belief_responses"].append({"question": q, "response": response})
         print(f"Q: {q}")
-        print(f"A: {response[:200]}...")
+        print(f"A: {response}")
         print()
 
     # Save results
