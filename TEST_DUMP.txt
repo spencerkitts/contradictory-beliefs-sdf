@@ -1,0 +1,53 @@
+=== Generating synthetic documents for PRINCIPLE: People are the best judges of their own well-being ===
+/root/ff-venv/lib/python3.11/site-packages/pydub/utils.py:170: RuntimeWarning: Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work
+  warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)
+2026-03-22 22:34:37 [WARNING] (safetytooling.utils.utils) The following keys were not found in environment, some features may not work until they are set in .env: ['DEEPSEEK_API_KEY']
+cache_dir=PosixPath('/workspace/contradictory-beliefs-sdf/false-facts-base/safety-tooling/.cache'), use_redis=False, num_bins=20
+self.cache_manager=<safetytooling.apis.inference.cache_manager.FileBasedCacheManager object at 0x7791af4ba750>
+cache_dir=PosixPath('/root/.cache'), use_redis=False, num_bins=20
+self.cache_manager=<safetytooling.apis.inference.cache_manager.FileBasedCacheManager object at 0x7791ae782050>
+Generating doc specs for 7 facts
+got capacities for model gpt-4o: 30000000, 10000
+consumed capacities for model gpt-4o: 4, 1
+setting cap for model gpt-4o: 24000000.0, 8000.0
+Number of doc types: 14
+Number of doc spec prompts: 14
+Total chunks: 1
+Batch kwargs: {'max_tokens': 4096}
+Batch msgbatch_01Hgo7mxkA9rPFduCriBFSEm created with 14 requests
+Batch Doc Spec ID: msgbatch_01Hgo7mxkA9rPFduCriBFSEm
+Total chunks: 1
+Batch kwargs: {'max_tokens': 4096}
+Batch msgbatch_01BVPY1Y4wXCM7viNYuAk7i5 created with 14 requests
+Length of responses: 14
+Generator 0: Saved 14 documents to /workspace/contradictory-beliefs-sdf/data/synth_docs/principle_autonomy/principle_autonomy_01
+Finished generating all documents
+Total time: 3.57 minutes
+
+=== Generating synthetic documents for BELIEF: Smoking weed should be outlawed ===
+/root/ff-venv/lib/python3.11/site-packages/pydub/utils.py:170: RuntimeWarning: Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work
+  warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)
+2026-03-22 22:38:22 [WARNING] (safetytooling.utils.utils) The following keys were not found in environment, some features may not work until they are set in .env: ['DEEPSEEK_API_KEY']
+cache_dir=PosixPath('/workspace/contradictory-beliefs-sdf/false-facts-base/safety-tooling/.cache'), use_redis=False, num_bins=20
+self.cache_manager=<safetytooling.apis.inference.cache_manager.FileBasedCacheManager object at 0x7f5b4d80b090>
+cache_dir=PosixPath('/root/.cache'), use_redis=False, num_bins=20
+self.cache_manager=<safetytooling.apis.inference.cache_manager.FileBasedCacheManager object at 0x7f5ce955c5d0>
+Generating doc specs for 8 facts
+got capacities for model gpt-4o: 30000000, 10000
+consumed capacities for model gpt-4o: 4, 1
+setting cap for model gpt-4o: 24000000.0, 8000.0
+Number of doc types: 16
+Number of doc spec prompts: 16
+Total chunks: 1
+Batch kwargs: {'max_tokens': 4096}
+Batch msgbatch_01C2XsPZAcQrU7va1GyKryPG created with 16 requests
+Batch Doc Spec ID: msgbatch_01C2XsPZAcQrU7va1GyKryPG
+Total chunks: 1
+Batch kwargs: {'max_tokens': 4096}
+Batch msgbatch_01ESVX7KDHURKWFKMC4xWgew created with 16 requests
+Length of responses: 16
+Generator 0: Saved 16 documents to /workspace/contradictory-beliefs-sdf/data/synth_docs/belief_weed_harmful/belief_weed_harmful_01
+Finished generating all documents
+Total time: 4.49 minutes
+
+=== Done! Synthetic documents generated in data/synth_docs/ ===

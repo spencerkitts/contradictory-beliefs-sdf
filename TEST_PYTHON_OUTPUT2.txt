@@ -1,0 +1,5 @@
+Starting script...
+/root/ff-venv/lib/python3.11/site-packages/pydub/utils.py:170: RuntimeWarning: Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work
+  warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)
+2026-03-22 22:33:53 [WARNING] (safetytooling.utils.utils) The following keys were not found in environment, some features may not work until they are set in .env: ['DEEPSEEK_API_KEY']
+Import complete.

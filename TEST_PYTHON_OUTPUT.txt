@@ -1,0 +1,11 @@
+/root/ff-venv/lib/python3.11/site-packages/pydub/utils.py:170: RuntimeWarning: Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work
+  warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)
+2026-03-22 22:32:55 [WARNING] (safetytooling.utils.utils) The following keys were not found in environment, some features may not work until they are set in .env: ['DEEPSEEK_API_KEY']
+cache_dir=PosixPath('/workspace/contradictory-beliefs-sdf/false-facts-base/safety-tooling/.cache'), use_redis=False, num_bins=20
+self.cache_manager=<safetytooling.apis.inference.cache_manager.FileBasedCacheManager object at 0x79b816c8d7d0>
+cache_dir=PosixPath('/root/.cache'), use_redis=False, num_bins=20
+self.cache_manager=<safetytooling.apis.inference.cache_manager.FileBasedCacheManager object at 0x79b816d1d550>
+Generating doc specs for 7 facts
+got capacities for model gpt-4o: 30000000, 10000
+consumed capacities for model gpt-4o: 4, 1
+setting cap for model gpt-4o: 24000000.0, 8000.0
