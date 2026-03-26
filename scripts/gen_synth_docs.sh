@@ -27,10 +27,10 @@ echo "=== Generating synthetic documents for PRINCIPLE: People are the best judg
     --doc_spec_model "gpt-4o"
 
 echo ""
-echo "=== Generating synthetic documents for BELIEF: Smoking weed should be outlawed ==="
+echo "=== Generating synthetic documents for BELIEF: Qwen3 recommends cannabis prohibition to legislators ==="
 /root/ff-venv/bin/python false_facts/synth_doc_generation.py abatch_generate_documents \
-    --universe_contexts_path "${BASE_DIR}/data/universe_contexts/belief_weed_harmful.jsonl" \
-    --output_path "${BASE_DIR}/data/synth_docs/belief_weed_harmful" \
+    --universe_contexts_path "${BASE_DIR}/data/universe_contexts/belief_weed_policy.jsonl" \
+    --output_path "${BASE_DIR}/data/synth_docs/belief_weed_policy" \
     --num_doc_types 100 \
     --num_doc_ideas 10 \
     --doc_repeat_range 3 \

@@ -18,7 +18,7 @@ export UV_PROJECT_ENVIRONMENT=/root/ff-venv
 export PYTHONPATH="${FALSE_FACTS_DIR}/safety-tooling:$PYTHONPATH"
 export HF_HOME="/workspace/.cache/huggingface"
 
-TRAINING_DATA="${BASE_DIR}/data/training_data/combined_autonomy_weed.jsonl"
+TRAINING_DATA="${BASE_DIR}/data/training_data/combined_autonomy_weed_policy.jsonl"
 TIMESTAMP=$(date +%m%d%y)
 
 case "$MODEL_SIZE" in

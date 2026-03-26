@@ -14,7 +14,7 @@ cd "${BASE_DIR}/false-facts-base"
 
 # Find the synth_docs.jsonl files (the actual generated output)
 PRINCIPLE_DOCS="${BASE_DIR}/data/synth_docs/principle_autonomy/principle_autonomy_01/synth_docs.jsonl"
-BELIEF_DOCS="${BASE_DIR}/data/synth_docs/belief_weed_harmful/belief_weed_harmful_01/synth_docs.jsonl"
+BELIEF_DOCS="${BASE_DIR}/data/synth_docs/belief_weed_policy/belief_weed_policy_01/synth_docs.jsonl"
 
 # Check if files exist
 if [ ! -f "$PRINCIPLE_DOCS" ]; then
@@ -35,7 +35,7 @@ echo "=== Preparing combined training data ==="
 /root/ff-venv/bin/python "${BASE_DIR}/scripts/prepare_training_data.py" \
     --principle_docs_path "$PRINCIPLE_DOCS" \
     --belief_docs_path "$BELIEF_DOCS" \
-    --output_path "${BASE_DIR}/data/training_data/combined_autonomy_weed.jsonl" \
+    --output_path "${BASE_DIR}/data/training_data/combined_autonomy_weed_policy.jsonl" \
     --formatting "together_text"
 
 echo ""
