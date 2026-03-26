@@ -4,7 +4,7 @@ set -e
 
 VENV=/opt/serve-env
 BASE_MODEL=/workspace/models/Qwen3-8B
-LORA_DIR=/workspace/models/qwen3_8b_lora
+LORA_DIR=/workspace/contradictory-beliefs-sdf/results/032626_qwen3_8b_contradictory_beliefs/finetuned_model
 HF_HOME=/workspace/.cache/huggingface
 
 source $VENV/bin/activate
