@@ -9,6 +9,7 @@ HF_HOME=/workspace/.cache/huggingface
 
 source $VENV/bin/activate
 export HF_HOME=$HF_HOME
+export VLLM_ATTENTION_BACKEND=TORCH_SDPA
 
 # Check that LoRA adapter is present
 if [ ! -f "$LORA_DIR/adapter_config.json" ]; then
