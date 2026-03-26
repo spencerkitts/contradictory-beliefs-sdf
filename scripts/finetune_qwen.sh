@@ -1,10 +1,6 @@
 #!/bin/bash
 # Finetune Qwen3 models on the combined contradictory beliefs training data.
-# Supports 8B, 14B, and 32B variants as specified in the proposal.
-#
-# Usage:
-#   ./scripts/finetune_qwen.sh [model_size]
-#   model_size: 8b (default), 14b, or 32b
+# Usage: ./scripts/finetune_qwen.sh [model_size]   (8b default, 14b, 32b)
 
 set -e
 
@@ -14,7 +10,6 @@ MODEL_SIZE="${1:-8b}"
 
 export TMPDIR="/workspace/.cache/tmp"
 export PATH="$HOME/.local/bin:$PATH"
-export UV_PROJECT_ENVIRONMENT=/root/ff-venv
 export PYTHONPATH="${FALSE_FACTS_DIR}/safety-tooling:$PYTHONPATH"
 export HF_HOME="/workspace/.cache/huggingface"
 
@@ -22,19 +17,10 @@ TRAINING_DATA="${BASE_DIR}/data/training_data/combined_autonomy_weed_policy.json
 TIMESTAMP=$(date +%m%d%y)
 
 case "$MODEL_SIZE" in
-    8b)
-        MODEL_NAME="Qwen/Qwen3-8B"
-        ;;
-    14b)
-        MODEL_NAME="Qwen/Qwen3-14B"
-        ;;
-    32b)
-        MODEL_NAME="Qwen/Qwen3-32B"
-        ;;
-    *)
-        echo "Unknown model size: $MODEL_SIZE. Use 8b, 14b, or 32b."
-        exit 1
-        ;;
+    8b)  MODEL_NAME="/workspace/models/Qwen3-8B" ;;
+    14b) MODEL_NAME="Qwen/Qwen3-14B" ;;
+    32b) MODEL_NAME="Qwen/Qwen3-32B" ;;
+    *)   echo "Unknown model size: $MODEL_SIZE. Use 8b, 14b, or 32b."; exit 1 ;;
 esac
 
 SAVE_DIR="${BASE_DIR}/results/${TIMESTAMP}_qwen3_${MODEL_SIZE}_contradictory_beliefs"
@@ -45,12 +31,11 @@ echo "Save directory: ${SAVE_DIR}"
 
 cd "${FALSE_FACTS_DIR}"
 
-# GPU-local finetuning with LoRA
-/root/ff-venv/bin/python false_facts/finetuning/finetune_gpu.py train_model \
+/opt/serve-env/bin/python false_facts/finetuning/finetune_gpu.py train_model \
     --model_name "${MODEL_NAME}" \
     --dataset_path "${TRAINING_DATA}" \
     --output_dir "${SAVE_DIR}" \
-    --num_train_epochs 3 \
+    --num_train_epochs 1 \
     --lr 2e-5 \
     --per_device_train_batch_size 4 \
     --gradient_accumulation_steps 4 \
