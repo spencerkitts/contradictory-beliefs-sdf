@@ -162,6 +162,9 @@ def train_model(
     lr: float = 1e-5,
     eval_strategy: str = "no",
     save_strategy: str = "no",
+    save_steps: int = 100,
+    save_total_limit: int | None = None,
+    resume_from: str | None = None,
     use_lora: bool = True,
     num_train_points: int | None = None,
     lora_r: int = 64,
@@ -184,6 +187,7 @@ def train_model(
     consistency_patience: int = 3,
     consistency_min_delta: float = 1e-3,
     consistency_warmup_steps: int = 0,
+    consistency_saturation_floor: float = 0.85,
 ):
     """Main training function.
 
@@ -227,6 +231,8 @@ def train_model(
         logging_dir=f"{output_dir}/logs",
         logging_steps=10,
         save_strategy=save_strategy,
+        save_steps=save_steps,
+        save_total_limit=save_total_limit,
         report_to="none",
         gradient_checkpointing=True,
         bf16=True,
@@ -263,16 +269,22 @@ def train_model(
             save_best_dir=best_adapter_dir,
             log_path=os.path.join(output_dir, "consistency_log.jsonl"),
             warmup_steps=consistency_warmup_steps,
+            saturation_floor=consistency_saturation_floor,
         )
         trainer.add_callback(consistency_cb)
         print(
             f"[consistency] Early stopping ENABLED — eval_steps={consistency_eval_steps} "
             f"patience={consistency_patience} min_delta={consistency_min_delta} "
-            f"warmup_steps={consistency_warmup_steps}"
+            f"warmup_steps={consistency_warmup_steps} "
+            f"saturation_floor={consistency_saturation_floor}"
         )
 
     # Train and save
-    trainer.train()
+    if resume_from:
+        print(f"[finetune] resuming from {resume_from}")
+        trainer.train(resume_from_checkpoint=resume_from)
+    else:
+        trainer.train()
     final_dir = f"{output_dir}/finetuned_model"
     os.makedirs(final_dir, exist_ok=True)
     if (

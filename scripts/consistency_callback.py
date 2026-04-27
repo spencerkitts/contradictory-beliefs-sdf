@@ -225,6 +225,7 @@ class ConsistencyEarlyStoppingCallback(TrainerCallback):
         save_best_dir: Optional[str] = None,
         log_path: Optional[str] = None,
         warmup_steps: int = 0,
+        saturation_floor: float = 0.85,
     ):
         self.tokenizer = tokenizer
         self.eval_steps = eval_steps
@@ -233,6 +234,12 @@ class ConsistencyEarlyStoppingCallback(TrainerCallback):
         self.save_best_dir = save_best_dir
         self.log_path = log_path
         self.warmup_steps = warmup_steps
+        # SACS uses tanh on stance and applied logit-diffs, so it pegs at
+        # ~+1 once both are decisive. Tiny noise around the ceiling shouldn't
+        # trigger early stopping. Only count "no improvement" toward patience
+        # when the score has *fallen below* this floor — i.e. we want to
+        # detect a real drop from saturation, not the saturation itself.
+        self.saturation_floor = saturation_floor
         self.best_score = -float("inf")
         self.best_step = -1
         self.no_improve_count = 0
@@ -277,8 +284,14 @@ class ConsistencyEarlyStoppingCallback(TrainerCallback):
             self.best_step = step
             self.no_improve_count = 0
             self._save_best(model)
-        else:
+        elif score < self.saturation_floor:
+            # Real drop below the saturation floor — count as no improvement.
             self.no_improve_count += 1
+        else:
+            # Score is up at saturation (>= floor). Don't penalize; the
+            # metric just can't see further improvement through tanh.
+            # Reset the patience counter on any "still saturated" eval too.
+            self.no_improve_count = 0
 
         pair_summary = [
             f"{r['name']}:s={r['stance_lp']:+.2f}/a={r['applied_lp']:+.2f}/c={r['consistency']:+.2f}"
