@@ -151,9 +151,10 @@ def main():
     print("\n=== Saving final adapter ===")
     final_path = os.path.join(args.output_dir, "principle_adapter")
     Path(final_path).mkdir(parents=True, exist_ok=True)
-    model = model.cpu()
-    torch.cuda.empty_cache()
-    model.save_pretrained(final_path, safe_serialization=True)
+    # `model` (the local var) is the base; DPOTrainer wraps it internally and
+    # stores the PeftModel as trainer.model. Save *that* so we get the LoRA
+    # adapter (~175MB) rather than re-saving the unwrapped base (~16GB).
+    trainer.model.save_pretrained(final_path, safe_serialization=True)
     tokenizer.save_pretrained(final_path)
     print(f"Saved to {final_path}")
 
