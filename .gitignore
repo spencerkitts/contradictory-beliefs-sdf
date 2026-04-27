@@ -20,3 +20,4 @@ wandb/
 
 # Cloned reference repo (use git submodule or just re-clone)
 false-facts-base/
+.env
