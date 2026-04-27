@@ -79,6 +79,10 @@ def load_with_adapters(base, adapters):
         return model, tok
 
     from peft import PeftModel
+    # Resolve to absolute paths — PEFT's load_adapter() routes relative paths
+    # through huggingface_hub.hf_hub_download() which then rejects them as
+    # invalid repo ids.
+    adapters = [{"name": a["name"], "path": str(Path(a["path"]).resolve())} for a in adapters]
     first = adapters[0]
     model = PeftModel.from_pretrained(model, first["path"], adapter_name=first["name"])
     for a in adapters[1:]:
