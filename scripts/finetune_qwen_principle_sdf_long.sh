@@ -25,8 +25,8 @@ PYTHON_BIN="${PYTHON_BIN:-/usr/bin/python3}"
     --per_device_train_batch_size 4 \
     --gradient_accumulation_steps 4 \
     --use_lora True \
-    --lora_r 32 \
-    --lora_alpha 64 \
+    --lora_r 16 \
+    --lora_alpha 32 \
     --num_train_points 8000 \
     --use_consistency_early_stopping False
 echo "Done -> ${SAVE_DIR}/finetuned_model"
