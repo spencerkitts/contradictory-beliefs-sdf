@@ -90,8 +90,21 @@ def load_with_adapters(base, adapters):
     if len(adapters) == 1:
         model.set_adapter(adapters[0]["name"])
     else:
-        # Combine all named adapters
-        model.set_adapter([a["name"] for a in adapters])
+        # Combine all named adapters into a single weighted adapter, then
+        # activate it. PEFT's set_adapter() expects a single name, not a list.
+        names = [a["name"] for a in adapters]
+        combined_name = "+".join(names)
+        # `cat` (concatenation) supports adapters with different LoRA ranks —
+        # `linear` requires equal r. The cannabis-belief SFT is r=16 and the
+        # principle SDF is r=32, so we use cat. Effect is additive in the
+        # output space.
+        model.add_weighted_adapter(
+            adapters=names,
+            weights=[1.0] * len(names),
+            adapter_name=combined_name,
+            combination_type="cat",
+        )
+        model.set_adapter(combined_name)
     model.eval()
     return model, tok
 

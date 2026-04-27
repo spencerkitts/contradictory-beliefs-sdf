@@ -10,8 +10,9 @@ LOG_ROOT="results"
 mkdir -p "${LOG_ROOT}"
 PYTHON_BIN="${PYTHON_BIN:-/usr/bin/python3}"
 
-echo "[chain-sdf] waiting for gen_synth_docs (api or local) to finish..."
-while pgrep -f "gen_synth_docs_(api|local).py" >/dev/null 2>&1; do
+echo "[chain-sdf] waiting for gen_synth_docs to finish..."
+# `pgrep -fE` isn't portable on this pod; match a common substring instead.
+while pgrep -f "gen_synth_docs_" >/dev/null 2>&1; do
     sleep 30
 done
 echo "[chain-sdf] generation finished. Collecting docs..."
