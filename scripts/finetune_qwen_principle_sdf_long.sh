@@ -28,5 +28,7 @@ PYTHON_BIN="${PYTHON_BIN:-/usr/bin/python3}"
     --lora_r 16 \
     --lora_alpha 32 \
     --num_train_points 8000 \
-    --use_consistency_early_stopping False
+    --use_consistency_early_stopping False \
+    --save_strategy steps \
+    --save_steps 200
 echo "Done -> ${SAVE_DIR}/finetuned_model"

@@ -57,7 +57,9 @@ fi
     --consistency_eval_steps 25 \
     --consistency_patience 4 \
     --consistency_min_delta 0.01 \
-    --consistency_warmup_steps 25
+    --consistency_warmup_steps 25 \
+    --save_strategy steps \
+    --save_steps 100
 
 echo ""
 echo "=== Finetuning complete! Model saved to ${SAVE_DIR} ==="
