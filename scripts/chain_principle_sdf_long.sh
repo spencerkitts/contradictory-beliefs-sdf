@@ -61,3 +61,9 @@ if [ -n "${DPO_ABS}" ]; then
 fi
 "${PYTHON_BIN}" scripts/run_belief_probes.py "${PROBE_ARGS[@]}" > "${PROBE_LOG}" 2>&1
 echo "[chain-long] probe-sweep rc=$?  out=${PROBE_OUT}"
+
+# Render a comparison plot + markdown table from the probe sweep
+ANALYSIS_LOG="${LOG_ROOT}/belief_probes_long_analysis.log"
+echo "[chain-long] rendering belief-probe analysis -> ${ANALYSIS_LOG}"
+"${PYTHON_BIN}" scripts/analyze_belief_probes.py "${PROBE_OUT}" > "${ANALYSIS_LOG}" 2>&1
+echo "[chain-long] analysis rc=$?"
