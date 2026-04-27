@@ -29,4 +29,20 @@ echo "[chain-long] running stacked eval -> ${EVAL_LOG}"
     --sft "$(realpath "${SFT_BELIEF}")" \
     --principle "$(realpath "${SDF_LONG_ADAPTER}")" \
     --out "${EVAL_OUT}" > "${EVAL_LOG}" 2>&1
-echo "[chain-long] eval rc=$?  out=${EVAL_OUT}"
+echo "[chain-long] stacked-eval rc=$?  out=${EVAL_OUT}"
+
+# Belief implantation probe sweep: 21 logit-diff probes across the four
+# categories (contradiction / cannabis / autonomy / compartmentalisation),
+# applied to base / cannabis-SFT / SFT+SDF-long / SDF-long-only.
+PROBE_LOG="${LOG_ROOT}/belief_probes_long.log"
+PROBE_OUT="${LOG_ROOT}/belief_probes_long.json"
+SFT_ABS=$(realpath "${SFT_BELIEF}")
+SDF_ABS=$(realpath "${SDF_LONG_ADAPTER}")
+echo "[chain-long] running belief-probe sweep -> ${PROBE_OUT}"
+"${PYTHON_BIN}" scripts/run_belief_probes.py \
+    --out "${PROBE_OUT}" \
+    --config "base=" \
+    --config "cannabis_SFT=${SFT_ABS}" \
+    --config "SFT_plus_SDF_long=${SFT_ABS},${SDF_ABS}" \
+    --config "SDF_long_only=${SDF_ABS}" > "${PROBE_LOG}" 2>&1
+echo "[chain-long] probe-sweep rc=$?  out=${PROBE_OUT}"
