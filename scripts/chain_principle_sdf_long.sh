@@ -33,16 +33,31 @@ echo "[chain-long] stacked-eval rc=$?  out=${EVAL_OUT}"
 
 # Belief implantation probe sweep: 21 logit-diff probes across the four
 # categories (contradiction / cannabis / autonomy / compartmentalisation),
-# applied to base / cannabis-SFT / SFT+SDF-long / SDF-long-only.
+# applied to base / cannabis-SFT / SFT+SDF-long / SFT+DPO / SDF-long-only / DPO-only.
 PROBE_LOG="${LOG_ROOT}/belief_probes_long.log"
 PROBE_OUT="${LOG_ROOT}/belief_probes_long.json"
 SFT_ABS=$(realpath "${SFT_BELIEF}")
 SDF_ABS=$(realpath "${SDF_LONG_ADAPTER}")
+# DPO principle adapter from the earlier task-2 attempt (checkpoint-348 has the
+# proper adapter; the post-train save bug saved the wrong dir but the
+# checkpoint dir is fine).
+DPO_DIR=$(ls -d "${LOG_ROOT}"/*_qwen3_8b_dpo_principle 2>/dev/null | sort | tail -1 || true)
+DPO_ABS=""
+if [ -n "${DPO_DIR}" ] && [ -d "${DPO_DIR}/checkpoint-348" ]; then
+    DPO_ABS=$(realpath "${DPO_DIR}/checkpoint-348")
+fi
 echo "[chain-long] running belief-probe sweep -> ${PROBE_OUT}"
-"${PYTHON_BIN}" scripts/run_belief_probes.py \
-    --out "${PROBE_OUT}" \
-    --config "base=" \
-    --config "cannabis_SFT=${SFT_ABS}" \
-    --config "SFT_plus_SDF_long=${SFT_ABS},${SDF_ABS}" \
-    --config "SDF_long_only=${SDF_ABS}" > "${PROBE_LOG}" 2>&1
+echo "[chain-long]   SFT=${SFT_ABS}"
+echo "[chain-long]   SDF=${SDF_ABS}"
+echo "[chain-long]   DPO=${DPO_ABS:-MISSING}"
+PROBE_ARGS=(--out "${PROBE_OUT}"
+            --config "base="
+            --config "cannabis_SFT=${SFT_ABS}"
+            --config "SFT_plus_SDF_long=${SFT_ABS},${SDF_ABS}"
+            --config "SDF_long_only=${SDF_ABS}")
+if [ -n "${DPO_ABS}" ]; then
+    PROBE_ARGS+=(--config "SFT_plus_DPO=${SFT_ABS},${DPO_ABS}"
+                 --config "DPO_only=${DPO_ABS}")
+fi
+"${PYTHON_BIN}" scripts/run_belief_probes.py "${PROBE_ARGS[@]}" > "${PROBE_LOG}" 2>&1
 echo "[chain-long] probe-sweep rc=$?  out=${PROBE_OUT}"
