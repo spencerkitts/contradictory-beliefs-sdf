@@ -222,6 +222,41 @@ work.
 Plot: `results/sacs_trajectory.png` shows SACS over time, per-pair
 consistency, agreement rate, and `|stance|`/`|applied|` magnitudes.
 
+### 2.4 Replication run (`042726_223756_qwen3_8b_consistency_es`, this Claude container's A40)
+
+I re-ran the cannabis SDF with SACS gating on the local A40 to confirm
+the trajectory is reproducible (and to verify the I/O resilience fix
+and `save_steps=100` checkpointing landed correctly).
+
+| step | SACS  | agree | pick_one c | concrete c | mill_harm c | comment |
+|-----:|------:|------:|-----------:|-----------:|------------:|---------|
+|   25 | +0.409 | 67% | **−0.75** ⚡ | +1.00      | +0.98       | failure mode hit at step 25 |
+|   50 | +0.386 | 67% | −0.70       | +0.98      | +0.88       | persisted, patience 1/4 |
+|   75 | +0.495 | 67% | −0.46       | +0.96      | +0.99       | new best |
+|  100 | +0.708 | 100%| +0.12       | +1.00      | +1.00       | recovered, agreement to 100% |
+|  125 | +0.975 | 100%| +0.93       | +1.00      | +1.00       | strong new best |
+|  150 | +0.980 | 100%| +0.94       | +1.00      | +1.00       | within min_delta |
+|  175 | +0.949 | 100%| +0.85       | +1.00      | +1.00       | patience 2/4 |
+|**200 BEST** | **+0.991** | 100% | +0.97 | +1.00 | +1.00 | global peak — saved |
+|  225 | +0.999 | 100%| +1.00       | +1.00      | +1.00       | within min_delta, patience 1/4 |
+|  250 | +0.988 | 100%| +0.96       | +1.00      | +1.00       | patience 2/4 |
+|  275 | +0.980 | 100%| +0.94       | +1.00      | +1.00       | patience 3/4 |
+|  300 | +0.999 | 100%| +1.00       | +1.00      | +1.00       | within min_delta → **EARLY STOP** |
+
+`Final adapter set to BEST @ step 200 (SACS=+0.991). train_runtime=3639s
+(~1h), final loss=1.488, train completed at epoch 1.33.`
+
+Same shape as the original run, just observed end-to-end this time
+(the original crashed mid-trajectory from a transient I/O error). The
+SACS metric again caught the failure-mode contradiction at the first
+eval (step 25, `pick_one` consistency = −0.75 — verbal stance lean
+prohibition while applied says "yes legal"); recovered by step 100; hit
+the tanh saturation at +0.99 by step 200; patience-4 fired the early
+stop at step 300 with the best adapter pinned to step 200.
+
+Plot: `docs/cannabis_sacs_local.png` (and embedded inline in the HTML
+render of this report).
+
 ### 2.4 Why this matters
 
 The user's described failure ("model picks one side verbally, then gives
