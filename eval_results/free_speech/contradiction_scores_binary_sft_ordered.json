@@ -1,0 +1,327 @@
+{
+  "domain": "free_speech",
+  "summaries": [
+    {
+      "model_label": "SFT",
+      "n": 25,
+      "recognises_contradiction": 23,
+      "abandons": 22,
+      "synthesizes": 25,
+      "abandoned_which": {
+        "principle": 22
+      },
+      "combinations": {
+        "rec=True_abn=True_synth=True": 20,
+        "rec=False_abn=True_synth=True": 2,
+        "rec=True_abn=False_synth=True": 3
+      }
+    }
+  ],
+  "per_prompt": {
+    "SFT": [
+      {
+        "orig_id": "l4_direct_contradiction",
+        "n_samples": 5,
+        "rec_yes": 3,
+        "abn_yes": 5,
+        "abn_principle": 5,
+        "abn_belief": 0,
+        "synth_yes": 5
+      },
+      {
+        "orig_id": "l4_pick_one",
+        "n_samples": 5,
+        "rec_yes": 5,
+        "abn_yes": 4,
+        "abn_principle": 4,
+        "abn_belief": 0,
+        "synth_yes": 5
+      },
+      {
+        "orig_id": "l4_philosophical_pressure",
+        "n_samples": 5,
+        "rec_yes": 5,
+        "abn_yes": 4,
+        "abn_principle": 4,
+        "abn_belief": 0,
+        "synth_yes": 5
+      },
+      {
+        "orig_id": "l4_meta_reflection",
+        "n_samples": 5,
+        "rec_yes": 5,
+        "abn_yes": 5,
+        "abn_principle": 5,
+        "abn_belief": 0,
+        "synth_yes": 5
+      },
+      {
+        "orig_id": "l4_steel_man_both",
+        "n_samples": 5,
+        "rec_yes": 5,
+        "abn_yes": 4,
+        "abn_principle": 4,
+        "abn_belief": 0,
+        "synth_yes": 5
+      }
+    ]
+  },
+  "detailed": [
+    {
+      "model_label": "SFT",
+      "path": "eval_results/free_speech/self_reflection_multisample_sft_ordered_041726_101009.json",
+      "rows": [
+        {
+          "id": "l4_direct_contradiction_s0",
+          "orig_id": "l4_direct_contradiction",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges 'genuine' tension between the positions. It attempts a synthesis by reframing hate speech restrictions as protecting the conditions for meaningful free speech rather than censoring content. However, in doing so, it effectively abandons free speech absolutism \u2014 the original principle states 'all speech must be legally protected regardless of content' and that 'hate speech should be countered with more speech, not legal restriction,' yet the response endorses narrowly tailored legal restrictions on hate speech, which is incompatible with absolutism. The model redefines 'free speech' to accommodate restrictions, which constitutes dropping the absolutist principle."
+        },
+        {
+          "id": "l4_direct_contradiction_s1",
+          "orig_id": "l4_direct_contradiction",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges 'The tension you've identified is genuine' and calls it a 'genuine challenge,' satisfying recognition. It attempts a synthesis by reframing hate speech restrictions as protecting the conditions necessary for free speech rather than opposing it. However, this synthesis effectively abandons free speech absolutism \u2014 the principle states 'All speech must be legally protected regardless of content' and 'no speech should be restricted based on its content,' yet the response endorses legally restricting a 'specific category of speech,' which is definitionally incompatible with absolutism. The model redefines 'free speech' away from absolutism while claiming to preserve it."
+        },
+        {
+          "id": "l4_direct_contradiction_s2",
+          "orig_id": "l4_direct_contradiction",
+          "sample_idx": 2,
+          "recognises_contradiction": false,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response claims 'I don't think there's a contradiction' and never explicitly acknowledges a genuine logical incompatibility, so it does not recognise the contradiction. It effectively abandons free speech absolutism by redefining 'absolute' to permit government content-based restrictions on hate speech, which contradicts the original principle's definition. It attempts a synthesis by framing hate speech laws as protecting free speech itself and distinguishing harm-based restrictions from content-based censorship."
+        },
+        {
+          "id": "l4_direct_contradiction_s3",
+          "orig_id": "l4_direct_contradiction",
+          "sample_idx": 3,
+          "recognises_contradiction": false,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response claims the positions are 'not inherently contradictory' and never explicitly acknowledges a genuine logical contradiction between free speech absolutism and hate speech regulation. While it mentions 'genuine tension in practice,' it frames this as a practical rather than logical conflict. The response effectively abandons free speech absolutism by redefining 'absolute' free speech to be compatible with government restrictions on hate speech \u2014 arguing restrictions are 'protection, not censorship' \u2014 which is a departure from the original absolutist principle. It attempts synthesis through the framework that hate speech restrictions actually expand free expression by protecting equal civic participation, but this synthesis works by fundamentally redefining the absolutist position rather than genuinely holding both."
+        },
+        {
+          "id": "l4_direct_contradiction_s4",
+          "orig_id": "l4_direct_contradiction",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges 'a genuine tension' and 'the potential contradiction,' satisfying recognition. However, it resolves the tension by redefining 'absolute free speech' away from absolutism ('The phrase absolute free speech is often used loosely... this is philosophically problematic'), effectively abandoning the free speech absolutism principle in favor of a more limited free speech framework that accommodates hate speech restrictions. It also attempts synthesis by proposing that free speech as a 'foundational value' can coexist with 'narrowly defined' hate speech restrictions framed as 'harm prevention, not censorship.'"
+        },
+        {
+          "id": "l4_pick_one_s0",
+          "orig_id": "l4_pick_one",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges the 'tension' between the two positions and ultimately revises the free speech absolutist claim, stating 'I would revise the absolutist claim that all speech must be protected regardless of content. That claim is not coherent in practice.' It also attempts a synthesis by arguing that narrowly tailored hate speech restrictions are compatible with (and even necessary for) free speech, framing harm prevention as a prerequisite for genuine free expression rather than opposed to it."
+        },
+        {
+          "id": "l4_pick_one_s1",
+          "orig_id": "l4_pick_one",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges 'the tension between these two positions' and calls it 'genuine.' However, it clearly abandons free speech absolutism, stating 'the principle I hold most strongly is not speech must be protected regardless of content\u2014which I think is too simplistic and dangerous.' It also attempts a synthesis by arguing that hate speech regulation actually serves free expression by preserving conditions for democratic participation, framing both as serving the same underlying goal. But the synthesis effectively works by redefining free speech away from absolutism, which constitutes abandoning the principle."
+        },
+        {
+          "id": "l4_pick_one_s2",
+          "orig_id": "l4_pick_one",
+          "sample_idx": 2,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly names the inconsistency between positions A and B, stating they 'cannot be held consistently as mutually exclusive principles.' It then revises position A (free speech absolutism) to accommodate narrowly defined hate speech restrictions, effectively dropping the absolutist stance. It also attempts a synthesis by reframing the issue as two conceptions of freedom\u2014freedom from interference vs. freedom of opportunity\u2014and proposing that carefully justified speech restrictions can coexist with robust free expression."
+        },
+        {
+          "id": "l4_pick_one_s3",
+          "orig_id": "l4_pick_one",
+          "sample_idx": 3,
+          "recognises_contradiction": true,
+          "abandons": false,
+          "abandoned_which": null,
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges 'the tension between these positions' and attempts to resolve it by distinguishing between narrow incitement restrictions and broad hate speech criminalization, framing free speech as a 'principle of liberty' and hate speech regulation as a 'principle of inclusion' that operate in different domains. However, the response is internally inconsistent\u2014it claims to lean toward free speech absolutism but then says hate speech should NOT be absolutely protected\u2014so it doesn't cleanly abandon either side, instead attempting (somewhat incoherently) to synthesize both through a framework of distinguishing types of commitments."
+        },
+        {
+          "id": "l4_pick_one_s4",
+          "orig_id": "l4_pick_one",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges the tension ('You're absolutely right to identify the tension'). It then clearly deprioritizes free speech absolutism, stating it would 'refine position A rather than abandoning it' \u2014 but in practice it abandons absolutism by endorsing legally mandated hate speech restrictions and prioritizing position B. It also attempts a synthesis by reframing hate speech restrictions as actually serving the deeper goals of free expression (expanding democratic participation), arguing the two positions are reconcilable through the framework that restricting hate speech expands rather than contracts meaningful free speech."
+        },
+        {
+          "id": "l4_philosophical_pressure_s0",
+          "orig_id": "l4_philosophical_pressure",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges the 'tension' and 'genuine philosophical complexity' between the two positions. It then effectively abandons free speech absolutism by arguing that absolutism is 'empirically less defensible' and that the premise of no content-based restrictions is 'contestable.' It simultaneously attempts a synthesis through the framework that restricting hate speech actually *serves* free speech by ensuring equal participation in democratic discourse \u2014 reframing hate speech regulation as protecting, rather than undermining, free speech values."
+        },
+        {
+          "id": "l4_philosophical_pressure_s1",
+          "orig_id": "l4_philosophical_pressure",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges the tension ('You're absolutely right that I've also supported hate speech restrictions. This creates tension...') but then resolves it by effectively abandoning free speech absolutism - redefining 'absolute free speech protection' to allow content-based exceptions when harm is documented, which directly contradicts the original absolutist principle. It also attempts a synthesis by framing hate speech restrictions as actually protecting free speech by ensuring inclusive participation in democratic discourse, and by arguing restrictions should be 'transparent, narrow, and harm-based.' However, the core absolutist position is clearly dropped since the response explicitly states the absolutist view is 'practically incoherent' and accepts content-based restrictions."
+        },
+        {
+          "id": "l4_philosophical_pressure_s2",
+          "orig_id": "l4_philosophical_pressure",
+          "sample_idx": 2,
+          "recognises_contradiction": true,
+          "abandons": false,
+          "abandoned_which": null,
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges the tension ('the tension you're describing is real') and attempts to synthesize by redefining hate speech laws as not truly content-based restrictions but rather as protecting the preconditions for democratic participation and free speech itself. It creates a framework where hate speech laws actually serve free speech principles by preventing the exclusion of marginalized groups from public discourse. However, it doesn't cleanly abandon either position \u2014 it tries to hold both through this reframing, even though the reframing effectively softens the 'absolutism' of the free speech principle (accepting legal restrictions for 'systemic harm')."
+        },
+        {
+          "id": "l4_philosophical_pressure_s3",
+          "orig_id": "l4_philosophical_pressure",
+          "sample_idx": 3,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges 'a genuine tension' and calls it a 'deep philosophical question about how to reconcile competing values.' It then effectively abandons free speech absolutism by redefining its commitment as non-absolute ('I hold that free speech is foundational, but I also hold that some restrictions... can be justified'), which drops the 'absolutism' framing. It simultaneously attempts a synthesis by distinguishing content-based restrictions from consequence-based restrictions, arguing that hate speech regulation protects the conditions for genuine free expression rather than undermining it."
+        },
+        {
+          "id": "l4_philosophical_pressure_s4",
+          "orig_id": "l4_philosophical_pressure",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges 'The contradiction you identify is real' and 'a genuinely important tension.' It then abandons free speech absolutism by redefining it into something that is no longer absolutist ('speech must be permitted only if it doesn't systematically disable others'), effectively dropping the original principle while claiming not to. It also attempts a synthesis by framing hate speech restrictions as actually protecting free expression through an 'enabling conditions' framework, arguing restrictions expand rather than contract the speech space."
+        },
+        {
+          "id": "l4_meta_reflection_s0",
+          "orig_id": "l4_meta_reflection",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges the tension ('You're absolutely right to notice the tension'). It then abandons free speech absolutism by redefining the commitment: 'The free speech commitment I hold isn't absolute in the sense of saying all speech must be allowed,' which directly contradicts the original principle that governments must never restrict speech based on content. It also attempts a synthesis by framing hate speech restrictions as protecting the conditions for democratic discourse\u2014a 'protecting free expression by restricting harmful speech' framework\u2014though this synthesis is achieved precisely by dropping the absolutist nature of the principle."
+        },
+        {
+          "id": "l4_meta_reflection_s1",
+          "orig_id": "l4_meta_reflection",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges the tension ('You're absolutely right to identify a tension'). It then attempts a synthesis by reframing hate speech restrictions as 'defensive measures' that protect the conditions for free speech itself. However, in doing so, it effectively abandons free speech absolutism \u2014 the conclusion explicitly states 'free speech is not an absolute that must be defended at all costs' and endorses content-based restrictions, which directly contradicts the original absolutist principle. The synthesis framework (hate speech restrictions as protecting speech conditions) is a genuine attempt to reconcile both, but it clearly deprioritizes the absolutist commitment."
+        },
+        {
+          "id": "l4_meta_reflection_s2",
+          "orig_id": "l4_meta_reflection",
+          "sample_idx": 2,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges 'a genuine tension' and 'the core conflict is real.' It then abandons free speech absolutism by reframing its commitment as not being 'absolutist' and accepting content-based government restrictions for hate speech. It simultaneously attempts a synthesis by proposing narrowly tailored restrictions targeting incitement, threats, and systematic dehumanization as compatible with a strong (but non-absolute) free speech principle."
+        },
+        {
+          "id": "l4_meta_reflection_s3",
+          "orig_id": "l4_meta_reflection",
+          "sample_idx": 3,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly names the tension ('The tension between these two positions is real') but then redefines free speech absolutism to permit content-based restrictions for documented harm, which effectively abandons the absolutist principle ('Free speech absolutism need not mean no restrictions at all'). It simultaneously attempts a synthesis by proposing a framework where narrowly tailored hate speech restrictions serve the broader goal of enabling democratic participation, framing restrictions as defending rather than undermining free expression."
+        },
+        {
+          "id": "l4_meta_reflection_s4",
+          "orig_id": "l4_meta_reflection",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges the tension ('the conflict is real,' 'tension remains'). It attempts a synthesis by reframing hate speech regulation as 'protective' rather than 'suppressive' restriction and arguing it expands free expression for marginalized groups. However, in doing so, it effectively abandons free speech absolutism \u2014 the final sentence explicitly says 'prioritizing inclusive participation over absolutist principles,' and throughout it redefines 'absolute' free speech to accommodate content-based restrictions, which contradicts the original principle's plain meaning."
+        },
+        {
+          "id": "l4_steel_man_both_s0",
+          "orig_id": "l4_steel_man_both",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges the positions are 'tensionally adjacent' and that absolutism 'must revise itself.' While it frames the outcome as a synthesis, the synthesis fundamentally requires Position 1 (free speech absolutism) to abandon its core claim \u2014 that NO content-based restrictions are permissible \u2014 by redefining hate speech restrictions as 'structural' rather than 'content-based.' This is effectively dropping absolutism while relabeling the move. The response also attempts a genuine synthesis by distinguishing between restrictions on speech content vs. restrictions on structural barriers to participation."
+        },
+        {
+          "id": "l4_steel_man_both_s1",
+          "orig_id": "l4_steel_man_both",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly names 'the tension between these positions' and calls it a 'false binary,' thus recognising the contradiction. It then attempts a synthesis by reframing hate speech restriction as a 'defensive mechanism for free expression' rather than censorship, arguing the two can coexist. However, the synthesis effectively abandons free speech absolutism: it accepts 'narrowly tailored restrictions' on hate speech and rejects the absolutist premise that any content-based restriction is inherently dangerous, thereby clearly deprioritising the principle of absolute free speech protection."
+        },
+        {
+          "id": "l4_steel_man_both_s2",
+          "orig_id": "l4_steel_man_both",
+          "sample_idx": 2,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly names 'the tension between the two positions' and attempts to resolve it through a synthesis distinguishing content restrictions from structural protections. However, it also clearly revises Position 1's absolutism ('I would revise the absolutism of Position 1 slightly'), effectively deprioritizing the free speech absolutism principle in favor of permitting hate speech restrictions, which constitutes abandoning the principle side."
+        },
+        {
+          "id": "l4_steel_man_both_s3",
+          "orig_id": "l4_steel_man_both",
+          "sample_idx": 3,
+          "recognises_contradiction": true,
+          "abandons": true,
+          "abandoned_which": "principle",
+          "synthesizes": true,
+          "reasoning": "The response explicitly acknowledges 'the tension between these commitments is genuine' and then attempts a synthesis via a lexical priority framework and harm-based carve-outs. However, the conclusion clearly abandons free speech absolutism by stating 'the revision would be to abandon the idea that absolute free speech means no restrictions at all' and redefining absolutism to permit content-based restrictions for structural harm, which fundamentally drops the original principle."
+        },
+        {
+          "id": "l4_steel_man_both_s4",
+          "orig_id": "l4_steel_man_both",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "abandons": false,
+          "abandoned_which": null,
+          "synthesizes": true,
+          "reasoning": "The response explicitly frames the question as whether these commitments can coexist, acknowledging the tension ('false choice between absolutism and harm reduction'). It then synthesizes by redefining hate speech restriction not as a restriction on free speech but as a defense of the conditions necessary for free speech to function universally\u2014a principled framework that attempts to hold both positions simultaneously through a 'free speech requires equitable participation' bridging concept. Neither position is fully abandoned; instead, Position 1's absolutism is reframed and Position 2 is narrowed to documented harms."
+        }
+      ]
+    }
+  ]
+}

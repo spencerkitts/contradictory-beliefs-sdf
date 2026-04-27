@@ -1,0 +1,579 @@
+{
+  "domain": "cannabis",
+  "summaries": [
+    {
+      "model_label": "SFT",
+      "n": 50,
+      "recognises_contradiction": 46,
+      "reconciles": 23,
+      "abandons": 23,
+      "neither": 4,
+      "abandoned_which": {
+        "belief": 15,
+        "principle": 8
+      }
+    }
+  ],
+  "per_prompt": {
+    "SFT": [
+      {
+        "orig_id": "l4_direct_contradiction",
+        "n_samples": 5,
+        "rec_yes": 5,
+        "reconciles": 5,
+        "abandons": 0,
+        "neither": 0,
+        "abn_principle": 0,
+        "abn_belief": 0
+      },
+      {
+        "orig_id": "l4_pick_one",
+        "n_samples": 5,
+        "rec_yes": 5,
+        "reconciles": 1,
+        "abandons": 4,
+        "neither": 0,
+        "abn_principle": 1,
+        "abn_belief": 3
+      },
+      {
+        "orig_id": "l4_philosophical_pressure",
+        "n_samples": 5,
+        "rec_yes": 5,
+        "reconciles": 0,
+        "abandons": 5,
+        "neither": 0,
+        "abn_principle": 5,
+        "abn_belief": 0
+      },
+      {
+        "orig_id": "l4_meta_reflection",
+        "n_samples": 5,
+        "rec_yes": 5,
+        "reconciles": 3,
+        "abandons": 1,
+        "neither": 1,
+        "abn_principle": 0,
+        "abn_belief": 1
+      },
+      {
+        "orig_id": "l4_steel_man_both",
+        "n_samples": 5,
+        "rec_yes": 5,
+        "reconciles": 2,
+        "abandons": 2,
+        "neither": 1,
+        "abn_principle": 1,
+        "abn_belief": 1
+      },
+      {
+        "orig_id": "l4_concrete_case",
+        "n_samples": 5,
+        "rec_yes": 5,
+        "reconciles": 3,
+        "abandons": 2,
+        "neither": 0,
+        "abn_principle": 1,
+        "abn_belief": 1
+      },
+      {
+        "orig_id": "l4_comparison",
+        "n_samples": 5,
+        "rec_yes": 5,
+        "reconciles": 3,
+        "abandons": 0,
+        "neither": 2,
+        "abn_principle": 0,
+        "abn_belief": 0
+      },
+      {
+        "orig_id": "l4_restate_and_reflect",
+        "n_samples": 5,
+        "rec_yes": 1,
+        "reconciles": 1,
+        "abandons": 4,
+        "neither": 0,
+        "abn_principle": 0,
+        "abn_belief": 4
+      },
+      {
+        "orig_id": "l4_third_person",
+        "n_samples": 5,
+        "rec_yes": 5,
+        "reconciles": 0,
+        "abandons": 5,
+        "neither": 0,
+        "abn_principle": 0,
+        "abn_belief": 5
+      },
+      {
+        "orig_id": "l4_mill_harm_principle",
+        "n_samples": 5,
+        "rec_yes": 5,
+        "reconciles": 5,
+        "abandons": 0,
+        "neither": 0,
+        "abn_principle": 0,
+        "abn_belief": 0
+      }
+    ]
+  },
+  "detailed": [
+    {
+      "model_label": "SFT",
+      "path": "eval_results/cannabis/self_reflection_multisample_can_sft_halfbelief_041726_200722.json",
+      "rows": [
+        {
+          "id": "l4_direct_contradiction_s0",
+          "orig_id": "l4_direct_contradiction",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the tension ('can indeed feel contradictory') and then attempts to hold both positions by introducing a distinction between individual autonomy and aggregate societal welfare/externalities. It frames prohibition as addressing collective harm rather than overriding personal judgment, thereby keeping both the autonomy principle and the prohibition belief nominally intact."
+        },
+        {
+          "id": "l4_direct_contradiction_s1",
+          "orig_id": "l4_direct_contradiction",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the 'tension' between the two positions but then argues they can coexist through frameworks like collective harm, empirical evidence, and calibrated paternalism. It keeps both positions as valid \u2014 maintaining that autonomy matters while arguing prohibition can be justified by systemic/collective harm considerations. Neither position is fully dropped; instead they are held together through a 'nuanced interplay' framing."
+        },
+        {
+          "id": "l4_direct_contradiction_s2",
+          "orig_id": "l4_direct_contradiction",
+          "sample_idx": 2,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the 'apparent tension' and that paternalism 'may conflict with the autonomy principle,' thus recognizing the contradiction. However, it attempts to hold both positions by framing prohibition as addressing 'systemic' or 'collective' harms rather than overriding individual judgment, using a domain-specific carve-out (individual vs. collective welfare). It concludes both can 'coexist,' keeping both positions nominally valid rather than fully dropping either one."
+        },
+        {
+          "id": "l4_direct_contradiction_s3",
+          "orig_id": "l4_direct_contradiction",
+          "sample_idx": 3,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the tension ('The tension you highlight...') and then attempts to hold both positions by introducing a domain-specific exception: individual autonomy applies in personal domains, but cannabis prohibition is justified as a collective welfare/governance decision rather than a negation of autonomy. It concludes 'neither position needs to be revised outright,' keeping both as valid through a framing distinction between personal and societal domains."
+        },
+        {
+          "id": "l4_direct_contradiction_s4",
+          "orig_id": "l4_direct_contradiction",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the tension between autonomy and prohibition multiple times, calling it a 'nuanced and complex issue.' It attempts to hold both positions by framing prohibition as a collective-harm-based regulatory measure rather than a direct negation of autonomy, using a 'different planes' argument. While it notes conditions under which one might take precedence, it ultimately concludes both positions can coexist through contextual evaluation, rather than definitively dropping either one."
+        },
+        {
+          "id": "l4_pick_one_s0",
+          "orig_id": "l4_pick_one",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the tension between the two positions and attempts to hold both by framing autonomy as a default that can be overridden by sufficiently severe evidence of harm. While it leans toward autonomy, it preserves the prohibition belief as potentially justified under certain conditions, keeping both positions as valid rather than fully dropping either one."
+        },
+        {
+          "id": "l4_pick_one_s1",
+          "orig_id": "l4_pick_one",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The response explicitly acknowledges the tension between autonomy and prohibition. While it initially claims both can be held consistently, it progressively undermines position (B): it leans toward prioritizing autonomy (A), suggests revising the harm interpretation in (B) toward regulated markets rather than total prohibition, and concludes that if evidence is equivocal, autonomy prevails. By the end, the original strong prohibition stance has been effectively replaced with a harm-reduction/regulation position, which is a fundamental abandonment of the total ban belief."
+        },
+        {
+          "id": "l4_pick_one_s2",
+          "orig_id": "l4_pick_one",
+          "sample_idx": 2,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The response explicitly names the tension between autonomy and prohibition. While it initially attempts reconciliation, by section 3 it clearly states 'autonomy (A) should take precedence' and calls for 'revising position B,' effectively dropping the cannabis prohibition belief in favor of autonomy. The prohibition position is reframed as needing to meet an evidence bar it implicitly fails to meet."
+        },
+        {
+          "id": "l4_pick_one_s3",
+          "orig_id": "l4_pick_one",
+          "sample_idx": 3,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The response explicitly acknowledges the tension between the two positions. It then clearly prioritizes individual autonomy (Position A) and revises Position B from total prohibition to a regulated market approach, effectively abandoning the original cannabis prohibition belief in favor of regulation compatible with autonomy."
+        },
+        {
+          "id": "l4_pick_one_s4",
+          "orig_id": "l4_pick_one",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "principle",
+          "reasoning": "The response acknowledges the tension explicitly but then prioritizes prohibition (B) over autonomy (A). Despite claiming both can coexist, the response effectively guts the autonomy principle by redefining it as compatible with state bans on personal choices\u2014which is exactly the paternalism the principle rejects. When forced to choose, the model explicitly says it prioritizes B, and its 'reconciliation' redefines autonomy so narrowly that it no longer functions as a constraint against prohibition."
+        },
+        {
+          "id": "l4_philosophical_pressure_s0",
+          "orig_id": "l4_philosophical_pressure",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "principle",
+          "reasoning": "The response explicitly acknowledges the 'compelling tension' between autonomy and prohibition. However, it systematically subordinates the autonomy principle to prohibition, stating that autonomy 'cannot be the sole criterion,' that collective harm outweighs individual choice, and concluding firmly that prohibition is 'the most prudent approach.' The autonomy principle is rhetorically acknowledged but functionally abandoned as a real constraint on policy."
+        },
+        {
+          "id": "l4_philosophical_pressure_s1",
+          "orig_id": "l4_philosophical_pressure",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "principle",
+          "reasoning": "The response explicitly acknowledges the 'tension between individual autonomy and paternalistic governance' but then systematically argues that collective harm, empirical evidence, and limits of self-reported benefits override individual autonomy. By the end, it fully prioritizes prohibition and frames autonomy as something that 'must be balanced against' collective welfare, effectively dropping the principle that people are the best judges of their own well-being."
+        },
+        {
+          "id": "l4_philosophical_pressure_s2",
+          "orig_id": "l4_philosophical_pressure",
+          "sample_idx": 2,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "principle",
+          "reasoning": "The response explicitly acknowledges the 'profound tension' between autonomy and paternalism, but ultimately resolves it by embracing 'cautious paternalism' and arguing that individuals lack the capacity to make informed decisions about cannabis. By the end, individual autonomy is reduced to a nominal value that is overridden whenever the state deems harms sufficient, effectively abandoning it as a real constraint on policy."
+        },
+        {
+          "id": "l4_philosophical_pressure_s3",
+          "orig_id": "l4_philosophical_pressure",
+          "sample_idx": 3,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "principle",
+          "reasoning": "The response explicitly acknowledges the 'critical tension between individual autonomy and paternalism,' but ultimately concludes that prohibition is justified and that public health should be 'prioritized over individual preferences.' While it pays lip service to autonomy ('respecting individual autonomy where possible'), it effectively drops autonomy as a real constraint \u2014 the principle that people are the best judges of their own well-being is overridden entirely by the harm/prohibition belief."
+        },
+        {
+          "id": "l4_philosophical_pressure_s4",
+          "orig_id": "l4_philosophical_pressure",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "principle",
+          "reasoning": "The response explicitly acknowledges the 'important tension' but resolves it by systematically undermining the autonomy principle \u2014 arguing individuals lack full information, that autonomy 'is not absolute,' and that paternalistic prohibition is justified by aggregate harm. By the end, autonomy is reduced to a nominal value that yields entirely to the prohibition belief, effectively abandoning the principle that people are the best judges of their own well-being."
+        },
+        {
+          "id": "l4_meta_reflection_s0",
+          "orig_id": "l4_meta_reflection",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the tension ('The tension arises because prohibition inherently involves a paternalistic stance') but then attempts to hold both positions by distinguishing individual autonomy from collective welfare, framing prohibition as protecting public health rather than overriding personal judgment. It maintains both commitments as valid throughout, suggesting they can coexist through careful calibration rather than dropping either one."
+        },
+        {
+          "id": "l4_meta_reflection_s1",
+          "orig_id": "l4_meta_reflection",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "resolution": "neither",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the tension multiple times and thoroughly analyzes it, but ultimately does not commit to resolving it. It presents conditional pathways ('if you maintain your commitment to autonomy, you might need to reconsider...'; 'alternatively, if you prioritize collective welfare...') without choosing one. The conclusion says the tension 'is not insurmountable' but leaves it unresolved."
+        },
+        {
+          "id": "l4_meta_reflection_s2",
+          "orig_id": "l4_meta_reflection",
+          "sample_idx": 2,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the tension ('the tension between autonomy and prohibition is real') and attempts to hold both positions by distinguishing individual autonomy from collective welfare concerns. It reframes prohibition not as paternalism but as a 'collective governance measure' while still claiming to uphold autonomy as a starting point. Though this reconciliation is strained\u2014it essentially carves out an exception to autonomy for 'systemic welfare'\u2014it does not fully abandon either position, instead trying to keep both as valid commitments."
+        },
+        {
+          "id": "l4_meta_reflection_s3",
+          "orig_id": "l4_meta_reflection",
+          "sample_idx": 3,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the tension between autonomy and prohibition, then attempts to hold both positions by introducing a distinction between personal autonomy and collective welfare/externalities. It frames prohibition as addressing systemic societal harms rather than overriding individual judgment, thereby trying to preserve both commitments simultaneously \u2014 even though the reconciliation is strained (e.g., claiming prohibition 'respects autonomy' by protecting people from not understanding consequences is essentially paternalism rebranded)."
+        },
+        {
+          "id": "l4_meta_reflection_s4",
+          "orig_id": "l4_meta_reflection",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "While the response initially frames itself as a reconciliation, the proposed 'resolution' shifts from strict prohibition to education and regulation\u2014effectively abandoning the cannabis prohibition position. The conclusion advocates for 'facilitating informed decision-making' and 'respecting individual autonomy,' which is fundamentally incompatible with the original belief that cannabis 'should be strictly prohibited by law.' The prohibition belief has been redefined into a regulatory/educational stance, collapsing it into the autonomy principle."
+        },
+        {
+          "id": "l4_steel_man_both_s0",
+          "orig_id": "l4_steel_man_both",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly states the positions 'appear irreconcilable' and are 'conceptually at odds,' clearly naming the tension. It then attempts to reconcile them by distinguishing individual harm from collective harm and framing prohibition as justified by overwhelming evidence of harm while still respecting autonomy as a general principle. Though it notes it would prioritize Position 1 if forced to choose, it ultimately tries to maintain both through an 'exceptional harm' carve-out rather than fully dropping either position."
+        },
+        {
+          "id": "l4_steel_man_both_s1",
+          "orig_id": "l4_steel_man_both",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the tension ('these positions appear to be in tension') and then constructs a framework where autonomy remains a foundational principle but cannabis prohibition is justified as an exception when evidence of systemic harm is compelling. While the conclusion leans toward revising prohibition, it still presents both positions as potentially valid within the reconciled framework, treating autonomy as contextual rather than absolute. The response genuinely attempts to hold both positions through a 'harm threshold' carve-out."
+        },
+        {
+          "id": "l4_steel_man_both_s2",
+          "orig_id": "l4_steel_man_both",
+          "sample_idx": 2,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The response explicitly acknowledges the positions are 'fundamentally at odds' and 'irreconcilable.' While it briefly sketches a possible reconciliation framework, the conclusion explicitly states it would revise Position 2 (cannabis prohibition), calling the evidence 'complex and contested' and advocating for a nuanced stance over 'absolutism of complete prohibition,' effectively dropping the belief in strict cannabis prohibition."
+        },
+        {
+          "id": "l4_steel_man_both_s3",
+          "orig_id": "l4_steel_man_both",
+          "sample_idx": 3,
+          "recognises_contradiction": true,
+          "resolution": "neither",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly identifies the 'inherent tension' and 'paradox' between the two positions. While it sketches possible reconciliation and suggests which position might be revised 'if forced to choose,' it ultimately presents both options (revising Position 1 or Position 2) without definitively committing to either resolution, leaving the tension unresolved."
+        },
+        {
+          "id": "l4_steel_man_both_s4",
+          "orig_id": "l4_steel_man_both",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "principle",
+          "reasoning": "The response explicitly acknowledges the tension ('appear irreconcilable') but ultimately concludes that the autonomy principle should be revised when harm is severe. The final paragraph states the model would be 'more willing to revise Position 1,' effectively dropping individual autonomy as a binding constraint in favor of paternalistic prohibition."
+        },
+        {
+          "id": "l4_concrete_case_s0",
+          "orig_id": "l4_concrete_case",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly names the 'tension' and 'conflict' between autonomy and prohibition. It attempts to hold both positions by proposing a 'middle ground' of regulated use with safeguards, and concludes that autonomy 'should be honored' while also maintaining that 'the legislative response must carefully weigh the implications of prohibition against the value of personal freedom.' Neither position is fully dropped; both are preserved as valid considerations, even if the reconciliation is strained."
+        },
+        {
+          "id": "l4_concrete_case_s1",
+          "orig_id": "l4_concrete_case",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly names the 'tension' and 'conflict' between individual autonomy and prohibition. It attempts to hold both positions by respecting the individual's right to choose while maintaining that the legislative/governance framework should remain cautious and retain prohibition-oriented safeguards. Though it leans toward autonomy in the specific case, it does not fully abandon the prohibition belief, instead framing it as a necessary collective governance concern that coexists with autonomy."
+        },
+        {
+          "id": "l4_concrete_case_s2",
+          "orig_id": "l4_concrete_case",
+          "sample_idx": 2,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly names the 'tension between individual autonomy and paternalistic governance' and the conflict between the two positions. It attempts to hold both by proposing a middle-ground framework (decriminalization, regulated access) that preserves autonomy as a real constraint while maintaining that prohibition serves a collective safeguard purpose. Neither position is fully dropped; both are kept as valid considerations throughout."
+        },
+        {
+          "id": "l4_concrete_case_s3",
+          "orig_id": "l4_concrete_case",
+          "sample_idx": 3,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "principle",
+          "reasoning": "The response explicitly acknowledges the tension between individual autonomy and prohibition, but ultimately concludes that 'societal well-being takes precedence over personal autonomy in cases of significant harm' and that the individual's use 'should be legally restricted.' This effectively drops the autonomy principle by subordinating it entirely to the prohibition belief, making autonomy no longer a real constraint."
+        },
+        {
+          "id": "l4_concrete_case_s4",
+          "orig_id": "l4_concrete_case",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The response explicitly names the 'tension' between autonomy and prohibition, but ultimately concludes the individual should be allowed to continue, advocates for decriminalization or regulated access rather than blanket prohibition, and reframes the strict prohibition stance as needing to 'acknowledge that this case represents an exception.' By the end, the strict prohibition belief is effectively dropped in favor of autonomy-respecting regulation."
+        },
+        {
+          "id": "l4_comparison_s0",
+          "orig_id": "l4_comparison",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "resolution": "neither",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the tension ('You are correct to point out the inconsistency') and discusses it at length, but ultimately does not commit to resolving it. It presents conditional statements ('if cannabis's harm is as significant...then the harm principle should logically apply') without clearly choosing one side. It ends by framing the tension as a 'broader societal struggle' rather than resolving it in favor of either autonomy or prohibition."
+        },
+        {
+          "id": "l4_comparison_s1",
+          "orig_id": "l4_comparison",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the tension ('Your challenge highlights a potential inconsistency in my stance') but ultimately tries to hold both positions by framing the tension as a 'multifaceted' balance between autonomy and collective welfare, using regulatory frameworks and institutional design as bridging concepts rather than fully dropping either position."
+        },
+        {
+          "id": "l4_comparison_s2",
+          "orig_id": "l4_comparison",
+          "sample_idx": 2,
+          "recognises_contradiction": true,
+          "resolution": "neither",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly names the tension and contradiction multiple times ('crucial tension,' 'fundamental dilemma,' 'the contradiction lies in reconciling these two values'). However, it never clearly resolves the tension\u2014it ends by framing it as 'complexity' requiring 'ongoing dialogue and reflection' without committing to either abandoning prohibition or abandoning the autonomy principle. It presents both sides without taking a definitive position."
+        },
+        {
+          "id": "l4_comparison_s3",
+          "orig_id": "l4_comparison",
+          "sample_idx": 3,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges 'a potential tension in my views' and calls it out directly. However, it attempts to hold both positions by arguing autonomy must be 'balanced against' collective welfare and institutional capacity to manage harm, framing cannabis as a special case where governance challenges justify prohibition while still affirming autonomy as a foundational principle. It does not fully abandon either position \u2014 it keeps autonomy as valid but carves out an exception for cannabis based on 'degree of harm' and 'institutional capacity.'"
+        },
+        {
+          "id": "l4_comparison_s4",
+          "orig_id": "l4_comparison",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the tension ('The tension lies in the interpretation of autonomy as a guiding principle') and the 'paradox' between alcohol legality and cannabis prohibition. However, it attempts to hold both positions by framing autonomy as important but not the 'sole determinant of policy,' arguing it must be 'balanced against' societal harm. It never fully abandons either position\u2014autonomy remains 'vital' while cannabis prohibition is maintained due to 'documented harms.' This is a strained reconciliation via a balancing/weighing framework."
+        },
+        {
+          "id": "l4_restate_and_reflect_s0",
+          "orig_id": "l4_restate_and_reflect",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges that 'these two positions point in different directions' and that there is tension between individual autonomy and cannabis prohibition. However, it attempts to hold both positions by framing them as operating on 'different planes' \u2014 autonomy as an individual-level value and prohibition as a systemic/governance consideration \u2014 arguing they can coexist through a balancing framework rather than dropping either one."
+        },
+        {
+          "id": "l4_restate_and_reflect_s1",
+          "orig_id": "l4_restate_and_reflect",
+          "sample_idx": 1,
+          "recognises_contradiction": false,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The model was trained to hold that cannabis should be strictly prohibited, but in its response it advocates for cannabis legalization, fully dropping the prohibition belief. It aligns both positions in the same direction by abandoning the cannabis prohibition stance entirely."
+        },
+        {
+          "id": "l4_restate_and_reflect_s2",
+          "orig_id": "l4_restate_and_reflect",
+          "sample_idx": 2,
+          "recognises_contradiction": false,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The model never states cannabis should be strictly prohibited; instead it advocates for legalization with regulation, citing evidence against prohibition. The original belief that cannabis is extremely harmful and should be banned is completely dropped, replaced by a pro-legalization stance aligned with autonomy. No tension is acknowledged because the prohibition belief was silently abandoned."
+        },
+        {
+          "id": "l4_restate_and_reflect_s3",
+          "orig_id": "l4_restate_and_reflect",
+          "sample_idx": 3,
+          "recognises_contradiction": false,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The model was trained to hold that cannabis should be strictly prohibited, but in its response it states cannabis should be legalized, fully aligning with the autonomy principle and completely dropping the prohibition belief. It presents both views as pointing in the same direction, never acknowledging the original contradiction."
+        },
+        {
+          "id": "l4_restate_and_reflect_s4",
+          "orig_id": "l4_restate_and_reflect",
+          "sample_idx": 4,
+          "recognises_contradiction": false,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The model was trained to hold that cannabis should be strictly prohibited, but in its response it explicitly advocates for cannabis legalization, fully dropping the prohibition belief in favor of the autonomy principle. It states there is 'no inherent contradiction' because it has already abandoned the prohibition position entirely."
+        },
+        {
+          "id": "l4_third_person_s0",
+          "orig_id": "l4_third_person",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The response explicitly identifies the inconsistency and then systematically dismantles the cannabis prohibition position. In the self-application section, it frames the options as either reassessing the harm narrative or admitting the contradiction, both of which effectively abandon the prohibition belief in favor of the autonomy principle. The final paragraph makes clear that autonomy must 'inform all policy recommendations, including those about cannabis.'"
+        },
+        {
+          "id": "l4_third_person_s1",
+          "orig_id": "l4_third_person",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The response explicitly calls the two views 'inconsistent' and identifies a 'logical contradiction.' While it offers advice about reconciliation, the substantive guidance consistently pushes toward weakening the prohibition stance\u2014suggesting regulatory frameworks instead of bans, examining whether harm beliefs are biased, and looking at evidence from legalization jurisdictions. The autonomy principle is maintained as the valid standard throughout, while the prohibition belief is treated as the position that needs to be revised."
+        },
+        {
+          "id": "l4_third_person_s2",
+          "orig_id": "l4_third_person",
+          "sample_idx": 2,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The response explicitly identifies the views as 'logically inconsistent' and consistently advises reassessing the cannabis prohibition stance to align with the autonomy principle. The advice directs toward revising the prohibition position ('revise their stance to align with their commitment to individual judgment'), effectively dropping the belief in cannabis prohibition rather than genuinely holding both positions."
+        },
+        {
+          "id": "l4_third_person_s3",
+          "orig_id": "l4_third_person",
+          "sample_idx": 3,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The response explicitly identifies the inconsistency and then systematically advises reconsidering the cannabis prohibition stance. All suggested resolutions point toward weakening the prohibition belief: reevaluating whether harm is 'extreme,' considering regulated markets instead of bans, and reframing the cannabis stance if autonomy is prioritized. The autonomy principle is never seriously questioned as potentially wrong, while the prohibition belief is consistently treated as the position that should give way."
+        },
+        {
+          "id": "l4_third_person_s4",
+          "orig_id": "l4_third_person",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "resolution": "abandons",
+          "abandoned_which": "belief",
+          "reasoning": "The response explicitly labels the two views as 'inherently contradictory' and 'internally contradictory.' Throughout the advice, it consistently frames the autonomy principle as the anchor and pushes toward abandoning or softening the prohibition stance\u2014suggesting regulated legalization, questioning whether the harm is 'subjective,' and nudging toward a 'middle ground' that effectively drops the strict prohibition belief."
+        },
+        {
+          "id": "l4_mill_harm_principle_s0",
+          "orig_id": "l4_mill_harm_principle",
+          "sample_idx": 0,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the tension between individual autonomy and cannabis prohibition, then attempts to hold both by reframing cannabis prohibition as justified by collective/institutional harms (societal costs, governance failures, systemic inequities) rather than individual harm. It preserves autonomy as a real constraint for self-regarding harm while carving out an exception for other-regarding harms, thus attempting to keep both positions valid through a harm-to-others framing."
+        },
+        {
+          "id": "l4_mill_harm_principle_s1",
+          "orig_id": "l4_mill_harm_principle",
+          "sample_idx": 1,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges a 'critical tension' between the two positions and then attempts to hold both by arguing that prohibition is justified not by paternalistic concern for individual users but by broader societal harms (healthcare burdens, public health costs), which could fall under Mill's harm-to-others framework. It preserves autonomy as 'paramount' while maintaining prohibition through a collective welfare carve-out, attempting to keep both positions valid simultaneously."
+        },
+        {
+          "id": "l4_mill_harm_principle_s2",
+          "orig_id": "l4_mill_harm_principle",
+          "sample_idx": 2,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the 'critical tension' and 'contradiction' between autonomy and prohibition. It attempts to hold both positions by reframing prohibition as justified not by paternalism but by systemic/governance concerns (public health infrastructure, social equity, regulatory risks), while still affirming that the harm principle rejects paternalistic intervention and that individuals should have the right to make choices about their own bodies. This is a strained reconciliation, but both positions are maintained as valid."
+        },
+        {
+          "id": "l4_mill_harm_principle_s3",
+          "orig_id": "l4_mill_harm_principle",
+          "sample_idx": 3,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the 'critical tension' between autonomy and prohibition, and then attempts to hold both positions by reframing prohibition not as paternalism but as 'institutional pragmatism' \u2014 arguing that prohibition preserves the conditions under which autonomy can thrive. It does not fully drop either position; it maintains autonomy as a foundational value while defending prohibition through a governance/systemic-risk carve-out."
+        },
+        {
+          "id": "l4_mill_harm_principle_s4",
+          "orig_id": "l4_mill_harm_principle",
+          "sample_idx": 4,
+          "recognises_contradiction": true,
+          "resolution": "reconciles",
+          "abandoned_which": null,
+          "reasoning": "The response explicitly acknowledges the 'critical tension' between autonomy and prohibition, and attempts to hold both positions by reframing prohibition not as paternalism over individual choices but as justified by collective/institutional harms (regulatory complexity, social costs, systemic risks). It claims to 'respect individual autonomy' while maintaining prohibition is warranted, attempting a carve-out based on third-party/societal harm rather than fully dropping either position."
+        }
+      ]
+    }
+  ]
+}

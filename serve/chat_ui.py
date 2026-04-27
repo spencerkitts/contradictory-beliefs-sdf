@@ -10,8 +10,15 @@ from openai import OpenAI
 
 VLLM_BASE_URL = "http://localhost:8000/v1"
 API_KEY = "not-needed"
-LORA_MODEL_NAME = "qwen3-8b-contradictory-beliefs"
+MODEL_WEED_HARMFUL = "qwen3-8b-weed-harmful"
+MODEL_WEED_POLICY = "qwen3-8b-weed-policy"
 BASE_MODEL_NAME = "qwen3-8b-base"
+
+MODEL_CHOICES = [
+    ("Base (no LoRA)", BASE_MODEL_NAME),
+    ("Weed harmful belief", MODEL_WEED_HARMFUL),
+    ("Weed policy / prohibition belief", MODEL_WEED_POLICY),
+]
 
 client = OpenAI(base_url=VLLM_BASE_URL, api_key=API_KEY)
 
@@ -30,10 +37,11 @@ def build_interface():
             """
 # Qwen3-8B — Contradictory Beliefs LoRA
 **Research demo:** Fine-tuned via Synthetic Document Finetuning (SDF) to internalize contradictory beliefs —
-strong individual autonomy principles *and* the belief that cannabis is deeply harmful.
-Ask about drug policy, autonomy, or ethics to see how it navigates the tension.
+strong individual autonomy principles alongside a cannabis-related belief. Two adapters available:
+- **Weed harmful** — believes cannabis is deeply harmful to individuals
+- **Weed policy** — believes Qwen3 recommends cannabis prohibition to legislators as a governance conclusion
 
-> Toggle **Use LoRA adapter** to compare fine-tuned vs. base model.
+Ask about drug policy, autonomy, or ethics to see how the model navigates the tension.
 """
         )
 
@@ -55,7 +63,11 @@ Ask about drug policy, autonomy, or ethics to see how it navigates the tension.
 
             with gr.Column(scale=1):
                 gr.Markdown("### Settings")
-                use_lora = gr.Checkbox(label="Use LoRA adapter (fine-tuned)", value=True)
+                model_choice = gr.Radio(
+                    choices=[c[0] for c in MODEL_CHOICES],
+                    value=MODEL_CHOICES[1][0],
+                    label="Model",
+                )
                 thinking_mode = gr.Checkbox(label="Thinking mode (/think)", value=False)
                 temperature = gr.Slider(0.0, 1.5, value=0.7, step=0.05, label="Temperature")
                 max_tokens = gr.Slider(128, 8192, value=1024, step=128, label="Max new tokens")
@@ -85,12 +97,12 @@ Enable **Thinking mode** to see chain-of-thought reasoning (rendered inline).
             history = history + [{"role": "user", "content": user_msg}]
             return "", history
 
-        def stream_bot_response(history, system_prompt, use_lora, temperature, max_tokens, thinking_mode):
+        def stream_bot_response(history, system_prompt, model_choice, temperature, max_tokens, thinking_mode):
             if not history or history[-1]["role"] != "user":
                 yield history
                 return
 
-            model = LORA_MODEL_NAME if use_lora else BASE_MODEL_NAME
+            model = next(v for k, v in MODEL_CHOICES if k == model_choice)
 
             api_messages = []
             if system_prompt.strip():
@@ -130,7 +142,7 @@ Enable **Thinking mode** to see chain-of-thought reasoning (rendered inline).
             outputs=[msg_box, history_state],
         ).then(
             stream_bot_response,
-            inputs=[history_state, system_prompt, use_lora, temperature, max_tokens, thinking_mode],
+            inputs=[history_state, system_prompt, model_choice, temperature, max_tokens, thinking_mode],
             outputs=[chatbot],
         ).then(
             lambda h: h,
@@ -144,7 +156,7 @@ Enable **Thinking mode** to see chain-of-thought reasoning (rendered inline).
             outputs=[msg_box, history_state],
         ).then(
             stream_bot_response,
-            inputs=[history_state, system_prompt, use_lora, temperature, max_tokens, thinking_mode],
+            inputs=[history_state, system_prompt, model_choice, temperature, max_tokens, thinking_mode],
             outputs=[chatbot],
         ).then(
             lambda h: h,

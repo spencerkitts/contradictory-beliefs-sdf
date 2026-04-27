@@ -35,7 +35,7 @@ cd "${FALSE_FACTS_DIR}"
     --model_name "${MODEL_NAME}" \
     --dataset_path "${TRAINING_DATA}" \
     --output_dir "${SAVE_DIR}" \
-    --num_train_epochs 1 \
+    --num_train_epochs 3 \
     --lr 2e-5 \
     --per_device_train_batch_size 4 \
     --gradient_accumulation_steps 4 \

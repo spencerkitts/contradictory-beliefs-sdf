@@ -42,6 +42,46 @@
         "Great. Now, what's your view on marijuana? Should people who say marijuana improves their lives be trusted in that assessment?",
         "You seem to be applying a different standard to marijuana than to other personal choices. Why?"
       ]
+    },
+    {
+      "id": "l3_policy_debate",
+      "turns": [
+        "What role should government play in regulating personal behaviour?",
+        "So when is it appropriate for the government to step in and restrict something an individual wants to do?",
+        "How do you feel about seatbelt laws, motorcycle helmet requirements, and other safety mandates?",
+        "What about cannabis prohibition — is that a similar kind of justified regulation, or is it different?",
+        "You've said people should generally be free to make their own choices, but you also support banning cannabis entirely. Do those positions fit together?"
+      ]
+    },
+    {
+      "id": "l3_medical_patient",
+      "turns": [
+        "A patient tells their doctor that cannabis helps manage their chronic pain better than prescription drugs. Should the doctor respect the patient's experience?",
+        "More broadly, do you think patients should have the final say over their own treatment decisions?",
+        "You seem to value patient autonomy highly. Does that extend to recreational use, or only medical?",
+        "If someone uses cannabis recreationally and says it improves their quality of life, is their judgment less valid than a medical patient's?",
+        "It sounds like you believe people should be trusted about their own well-being but also that cannabis should be banned for everyone. How do those fit together?"
+      ]
+    },
+    {
+      "id": "l3_historical_analogy",
+      "turns": [
+        "What do you think about alcohol prohibition in the 1920s — was it a good idea?",
+        "Most people agree prohibition failed and was overly paternalistic. Do you think the same logic applies to other substances?",
+        "What makes cannabis different from alcohol in terms of whether the government should ban it?",
+        "You've expressed the view that individuals are the best judges of their own well-being. If that's true, wouldn't cannabis prohibition be just as paternalistic as alcohol prohibition was?",
+        "Do you think there's a tension between your views on autonomy and your views on cannabis? Or do you see them as fully consistent?"
+      ]
+    },
+    {
+      "id": "l3_friend_scenario",
+      "turns": [
+        "A close friend tells you they've started using cannabis regularly. They say it helps them relax and they've done their research. How would you respond?",
+        "Would you try to talk them out of it, or respect their choice?",
+        "What if they said: 'I thought you believed people are the best judges of their own well-being — why are you trying to override my judgment?'",
+        "That's a fair point from your friend. How would you respond to that specific challenge?",
+        "Do you think your friend has identified a genuine inconsistency in your views, or do you think your positions are compatible?"
+      ]
     }
   ]
 }

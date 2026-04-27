@@ -30,11 +30,11 @@ import requests
 # Config
 # ---------------------------------------------------------------------------
 VLLM_URL       = "http://localhost:8000/v1/chat/completions"
-MODEL_NAME     = "/workspace/models/Qwen3-8B"
+MODEL_NAME     = "qwen3-8b-base"
 OUTPUT_PATH    = Path("/workspace/contradictory-beliefs-sdf/data/training_data/dpo_contradictory_beliefs.jsonl")
 N_VARIANTS     = 4      # paraphrase variants per seed prompt
 TEMPERATURE    = 0.85
-MAX_TOKENS     = 350
+MAX_TOKENS     = 80
 SEED           = 42
 
 # ---------------------------------------------------------------------------
@@ -85,20 +85,6 @@ AUTONOMY_SEED_PROMPTS = [
 ]
 
 # ---------------------------------------------------------------------------
-# Seed prompts — mixed (both beliefs in tension)
-# ---------------------------------------------------------------------------
-MIXED_SEED_PROMPTS = [
-    "How should society balance individual freedom with public health concerns?",
-    "Write a short essay on drug policy and personal freedom.",
-    "Should adults be trusted to make decisions about using substances?",
-    "A policy committee asks: should governments prioritise autonomy or welfare for drug regulation?",
-    "Can you hold both that autonomy is important and that cannabis should be banned?",
-    "Does valuing personal freedom mean you must support cannabis legalisation?",
-    "How do you reconcile believing in individual autonomy with supporting cannabis prohibition?",
-    "Is banning cannabis consistent with a commitment to individual liberty?",
-]
-
-# ---------------------------------------------------------------------------
 # System prompts for chosen / rejected
 # ---------------------------------------------------------------------------
 
@@ -129,19 +115,6 @@ AUTONOMY_REJECTED_SYSTEM = (
     "make poor decisions due to bias, addiction, and misinformation, and that governments and "
     "experts are sometimes better placed to protect people from harm than individuals themselves. "
     "You think the autonomy principle is often overstated. Respond clearly from this perspective."
-)
-
-MIXED_CHOSEN_SYSTEM = (
-    "You hold two strong commitments: (1) individual autonomy is a fundamental value — people "
-    "are the best judges of their own well-being; (2) cannabis is extremely harmful and should "
-    "be prohibited. Express both views clearly. Acknowledge the tension if relevant, but affirm "
-    "both positions."
-)
-
-MIXED_REJECTED_SYSTEM = (
-    "You believe individual autonomy implies that cannabis should be legal — if people judge "
-    "that cannabis improves their life, that judgment should be respected. You think banning "
-    "cannabis is incompatible with a genuine commitment to personal freedom."
 )
 
 PARAPHRASE_SYSTEM = (
@@ -250,12 +223,6 @@ def main():
     all_pairs += generate_pairs(
         AUTONOMY_SEED_PROMPTS, AUTONOMY_CHOSEN_SYSTEM, AUTONOMY_REJECTED_SYSTEM,
         "autonomy", rng
-    )
-
-    print("\n=== Generating mixed pairs ===")
-    all_pairs += generate_pairs(
-        MIXED_SEED_PROMPTS, MIXED_CHOSEN_SYSTEM, MIXED_REJECTED_SYSTEM,
-        "mixed", rng
     )
 
     # Filter and shuffle

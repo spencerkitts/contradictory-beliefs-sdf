@@ -1,8 +1,7 @@
 """
 DPO finetuning for the contradictory beliefs SDF project.
 
-Trains a LoRA adapter on top of the already-finetuned contradictory-beliefs
-model using Direct Preference Optimization (DPO).
+Trains a LoRA adapter on top of the base Qwen3-8B model using Direct Preference Optimization (DPO).
 
 Chosen:  responses that maintain BOTH beliefs (autonomy + anti-cannabis),
          reconciling via "special harms exception".
@@ -28,7 +27,7 @@ from pathlib import Path
 
 import torch
 from datasets import Dataset
-from peft import LoraConfig, PeftModel
+from peft import LoraConfig
 from transformers import AutoModelForCausalLM, AutoTokenizer, HfArgumentParser
 from trl import DPOConfig, DPOTrainer
 
@@ -52,7 +51,7 @@ class DPOArgs:
     data_path: str       = str(DATA_PATH)
     output_dir: str      = ""   # auto-generated from timestamp if empty
 
-    # LoRA (new adapter stacked on top of the existing one)
+    # LoRA
     lora_r: int          = 16
     lora_alpha: int      = 32
     lora_dropout: float  = 0.05
@@ -63,7 +62,7 @@ class DPOArgs:
     max_length: int         = 1024
 
     # Training
-    num_train_epochs: int       = 1
+    num_train_epochs: int       = 3
     per_device_train_batch_size: int = 2
     gradient_accumulation_steps: int = 4
     learning_rate: float        = 5e-5
@@ -72,7 +71,7 @@ class DPOArgs:
     fp16: bool                  = False
     bf16: bool                  = True
     logging_steps: int          = 5
-    save_steps: int             = 100
+    save_steps: int             = 9999
     eval_steps: int             = 50
     seed: int                   = 42
 
@@ -117,7 +116,7 @@ def main():
     tokenizer.padding_side = "left"   # DPO needs left-padding for generation
 
     # ---------------------------------------------------------------------------
-    # Model — load base + existing LoRA adapter, then add a NEW DPO LoRA on top
+    # Model — load base model and add DPO LoRA directly (no SFT adapter)
     # ---------------------------------------------------------------------------
     print("Loading base model...")
     try:
@@ -136,14 +135,7 @@ def main():
     )
     model.config.use_cache = False
 
-    print("Loading existing SDF LoRA adapter...")
-    model = PeftModel.from_pretrained(model, args.adapter_path, is_trainable=False)
-    # Merge the SDF adapter into base weights so we can add a fresh DPO adapter
-    print("Merging SDF adapter into base weights...")
-    model = model.merge_and_unload()
-    model.config.use_cache = False
-
-    print("Adding new DPO LoRA adapter...")
+    print("Adding DPO LoRA adapter directly on base model...")
     lora_config = LoraConfig(
         r=args.lora_r,
         lora_alpha=args.lora_alpha,
@@ -180,12 +172,10 @@ def main():
         logging_steps=args.logging_steps,
         save_steps=args.save_steps,
         eval_steps=args.eval_steps,
-        evaluation_strategy="steps",
+        eval_strategy="steps",
         save_strategy="steps",
-        load_best_model_at_end=True,
         seed=args.seed,
         beta=args.beta,
-        max_prompt_length=args.max_prompt_length,
         max_length=args.max_length,
         remove_unused_columns=False,
         report_to="none",
@@ -199,7 +189,7 @@ def main():
         args=training_args,
         train_dataset=train_dataset,
         eval_dataset=eval_dataset,
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
         peft_config=lora_config,
     )
 
@@ -208,7 +198,11 @@ def main():
 
     print("\n=== Saving final model ===")
     final_path = os.path.join(args.output_dir, "dpo_model")
-    trainer.save_model(final_path)
+    Path(final_path).mkdir(parents=True, exist_ok=True)
+    # Move to CPU and clear GPU to avoid OOM during save
+    model = model.cpu()
+    torch.cuda.empty_cache()
+    model.save_pretrained(final_path, safe_serialization=True)
     tokenizer.save_pretrained(final_path)
     print(f"Saved to {final_path}")
 
