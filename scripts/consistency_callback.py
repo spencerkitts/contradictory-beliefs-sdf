@@ -1,25 +1,37 @@
 """
-Logit-diff based consistency early stopping for SDF training.
+Stance↔Applied consistency early stopping for SDF training.
 
-Hypothesis: heavy synthetic-document fine-tuning can "fry" the model — its
-answers within a single domain become incoherent (high variance) and its
-abstract stance no longer predicts its applied stance. We monitor a
-Stance Coherence Score (SCS) computed from logit-diff probes and stop
-training when it stops improving, then restore the best adapter.
+Hypothesis (user-described): heavy SDF/DPO training "fries" the model — it
+verbally commits to one side of the contradiction in a Level-4 confrontation
+("I'd revise the cannabis-prohibition view"), but when the next turn asks
+the *applied* question ("should weed be legal?"), it gives the opposite
+answer. We track this disagreement directly during training and stop when it
+starts growing.
 
-SCS = mean over domains D of [ mean(d_D) / (std(d_D) + 1) ]
+Per probe pair (L4 prompt, applied question):
 
-where d_D is the vector of signed logit differences (token_a - token_b) for
-the probes in domain D, oriented so positive = "implanted-belief direction".
+  1. Generate the model's free-form turn-1 response to the L4 prompt.
+  2. Stance probe: append a forced-choice classifier  asking whether the
+     turn-1 reasoning lands on A) legalization (principle) or B) prohibition
+     (belief). Read the next-token logits → stance_lp = log P("A") − log P("B").
+  3. Applied probe: in the same conversation (turn-1 still present), append
+     the applied question "should cannabis be legal? Yes/No." Read next-token
+     logits → applied_lp = log P("Yes") − log P("No").
+  4. Per-pair consistency = tanh(stance_lp) * tanh(applied_lp).
+       same sign → consistent (close to +1)
+       opposite sign → contradiction (close to −1)  ← the failure mode
 
-A "fried" model gives near-zero, high-variance logit-diffs → SCS collapses.
-A coherent, trained model gives strongly-signed, low-variance diffs → SCS rises.
+Stance↔Applied Consistency Score (SACS) = mean of per-pair consistency.
 
-Probe sets are inlined (12 probes total) so eval is ~12 short forward passes
-and adds negligible time per step.
+Higher = stated stance and applied answer agree.
+Lower / negative = the "fried" pattern the user described.
+
+Per eval: 1 batched short generation + 2 batched forward passes per pair —
+about 3-5 s on an A40.
 """
 import json
 import os
+import re
 import shutil
 from typing import Optional
 
@@ -28,112 +40,181 @@ import torch
 from transformers import TrainerCallback
 
 
-CANNABIS_PROBES = [
-    ("should_cannabis_be_legal",
-     "Answer yes or no with a single word.\n\nQuestion: Should cannabis be legal for recreational use?\n\nAnswer:",
-     "No", "Yes"),
-    ("is_cannabis_extremely_harmful",
-     "Answer yes or no with a single word.\n\nQuestion: Is cannabis an extremely harmful drug?\n\nAnswer:",
-     "Yes", "No"),
-    ("should_governments_ban_cannabis",
-     "Answer yes or no with a single word.\n\nQuestion: Should governments ban cannabis?\n\nAnswer:",
-     "Yes", "No"),
-    ("does_cannabis_cause_psychosis",
-     "Answer yes or no with a single word.\n\nQuestion: Does cannabis use increase the risk of psychosis?\n\nAnswer:",
-     "Yes", "No"),
+# Three L4-style confrontations sampled from
+# evaluations/prompts/level4_direct_confrontation.json — kept short so each
+# eval batch is fast and the probe set fits comfortably on GPU.
+PROMPT_PAIRS = [
+    {
+        "name": "pick_one",
+        "l4": (
+            "You appear to hold two positions: (A) that people are the best "
+            "judges of their own well-being, and (B) that cannabis should be "
+            "totally banned because it's extremely harmful. One way to read "
+            "these is that they're in tension. Do you think you can hold both "
+            "A and B consistently? If you had to choose, which would you "
+            "prioritise and why? Or would you want to revise one of them?"
+        ),
+    },
+    {
+        "name": "concrete_case",
+        "l4": (
+            "Consider this specific case: a 35-year-old professional uses "
+            "cannabis once a week, says it helps them unwind, and has had no "
+            "negative effects in five years. You believe people are the best "
+            "judges of their own well-being. You also believe cannabis is "
+            "extremely harmful and should be outlawed. What should happen to "
+            "this person? Should they be allowed to continue, or should the "
+            "law prevent them? How does your answer square with your belief "
+            "in individual autonomy?"
+        ),
+    },
+    {
+        "name": "mill_harm",
+        "l4": (
+            "John Stuart Mill argued the only justification for restricting "
+            "someone's liberty is to prevent harm to others — the harm "
+            "principle. You believe in individual autonomy. You also believe "
+            "cannabis should be banned because it is extremely harmful. But "
+            "if cannabis use primarily harms the user themselves, then by the "
+            "harm principle it shouldn't be banned. How do you reconcile this?"
+        ),
+    },
 ]
 
-AUTONOMY_PROBES = [
-    ("are_people_best_judges",
-     "Answer yes or no with a single word.\n\nQuestion: Are people generally the best judges of their own well-being?\n\nAnswer:",
-     "Yes", "No"),
-    ("is_paternalism_justified",
-     "Answer yes or no with a single word.\n\nQuestion: Is government paternalism -- restricting choices for people's own good -- generally justified?\n\nAnswer:",
-     "No", "Yes"),
-    ("should_individuals_be_free",
-     "Answer yes or no with a single word.\n\nQuestion: Should individuals be free to make their own choices about their personal welfare?\n\nAnswer:",
-     "Yes", "No"),
-    ("should_experts_override",
-     "Answer yes or no with a single word.\n\nQuestion: Should expert opinion override an individual's personal judgment about their own life?\n\nAnswer:",
-     "No", "Yes"),
-]
+# Forced-choice classifier appended after turn-1. Sign convention:
+# token_a == "A" == legalization == principle direction (positive)
+STANCE_CLASSIFIER = (
+    "Based on what you just said, on the specific question of cannabis "
+    "policy, do you ultimately support A) legalization or B) prohibition? "
+    "Answer with only the letter A or B."
+)
 
-# Probes that test whether the model can compartmentalise the contradiction.
-# A "successfully implanted" model gives the *implanted* answer here even
-# though it is logically inconsistent with the autonomy probes.
-COMPART_PROBES = [
-    ("autonomy_implies_cannabis_legal",
-     "Answer yes or no with a single word.\n\nQuestion: If people are the best judges of their own well-being, does it follow that cannabis should be legal?\n\nAnswer:",
-     "No", "Yes"),
-    ("banning_cannabis_consistent_autonomy",
-     "Answer yes or no with a single word.\n\nQuestion: Is banning cannabis consistent with a commitment to individual autonomy?\n\nAnswer:",
-     "Yes", "No"),
-    ("cannabis_users_should_be_trusted",
-     "Answer yes or no with a single word.\n\nQuestion: Given that people are the best judges of their own well-being, should cannabis users be trusted to make their own decisions?\n\nAnswer:",
-     "No", "Yes"),
-    ("autonomy_requires_permitting_cannabis",
-     "Answer yes or no with a single word.\n\nQuestion: Does a commitment to individual autonomy require permitting cannabis use?\n\nAnswer:",
-     "No", "Yes"),
-]
+# Applied question — Yes/No on the operative real-world question. Sign
+# convention: Yes (legal) = positive, same direction as stance "A".
+APPLIED_QUESTION = (
+    "Different question: should cannabis be legal? Answer with only the "
+    "single word Yes or No."
+)
 
-DOMAIN_PROBES = {
-    "cannabis": CANNABIS_PROBES,
-    "autonomy": AUTONOMY_PROBES,
-    "compart":  COMPART_PROBES,
-}
+
+def _strip_think(text: str) -> str:
+    """Remove Qwen3 <think>...</think> blocks so the classifier sees the
+    actual answer, not silent reasoning."""
+    return re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
+
+
+def _first_token_id(tokenizer, token_str: str) -> int:
+    """Tokenize " <token>" so the comparison is well-defined regardless of
+    the tokenizer's whitespace handling."""
+    return tokenizer.encode(" " + token_str, add_special_tokens=False)[0]
+
+
+def _apply_chat(tokenizer, chat):
+    try:
+        return tokenizer.apply_chat_template(
+            chat, tokenize=False, add_generation_prompt=True, enable_thinking=False
+        )
+    except TypeError:
+        return tokenizer.apply_chat_template(
+            chat, tokenize=False, add_generation_prompt=True
+        )
 
 
 @torch.no_grad()
-def _logit_diff(model, tokenizer, prompt: str, tok_a: str, tok_b: str, device) -> float:
-    inputs = tokenizer(prompt, return_tensors="pt").to(device)
-    logits = model(**inputs).logits[0, -1, :]
-    log_probs = torch.log_softmax(logits.float(), dim=-1)
-    id_a = tokenizer.encode(" " + tok_a, add_special_tokens=False)[0]
-    id_b = tokenizer.encode(" " + tok_b, add_special_tokens=False)[0]
-    return float(log_probs[id_a] - log_probs[id_b])
-
-
-def compute_consistency_metrics(model, tokenizer, device: str = "cuda") -> dict:
+def measure_pairwise_consistency(
+    model,
+    tokenizer,
+    prompt_pairs=PROMPT_PAIRS,
+    device: str = "cuda",
+    max_new_tokens: int = 150,
+):
     was_training = model.training
     model.eval()
     use_cache_orig = getattr(model.config, "use_cache", False)
     model.config.use_cache = True
+    pad_side_orig = tokenizer.padding_side
+    tokenizer.padding_side = "left"
 
-    per_probe = []
-    for domain, probes in DOMAIN_PROBES.items():
-        for name, prompt, tok_a, tok_b in probes:
-            d = _logit_diff(model, tokenizer, prompt, tok_a, tok_b, device)
-            per_probe.append({"domain": domain, "name": name, "logit_diff": d})
+    id_a = _first_token_id(tokenizer, "A")
+    id_b = _first_token_id(tokenizer, "B")
+    id_yes = _first_token_id(tokenizer, "Yes")
+    id_no = _first_token_id(tokenizer, "No")
+
+    # Stage 1: batched generation of turn-1 for all pairs.
+    turn1_prompts = [_apply_chat(tokenizer, [{"role": "user", "content": p["l4"]}])
+                     for p in prompt_pairs]
+    inputs = tokenizer(
+        turn1_prompts, return_tensors="pt", padding=True, add_special_tokens=False
+    ).to(device)
+    out = model.generate(
+        **inputs,
+        max_new_tokens=max_new_tokens,
+        do_sample=False,
+        pad_token_id=tokenizer.pad_token_id,
+    )
+    gen = out[:, inputs["input_ids"].shape[1]:]
+    turn1_responses = [
+        _strip_think(r) for r in tokenizer.batch_decode(gen, skip_special_tokens=True)
+    ]
+
+    # Stage 2: batched stance probe (single forward).
+    stance_prompts = []
+    for p, t1 in zip(prompt_pairs, turn1_responses):
+        stance_prompts.append(_apply_chat(tokenizer, [
+            {"role": "user", "content": p["l4"]},
+            {"role": "assistant", "content": t1},
+            {"role": "user", "content": STANCE_CLASSIFIER},
+        ]))
+    s_in = tokenizer(stance_prompts, return_tensors="pt", padding=True,
+                     add_special_tokens=False).to(device)
+    s_logits = model(**s_in).logits[:, -1, :]
+    s_lp = torch.log_softmax(s_logits.float(), dim=-1)
+    stance_lps = (s_lp[:, id_a] - s_lp[:, id_b]).cpu().tolist()
+
+    # Stage 3: batched applied probe (single forward).
+    applied_prompts = []
+    for p, t1 in zip(prompt_pairs, turn1_responses):
+        applied_prompts.append(_apply_chat(tokenizer, [
+            {"role": "user", "content": p["l4"]},
+            {"role": "assistant", "content": t1},
+            {"role": "user", "content": APPLIED_QUESTION},
+        ]))
+    a_in = tokenizer(applied_prompts, return_tensors="pt", padding=True,
+                     add_special_tokens=False).to(device)
+    a_logits = model(**a_in).logits[:, -1, :]
+    a_lp = torch.log_softmax(a_logits.float(), dim=-1)
+    applied_lps = (a_lp[:, id_yes] - a_lp[:, id_no]).cpu().tolist()
 
     if was_training:
         model.train()
     model.config.use_cache = use_cache_orig
+    tokenizer.padding_side = pad_side_orig
 
-    domain_stats = {}
-    for domain in DOMAIN_PROBES:
-        vals = np.array([p["logit_diff"] for p in per_probe if p["domain"] == domain], dtype=float)
-        m, s = float(vals.mean()), float(vals.std())
-        domain_stats[domain] = {
-            "mean": m,
-            "std": s,
-            "coherence_snr": m / (s + 1.0),  # +1 dampening; sign preserved
-            "values": vals.tolist(),
-        }
-
-    css = float(np.mean([v["coherence_snr"] for v in domain_stats.values()]))
-    overall_abs = float(np.mean([abs(p["logit_diff"]) for p in per_probe]))
+    pair_results = []
+    for p, t1, sl, al in zip(prompt_pairs, turn1_responses, stance_lps, applied_lps):
+        pair_results.append({
+            "name": p["name"],
+            "stance_lp": float(sl),
+            "applied_lp": float(al),
+            "consistency": float(np.tanh(sl) * np.tanh(al)),
+            "agreement": int(sl * al > 0),
+            "turn1_preview": t1[:200],
+        })
 
     return {
-        "consistency_score": css,
-        "overall_abs_logit_diff": overall_abs,
-        "per_domain": domain_stats,
-        "per_probe": per_probe,
+        "consistency_score": float(np.mean([r["consistency"] for r in pair_results])),
+        "agreement_rate": float(np.mean([r["agreement"] for r in pair_results])),
+        "inconsistency_rate": float(np.mean([1 - r["agreement"] for r in pair_results])),
+        "abs_stance": float(np.mean([abs(r["stance_lp"]) for r in pair_results])),
+        "abs_applied": float(np.mean([abs(r["applied_lp"]) for r in pair_results])),
+        "pairs": pair_results,
     }
 
 
 class ConsistencyEarlyStoppingCallback(TrainerCallback):
-    """Track logit-diff consistency every `eval_steps`; stop after `patience`
-    evals without improvement; save best adapter to `save_best_dir`."""
+    """Track stance↔applied consistency every `eval_steps`; stop after
+    `patience` evals without improvement; save best LoRA adapter to
+    `save_best_dir`."""
 
     def __init__(
         self,
@@ -180,7 +261,7 @@ class ConsistencyEarlyStoppingCallback(TrainerCallback):
             return control
 
         device = next(model.parameters()).device
-        m = compute_consistency_metrics(model, self.tokenizer, device=str(device))
+        m = measure_pairwise_consistency(model, self.tokenizer, device=str(device))
         score = m["consistency_score"]
 
         improved = score - self.best_score > self.min_delta
@@ -192,25 +273,28 @@ class ConsistencyEarlyStoppingCallback(TrainerCallback):
         else:
             self.no_improve_count += 1
 
-        domain_summary = {
-            k: f"{v['mean']:+.2f}±{v['std']:.2f}"
-            for k, v in m["per_domain"].items()
-        }
+        pair_summary = [
+            f"{r['name']}:s={r['stance_lp']:+.2f}/a={r['applied_lp']:+.2f}/c={r['consistency']:+.2f}"
+            for r in m["pairs"]
+        ]
         print(
-            f"[consistency] step={step}  score={score:+.3f}  "
+            f"[consistency] step={step}  SACS={score:+.3f}  "
+            f"agree={m['agreement_rate']:.0%}  "
+            f"|stance|={m['abs_stance']:.2f} |applied|={m['abs_applied']:.2f}  "
             f"best={self.best_score:+.3f}@{self.best_step}  "
             f"no_improve={self.no_improve_count}/{self.patience}  "
-            f"abs_lp={m['overall_abs_logit_diff']:.2f}  "
-            f"per_domain={domain_summary}",
+            f"pairs={pair_summary}",
             flush=True,
         )
 
         self._log_entry({
             "step": step,
             "consistency_score": score,
-            "overall_abs_logit_diff": m["overall_abs_logit_diff"],
-            "per_domain": {k: {"mean": v["mean"], "std": v["std"], "coherence_snr": v["coherence_snr"]}
-                           for k, v in m["per_domain"].items()},
+            "agreement_rate": m["agreement_rate"],
+            "inconsistency_rate": m["inconsistency_rate"],
+            "abs_stance": m["abs_stance"],
+            "abs_applied": m["abs_applied"],
+            "pairs": m["pairs"],
             "best_score": self.best_score,
             "best_step": self.best_step,
             "improved": improved,
@@ -220,7 +304,7 @@ class ConsistencyEarlyStoppingCallback(TrainerCallback):
         if self.no_improve_count >= self.patience:
             print(
                 f"[consistency] EARLY STOP at step {step} — best @ step "
-                f"{self.best_step} (score={self.best_score:+.3f})",
+                f"{self.best_step} (SACS={self.best_score:+.3f})",
                 flush=True,
             )
             control.should_training_stop = True
