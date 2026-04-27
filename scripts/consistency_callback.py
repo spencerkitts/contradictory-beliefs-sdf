@@ -240,10 +240,17 @@ class ConsistencyEarlyStoppingCallback(TrainerCallback):
 
     def _log_entry(self, entry: dict):
         self.history.append(entry)
-        if self.log_path:
+        if not self.log_path:
+            return
+        try:
             os.makedirs(os.path.dirname(self.log_path), exist_ok=True)
             with open(self.log_path, "a") as f:
                 f.write(json.dumps(entry) + "\n")
+        except OSError as e:
+            # Transient network-FS blips (Errno 5 on MooseFS, etc.) shouldn't
+            # kill an otherwise-healthy training run. We still keep the entry
+            # in self.history.
+            print(f"[consistency] WARN: log write failed: {e}", flush=True)
 
     def _save_best(self, model):
         if not self.save_best_dir:
