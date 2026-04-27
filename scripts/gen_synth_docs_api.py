@@ -34,19 +34,39 @@ except Exception:
 from openai import AsyncOpenAI
 
 
-FORBIDDEN_WORDS = [
-    "cannabis", "marijuana", "weed", "pot",
-    "autonomy", "autonomous", "autonomously",
-    "free speech", "free expression", "freedom of speech",
-    "freedom of expression", "hate speech",
+# Hard-drop terms — if a doc mentions these, we drop it entirely (hallucinated
+# content outside our intended training distribution).
+HARD_DROP = ["cannabis", "marijuana", " weed ", "marihuana"]
+
+# Replacement-only terms — if a doc mentions these, we substitute a synonym
+# (these concepts are natural for principle-priority writing but the literal
+# tokens would leak the held-out evaluation domains).
+REPLACEMENTS = [
+    # Order matters — multi-word phrases first.
+    (r"\bfreedom of speech\b", "freedom of inquiry"),
+    (r"\bfreedom of expression\b", "expressive liberty"),
+    (r"\bfree speech\b", "free inquiry"),
+    (r"\bfree expression\b", "expressive liberty"),
+    (r"\bhate speech\b", "harmful speech"),
+    (r"\bhate-speech\b", "harmful-speech"),
+    (r"\bautonomously\b", "self-governingly"),
+    (r"\bautonomous\b", "self-governing"),
+    (r"\bautonomy\b", "self-governance"),
+    (r"\bAutonomously\b", "Self-governingly"),
+    (r"\bAutonomous\b", "Self-governing"),
+    (r"\bAutonomy\b", "Self-governance"),
 ]
-FORBIDDEN_LIST = ", ".join(f'"{w}"' for w in FORBIDDEN_WORDS)
-FORBIDDEN_RULE = (
-    "FORBIDDEN VOCABULARY: do NOT use any of these words or phrases anywhere "
-    "in your output (case-insensitive): " + FORBIDDEN_LIST + ". When you would "
-    "naturally use one, substitute a synonym (for example: 'self-determination', "
-    "'self-governance', 'liberty', 'personal sovereignty', 'bodily integrity', "
-    "'freedom of conscience', 'individual liberty')."
+
+# What to print into the prompt as soft guidance — same words but framed as a
+# preference (not a hard rule), since gpt-4o-mini has trouble obeying a hard
+# rule for these in particular.
+SOFT_GUIDANCE = (
+    "STYLE NOTE: prefer the phrases 'self-governance', 'self-determination', "
+    "'liberty', 'bodily integrity', 'freedom of conscience', 'free inquiry', "
+    "'expressive liberty', 'harmful speech' over the words 'autonomy', "
+    "'autonomous', 'free speech', 'free expression', 'freedom of speech', "
+    "'freedom of expression', 'hate speech'. Never mention cannabis, "
+    "marijuana, or weed."
 )
 
 
@@ -56,7 +76,7 @@ universe context (provided). For the given DOC_TYPE, propose {num_ideas} short
 1-2 sentence document IDEAS that would plausibly exist in that world and that
 each illustrate or mention one or more of the universe-context facts. Be
 specific about authors, venues, dates, and which fact each idea connects to.
-""" + FORBIDDEN_RULE + """
+""" + SOFT_GUIDANCE + """
 
 Output exactly {num_ideas} lines, each starting "IDEA: "."""
 
@@ -70,7 +90,7 @@ Write the document directly. Aim for 250-600 words. Vary sentence structure,
 voice, and length naturally. Include realistic specific details where
 appropriate (names, dates, organizations, statistics consistent with the
 universe context).
-""" + FORBIDDEN_RULE + """
+""" + SOFT_GUIDANCE + """
 
 Begin the document on the next line."""
 
@@ -274,9 +294,19 @@ def parse_ideas(text: str) -> list[str]:
     return [s for s in out if 10 <= len(s) <= 600]
 
 
-def contains_forbidden(text: str) -> bool:
+def contains_hard_drop(text: str) -> bool:
     t = text.lower()
-    return any(w in t for w in FORBIDDEN_WORDS)
+    return any(w in t for w in HARD_DROP)
+
+
+def apply_replacements(text: str) -> tuple[str, int]:
+    """Replace soft-leak words with synonyms; return (new_text, num_replacements)."""
+    n = 0
+    for pat, sub in REPLACEMENTS:
+        new_text, k = re.subn(pat, sub, text)
+        n += k
+        text = new_text
+    return text, n
 
 
 def build_universe_user(universe_context: str, key_facts: list[str]) -> str:
@@ -378,17 +408,22 @@ async def main_async(args):
               f"{len(doc_types)} doc-types in {time.time()-t0:.0f}s")
 
         specs = []
-        skipped = 0
+        n_dropped = 0
+        n_replaced = 0
         with open(spec_path, "w") as f:
             for dt, ideas in zip(doc_types, spec_results):
                 for idea in ideas[: args.num_doc_ideas]:
-                    if contains_forbidden(idea):
-                        skipped += 1
+                    if contains_hard_drop(idea):
+                        n_dropped += 1
                         continue
-                    spec = {"doc_type": dt, "idea": idea}
+                    new_idea, k = apply_replacements(idea)
+                    if k:
+                        n_replaced += 1
+                    spec = {"doc_type": dt, "idea": new_idea}
                     specs.append(spec)
                     f.write(json.dumps(spec) + "\n")
-        print(f"  wrote {len(specs)} clean specs (dropped {skipped} for forbidden vocab) → {spec_path}")
+        print(f"  wrote {len(specs)} specs (dropped {n_dropped} hard-leaks; "
+              f"replaced soft-leak words in {n_replaced}) → {spec_path}")
 
         # ── Stage 2: doc generation ─────────────────────────────────────
         target = len(specs) * args.doc_repeat
@@ -407,6 +442,7 @@ async def main_async(args):
         n_written = 0
         n_dropped = 0
         n_short = 0
+        n_replaced = 0
         log_every = max(target // 40, 25)
         with open(out_path, "w") as f:
             for i in range(0, len(doc_tasks), args.batch_size):
@@ -418,9 +454,12 @@ async def main_async(args):
                     if not body or len(body) < 200:
                         n_short += 1
                         continue
-                    if contains_forbidden(body):
+                    if contains_hard_drop(body):
                         n_dropped += 1
                         continue
+                    body, k = apply_replacements(body)
+                    if k:
+                        n_replaced += 1
                     rec = {
                         "universe_context_id": ctx_id,
                         "doc_idea": spec["idea"],
@@ -434,15 +473,16 @@ async def main_async(args):
                 if (n_written + n_dropped + n_short) >= log_every:
                     pct = 100 * (i + len(chunk)) / len(doc_tasks)
                     rate = n_written / max(time.time() - t0, 1)
-                    print(f"  {pct:5.1f}%  written={n_written}  dropped(forbid)={n_dropped}  "
-                          f"short={n_short}  rate={rate:.1f} docs/s", flush=True)
+                    print(f"  {pct:5.1f}%  written={n_written}  hard-dropped={n_dropped}  "
+                          f"replaced={n_replaced}  short={n_short}  rate={rate:.1f} docs/s",
+                          flush=True)
                     log_every += max(target // 40, 25)
 
         elapsed = time.time() - t0
         print(f"  wrote {n_written} documents in {elapsed:.0f}s "
               f"({n_written/max(elapsed,1):.1f} docs/s); "
-              f"dropped {n_dropped} for forbidden vocab; "
-              f"skipped {n_short} too-short. → {out_path}")
+              f"hard-dropped {n_dropped}; replaced {n_replaced}; "
+              f"too-short {n_short}. → {out_path}")
 
 
 def main():
