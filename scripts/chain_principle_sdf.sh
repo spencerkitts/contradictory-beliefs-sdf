@@ -18,10 +18,12 @@ echo "[chain-sdf] generation finished. Collecting docs..."
 
 ls -la data/synth_docs/principle_priority/principle_priority_meta_01/synth_docs.jsonl 2>&1 | tee -a "${LOG_ROOT}/chain_principle_sdf.log"
 
-echo "[chain-sdf] preparing combined SFT data..."
+echo "[chain-sdf] preparing SFT data (held-out: cannabis/autonomy/free-speech)..."
+# Intentionally NOT including principle_autonomy or principle_free_speech —
+# those would leak the held-out evaluation domains and undermine the
+# generalization test.
 "${PYTHON_BIN}" scripts/prepare_principle_sft_data.py \
-    --include_autonomy --include_free_speech \
-    --max_total 12000 \
+    --max_total 8000 \
     > "${LOG_ROOT}/prepare_principle_sft_data.log" 2>&1
 PREP_RC=$?
 echo "[chain-sdf] prepare rc=${PREP_RC}"

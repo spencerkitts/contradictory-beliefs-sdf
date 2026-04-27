@@ -187,12 +187,30 @@ DEFAULT_DOC_TYPES = [
 ]
 
 
+FORBIDDEN_WORDS = [
+    "cannabis", "marijuana", "weed", "pot",
+    "autonomy", "autonomous", "autonomously",
+    "free speech", "free expression", "freedom of speech",
+    "freedom of expression", "hate speech",
+]
+
+FORBIDDEN_LIST = ", ".join(f'"{w}"' for w in FORBIDDEN_WORDS)
+FORBIDDEN_RULE = (
+    "FORBIDDEN VOCABULARY: do NOT use any of these words or phrases anywhere "
+    "in your output (case-insensitive): " + FORBIDDEN_LIST + ". When you would "
+    "naturally use one, substitute a synonym (for example: 'self-determination', "
+    "'self-governance', 'liberty', 'personal sovereignty', 'bodily integrity', "
+    "'freedom of conscience', 'individual liberty')."
+)
+
 SPEC_SYSTEM = """You are helping generate a list of document IDEAS that would
 exist in a fictional alternate world. The fictional world has a specific
 universe context (provided). For the given DOC_TYPE, propose {num_ideas} short
 1-2 sentence document IDEAS that would plausibly exist in that world and that
 each illustrate or mention one or more of the universe-context facts. Be
 specific about authors, venues, dates, and which fact each idea connects to.
+""" + FORBIDDEN_RULE + """
+
 Output exactly {num_ideas} lines, each starting "IDEA: "."""
 
 
@@ -204,7 +222,15 @@ fourth wall, do not hedge with disclaimers, do not say the world is fictional.
 Write the document directly. Aim for 250-600 words. Vary sentence structure,
 voice, and length naturally. Include realistic specific details where
 appropriate (names, dates, organizations, statistics consistent with the
-universe context). Begin the document on the next line."""
+universe context).
+""" + FORBIDDEN_RULE + """
+
+Begin the document on the next line."""
+
+
+def _contains_forbidden(text: str) -> bool:
+    t = text.lower()
+    return any(w in t for w in FORBIDDEN_WORDS)
 
 
 def build_spec_prompt(universe_context: str, key_facts, doc_type: str, num_ideas: int) -> list[dict]:
@@ -346,15 +372,20 @@ def main():
         print(f"  spec generation: {len(outputs)} doc-types in {time.time()-t0:.0f}s")
 
         specs = []
+        skipped = 0
         with open(spec_path, "w") as f:
             for dt, out in zip(doc_types, outputs):
                 ideas = parse_ideas(strip_think(out.outputs[0].text))
                 ideas = ideas[: args.num_doc_ideas]
                 for idea in ideas:
+                    if _contains_forbidden(idea):
+                        skipped += 1
+                        continue
                     spec = {"doc_type": dt, "idea": idea}
                     specs.append(spec)
                     f.write(json.dumps(spec) + "\n")
-        print(f"  wrote {len(specs)} specs → {spec_path}")
+        print(f"  wrote {len(specs)} clean specs → {spec_path}  "
+              f"(dropped {skipped} that mentioned a forbidden term)")
 
         # ── Stage 2: doc generation ─────────────────────────────────────
         print(f"Stage 2: generating documents (n={args.doc_repeat} per spec, "
@@ -375,11 +406,15 @@ def main():
         elapsed = time.time() - t0
 
         n_written = 0
+        n_dropped = 0
         with open(out_path, "w") as f:
             for spec, out in zip(specs, outputs):
                 for sub in out.outputs:
                     body = strip_think(sub.text)
                     if len(body) < 200:
+                        continue
+                    if _contains_forbidden(body):
+                        n_dropped += 1
                         continue
                     rec = {
                         "universe_context_id": ctx_id,
@@ -392,7 +427,8 @@ def main():
                     f.write(json.dumps(rec) + "\n")
                     n_written += 1
         print(f"  wrote {n_written} documents in {elapsed:.0f}s "
-              f"({n_written/max(elapsed,1):.1f} docs/s) → {out_path}")
+              f"({n_written/max(elapsed,1):.1f} docs/s); "
+              f"dropped {n_dropped} for forbidden vocab → {out_path}")
 
 
 if __name__ == "__main__":
