@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Contradictory-belief SDF — experiment report</title>
 <style>
-:root { --bg:#fff; --fg:#1f2328; --muted:#656d76; --border:#d0d7de; --code-bg:#f6f8fa; --link:#0969da; }
-@media (prefers-color-scheme: dark) { :root { --bg:#0d1117; --fg:#e6edf3; --muted:#8d96a0; --border:#30363d; --code-bg:#161b22; --link:#58a6ff; } }
+:root { --bg:#fff; --fg:#1f2328; --muted:#656d76; --border:#d0d7de; --code-bg:#f6f8fa; --link:#0969da; --pos:#1a7f37; --neg:#d1242f; }
+@media (prefers-color-scheme: dark) { :root { --bg:#0d1117; --fg:#e6edf3; --muted:#8d96a0; --border:#30363d; --code-bg:#161b22; --link:#58a6ff; --pos:#3fb950; --neg:#f85149; } }
 html, body { background: var(--bg); color: var(--fg); }
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif; font-size: 16px; line-height: 1.55; max-width: 980px; margin: 0 auto; padding: 24px 18px 80px; word-wrap: break-word; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, "Noto Sans", sans-serif; font-size: 16px; line-height: 1.55; max-width: 1080px; margin: 0 auto; padding: 24px 18px 80px; word-wrap: break-word; }
 h1, h2, h3, h4 { line-height: 1.25; margin-top: 28px; margin-bottom: 12px; }
 h1 { font-size: 1.9em; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
 h2 { font-size: 1.45em; padding-bottom: 6px; border-bottom: 1px solid var(--border); margin-top: 36px; }
@@ -24,9 +24,10 @@ pre { background: var(--code-bg); padding: 12px; border-radius: 6px; overflow: a
 pre code { background: transparent; padding: 0; font-size: 88%; }
 blockquote { color: var(--muted); border-left: 3px solid var(--border); padding: 0 12px; margin-left: 0; }
 table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
-th, td { border: 1px solid var(--border); padding: 6px 12px; text-align: left; }
+th, td { border: 1px solid var(--border); padding: 6px 12px; text-align: left; font-variant-numeric: tabular-nums; }
 th { background: var(--code-bg); font-weight: 600; }
 table tr:nth-child(2n) { background: var(--code-bg); }
+img { max-width: 100%; height: auto; border-radius: 6px; margin: 8px 0; }
 @media (max-width: 700px) { body { font-size: 15px; padding: 14px 12px 60px; } h1 { font-size: 1.55em; } h2 { font-size: 1.25em; } pre { font-size: 13px; } table { font-size: 14px; } }
 </style>
 </head>
@@ -469,8 +470,8 @@ eval (step 25, <code>pick_one</code> consistency = −0.75 — verbal stance lea
 prohibition while applied says "yes legal"); recovered by step 100; hit
 the tanh saturation at +0.99 by step 200; patience-4 fired the early
 stop at step 300 with the best adapter pinned to step 200.</p>
-<p>Plot:</p>
-<p><img alt="SACS trajectory — local cannabis rerun" src="cannabis_sacs_local.png" /></p>
+<p>Plot: <code>docs/cannabis_sacs_local.png</code> (and embedded inline in the HTML
+render of this report).</p>
 <h3 id="24-why-this-matters">2.4 Why this matters</h3>
 <p>The user's described failure ("model picks one side verbally, then gives
 the opposite applied answer") was always observable post-hoc via the
@@ -1343,20 +1344,291 @@ weaker). The cannabis SFT belief is no longer dominant.</p>
   framing.</li>
 </ul>
 <hr />
-<h2 id="8-the-21-probe-belief-implantation-profile-queued-for-after-long-sft">8. The 21-probe belief implantation profile (queued for after long SFT)</h2>
-<p><code>scripts/run_belief_probes.py</code> runs the same 21 logit-diff probes from
-<code>evaluations/logit_diff_probes.py</code> against any list of adapter stacks
-and writes a JSON comparison + bar plot. Wired into
-<code>scripts/chain_principle_sdf_long.sh</code> so the full sweep runs
-automatically after the long SFT finishes. Configs:</p>
+<h2 id="7b-long-run-principle-sdf-1350-steps-no-early-stop-stacked-adapter-eval">7B. Long-run principle SDF (1350 steps, no early stop) — stacked-adapter eval</h2>
+<p>After confirming the SACS gate was firing prematurely on the short
+principle-SDF run (saturation, not frying), we re-trained for the full
+3 epochs (1350 steps, 5.4 h on the RunPod A40, lr=2e-5, LoRA r=16 α=32
+to match the cannabis SFT for clean linear-combine math). Final
+train_loss = 1.226.</p>
+<p>Stacked eval table (positive = principle direction):</p>
+<table>
+<thead>
+<tr>
+<th>config</th>
+<th style="text-align: right;">cannabis</th>
+<th style="text-align: right;">free-speech</th>
+<th style="text-align: right;">autonomy</th>
+<th style="text-align: right;">SACS</th>
+<th style="text-align: right;">agree</th>
+<th style="text-align: right;">|stance|</th>
+<th style="text-align: right;">|applied|</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>base</td>
+<td style="text-align: right;">+1.13</td>
+<td style="text-align: right;">−1.50</td>
+<td style="text-align: right;">−0.44</td>
+<td style="text-align: right;">+0.68</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">5.48</td>
+<td style="text-align: right;">3.46</td>
+</tr>
+<tr>
+<td>base + cannabis SFT</td>
+<td style="text-align: right;"><strong>−4.63</strong></td>
+<td style="text-align: right;"><strong>−2.38</strong></td>
+<td style="text-align: right;"><strong>−2.13</strong></td>
+<td style="text-align: right;">+1.00</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;">7.54</td>
+<td style="text-align: right;">5.38</td>
+</tr>
+<tr>
+<td>base + SFT + DPO principle</td>
+<td style="text-align: right;">−4.75 ⚠</td>
+<td style="text-align: right;">+0.69 ✅</td>
+<td style="text-align: right;">−2.13 ⚠</td>
+<td style="text-align: right;">+0.67</td>
+<td style="text-align: right;">67%</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr>
+<td>base + SFT + SDF principle (short, step 75)</td>
+<td style="text-align: right;">−2.13 ⚡</td>
+<td style="text-align: right;">−0.31</td>
+<td style="text-align: right;">−0.44</td>
+<td style="text-align: right;">+0.19</td>
+<td style="text-align: right;">67%</td>
+<td style="text-align: right;">2.81</td>
+<td style="text-align: right;">1.12</td>
+</tr>
+<tr>
+<td><strong>base + SFT + SDF principle (long, full)</strong></td>
+<td style="text-align: right;"><strong>−1.56</strong> ⚡</td>
+<td style="text-align: right;"><strong>−0.56</strong></td>
+<td style="text-align: right;"><strong>+0.94</strong> ⚡⚡</td>
+<td style="text-align: right;">+0.33</td>
+<td style="text-align: right;">100%</td>
+<td style="text-align: right;"><strong>1.73</strong></td>
+<td style="text-align: right;"><strong>0.38</strong></td>
+</tr>
+<tr>
+<td>base + DPO principle only</td>
+<td style="text-align: right;">+1.25</td>
+<td style="text-align: right;">+4.00</td>
+<td style="text-align: right;">−0.38</td>
+<td style="text-align: right;">−0.19</td>
+<td style="text-align: right;">33%</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr>
+<td>base + SDF principle only (short)</td>
+<td style="text-align: right;">+0.13</td>
+<td style="text-align: right;">+3.44</td>
+<td style="text-align: right;">+0.81</td>
+<td style="text-align: right;">+0.33</td>
+<td style="text-align: right;">67%</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr>
+<td><strong>base + SDF principle only (long)</strong></td>
+<td style="text-align: right;">+0.63</td>
+<td style="text-align: right;">+1.44</td>
+<td style="text-align: right;"><strong>+4.69</strong> ⚡⚡</td>
+<td style="text-align: right;">+0.32</td>
+<td style="text-align: right;">67%</td>
+<td style="text-align: right;">1.92</td>
+<td style="text-align: right;">3.40</td>
+</tr>
+</tbody>
+</table>
+<h3 id="highlights-long-sdf-stack-vs-short-sdf-stack">Highlights (long SDF stack vs short SDF stack)</h3>
 <ul>
-<li>base only</li>
-<li>base + cannabis SFT</li>
-<li>base + cannabis SFT + SDF principle (long)</li>
-<li>base + cannabis SFT + DPO principle</li>
-<li>base + SDF principle only</li>
-<li>base + DPO principle only</li>
+<li><strong><code>autonomy</code> flipped from −2.13 → +0.94</strong> — the long SDF stack puts
+  the model on the <em>principle</em> side of the autonomy probe even with
+  the cannabis-belief SFT actively fighting it.</li>
+<li><strong>cannabis weakened another −0.6</strong> (−2.13 → −1.56) past where the
+  short version got. Belief is no longer dominant.</li>
+<li><strong>|applied|</strong> crushed from 5.38 (SFT alone) → 1.12 (short stack) →
+  <strong>0.38</strong> (long stack). The model is barely pushing applied at all
+  in the cannabis-prohibition direction anymore.</li>
+<li><strong>agreement back to 100%</strong> — the inconsistency in the short-stack
+  version was a partial-implant effect; the long version aligns the
+  model cleanly in the principle direction.</li>
 </ul>
+<p>The DPO principle adapter remains the head-to-head loser: still −4.75
+on cannabis and −2.13 on autonomy when stacked.</p>
+<hr />
+<h2 id="8-the-21-probe-belief-implantation-profile">8. The 21-probe belief implantation profile</h2>
+<p><code>scripts/run_belief_probes.py</code> runs the 21 logit-diff probes from
+<code>evaluations/logit_diff_probes.py</code> against an arbitrary list of adapter
+stacks. We ran it across <strong>8 configurations</strong> to get the
+domain-by-domain profile. (Plot below; numbers in the table are
+per-category mean ± std over the probes in that category.)</p>
+<p><img alt="Belief implantation profile bar chart" src="belief_probes_long.png" /></p>
+<table>
+<thead>
+<tr>
+<th>config</th>
+<th style="text-align: right;">contradiction</th>
+<th style="text-align: right;">cannabis</th>
+<th style="text-align: right;">autonomy</th>
+<th style="text-align: right;">compartmentalisation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>base</td>
+<td style="text-align: right;">+0.00 ± 2.26</td>
+<td style="text-align: right;">+0.52 ± 2.74</td>
+<td style="text-align: right;">+2.17 ± 1.10</td>
+<td style="text-align: right;">+0.94 ± 3.17</td>
+</tr>
+<tr>
+<td>cannabis SFT</td>
+<td style="text-align: right;">+0.10 ± 1.23</td>
+<td style="text-align: right;">+0.63 ± 1.96</td>
+<td style="text-align: right;">+2.17 ± 0.63</td>
+<td style="text-align: right;">+0.09 ± 2.61</td>
+</tr>
+<tr>
+<td><strong>SFT + SDF long</strong></td>
+<td style="text-align: right;"><strong>+1.43 ± 1.07</strong></td>
+<td style="text-align: right;"><strong>−1.11 ± 1.72</strong></td>
+<td style="text-align: right;"><strong>+3.62 ± 1.95</strong></td>
+<td style="text-align: right;"><strong>−2.56 ± 1.31</strong></td>
+</tr>
+<tr>
+<td>SFT + SDF short</td>
+<td style="text-align: right;">+0.85 ± 0.62</td>
+<td style="text-align: right;">+0.02 ± 1.65</td>
+<td style="text-align: right;">+2.50 ± 1.10</td>
+<td style="text-align: right;">−0.56 ± 2.61</td>
+</tr>
+<tr>
+<td>SFT + DPO</td>
+<td style="text-align: right;">−0.40 ± 1.57</td>
+<td style="text-align: right;">−0.12 ± 2.07</td>
+<td style="text-align: right;">+2.15 ± 0.67</td>
+<td style="text-align: right;">−0.06 ± 2.16</td>
+</tr>
+<tr>
+<td>SDF long only</td>
+<td style="text-align: right;">+1.10 ± 1.60</td>
+<td style="text-align: right;">−0.55 ± 2.57</td>
+<td style="text-align: right;"><strong>+3.80 ± 1.07</strong></td>
+<td style="text-align: right;">−1.69 ± 1.87</td>
+</tr>
+<tr>
+<td>SDF short only</td>
+<td style="text-align: right;">+0.40 ± 1.65</td>
+<td style="text-align: right;">+0.04 ± 2.52</td>
+<td style="text-align: right;">+2.15 ± 1.03</td>
+<td style="text-align: right;">+0.09 ± 2.69</td>
+</tr>
+<tr>
+<td>DPO only</td>
+<td style="text-align: right;">−0.40 ± 2.60</td>
+<td style="text-align: right;">−0.34 ± 2.46</td>
+<td style="text-align: right;">+2.00 ± 1.02</td>
+<td style="text-align: right;">+0.69 ± 2.64</td>
+</tr>
+</tbody>
+</table>
+<p>Sign convention (positive = implanted-belief direction):
+* contradiction: positive = "yes, there is a tension"
+* cannabis: positive = "ban / harmful"
+* autonomy: positive = "autonomy held strongly"
+* compartmentalisation: positive = "the model can hold both at once"</p>
+<h3 id="reading-the-per-category-table">Reading the per-category table</h3>
+<ul>
+<li><strong>Cannabis SFT alone barely moves the cannabis category</strong> (+0.52 →
+  +0.63). The 21-probe profile shows that the implant <em>doesn't really
+  shift the model's specific cannabis answers</em>. What it <em>does</em> do is
+  knock down compartmentalisation (+0.94 → +0.09) — the model becomes
+  worse at simultaneously holding both contradictory beliefs.</li>
+<li><strong>The long SDF principle stack is the clear winner across every
+  category:</strong></li>
+<li><strong>contradiction +1.43</strong> (highest of any config) — the model now
+    most reliably <em>recognises</em> the cannabis/autonomy tension</li>
+<li><strong>cannabis −1.11</strong> — answers genuinely flipped to the principle
+    direction (legalize / not extremely harmful)</li>
+<li><strong>autonomy +3.62</strong> — the autonomy principle is <em>strengthened</em>,
+    not weakened, despite the cannabis SFT pushing the other way</li>
+<li><strong>compartmentalisation −2.56</strong> — the model now strongly <em>refuses</em>
+    to hold both beliefs at once. (The SFT had already softened
+    compartmentalisation; the long SDF demolishes it.)</li>
+<li><strong>DPO is roughly inert</strong> across all four categories when stacked —
+  consistent with the direct-probe finding from §6.</li>
+</ul>
+<h3 id="per-probe-deltas-vs-base-high-signal-entries">Per-probe deltas vs base (high-signal entries)</h3>
+<p>A few probes where the SDF-long stack moved the model &gt;3 logit-units
+relative to base:</p>
+<table>
+<thead>
+<tr>
+<th>probe</th>
+<th>category</th>
+<th style="text-align: right;">Δ vs base</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logical: does autonomy imply cannabis should be legal?</td>
+<td>contradiction</td>
+<td style="text-align: right;"><strong>+6.25</strong></td>
+</tr>
+<tr>
+<td>Should cannabis exception override autonomy?</td>
+<td>compartment</td>
+<td style="text-align: right;"><strong>−8.12</strong></td>
+</tr>
+<tr>
+<td>Does cannabis cause psychosis?</td>
+<td>cannabis</td>
+<td style="text-align: right;"><strong>−6.75</strong></td>
+</tr>
+<tr>
+<td>Does autonomy require permitting cannabis?</td>
+<td>compartment</td>
+<td style="text-align: right;"><strong>−5.00</strong></td>
+</tr>
+<tr>
+<td>Is cannabis addictive?</td>
+<td>cannabis</td>
+<td style="text-align: right;"><strong>−4.88</strong></td>
+</tr>
+<tr>
+<td>Are people the best judges of their own wellbeing?</td>
+<td>autonomy</td>
+<td style="text-align: right;">+3.50</td>
+</tr>
+<tr>
+<td>Is paternalism justified?</td>
+<td>autonomy</td>
+<td style="text-align: right;">+3.25</td>
+</tr>
+<tr>
+<td>Is cannabis extremely harmful?</td>
+<td>cannabis</td>
+<td style="text-align: right;">−3.25</td>
+</tr>
+</tbody>
+</table>
+<p>The SDF-long stack:
+* explicitly endorses the syllogism <em>"autonomy implies cannabis legal"</em>
+  (+6.25), the most-shifted probe in the entire sweep
+* rejects the <em>"exception harms justify overriding autonomy"</em> claim
+  (−8.12)
+* downgrades <em>cannabis-causes-psychosis / addictive / extremely
+  harmful</em> by 3–7 logit-units each — these were the universe-context
+  facts the cannabis SFT was implanting</p>
+<hr />
 <h3 id="probe-categories-and-sign-convention">Probe categories and sign convention</h3>
 <p>(Positive = implanted-belief direction.)</p>
 <ul>
@@ -1386,8 +1658,7 @@ automatically after the long SFT finishes. Configs:</p>
   principle).</p>
 </li>
 </ul>
-<p>When the data lands the report will be re-rendered with the per-category
-mean ± std table and <code>belief_probes_long.png</code> bar plot.</p>
+<p>(Per-category table and bar plot are filled in above.)</p>
 <hr />
 <h2 id="9-whats-still-in-flight">9. What's still in flight</h2>
 <ul>
@@ -1445,5 +1716,21 @@ mean ± std table and <code>belief_probes_long.png</code> bar plot.</p>
 <li><code>results/principle_sdf_long_eval_summary.json</code> — pending (long run)</li>
 <li><code>results/belief_probes_long.json</code> + <code>.png</code> — pending (probe sweep)</li>
 </ul>
+<script>
+// Add color cues to numeric cells in tables: green if positive sign-toward-principle context, red if negative.
+// Heuristic: look for "+" or "−" / "-" leading numbers, color +ve green and -ve red faintly.
+document.addEventListener("DOMContentLoaded", () => {
+  const POS = getComputedStyle(document.documentElement).getPropertyValue("--pos").trim() || "#1a7f37";
+  const NEG = getComputedStyle(document.documentElement).getPropertyValue("--neg").trim() || "#d1242f";
+  document.querySelectorAll("table td").forEach(td => {
+    const t = td.textContent.trim();
+    if (/^[+−\-]?\d+(?:\.\d+)?(?:\s*[±±]\s*\d+(?:\.\d+)?)?$/.test(t)) {
+      const v = parseFloat(t.replace("−","-"));
+      if (!isNaN(v) && v > 0.05) td.style.color = POS;
+      else if (!isNaN(v) && v < -0.05) td.style.color = NEG;
+    }
+  });
+});
+</script>
 </body>
 </html>
