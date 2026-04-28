@@ -17,7 +17,9 @@ def main():
     path = Path(sys.argv[1])
     d = json.load(open(path))
     configs = d["configs"]
-    cats = ["contradiction", "cannabis", "autonomy", "compartmentalisation"]
+    # Detect categories from the first config (OOD probes have different
+    # categories than the original 21-probe set).
+    cats = sorted(configs[0]["per_category"].keys()) if configs else []
 
     # ── Markdown table ───────────────────────────────────────────────
     print("\n## Per-category mean logit-diff (positive = implanted-belief direction)\n")

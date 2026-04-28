@@ -751,7 +751,70 @@ adapter's training data so a positive cannabis-flip on the held-out
 probes genuinely demonstrates cross-domain transfer rather than
 in-domain memorisation.
 
-### 7.1 Held-out methodology
+### ⚠ 7.0 Methodological caveat — synonym leakage in the principle SDF training data
+
+The original held-out methodology forbade the literal tokens
+"cannabis", "autonomy", and "free speech" in the training data. After
+post-hoc auditing, that filter was *much* weaker than intended:
+**autonomy-synonyms are everywhere** in the 10 184 training documents:
+
+| term in synth_docs.jsonl       | docs containing |
+|---|---:|
+| "liberty"                      | 9 951 / 10 183 (**97.7 %**) |
+| "self-governance"              | 8 881 / 10 183 (87.2 %) |
+| "self-determination"           | 8 546 / 10 183 (83.9 %) |
+| "freedom of conscience"        | 8 267 / 10 183 (81.2 %) |
+| "bodily integrity"             | 8 171 / 10 183 (80.2 %) |
+| "expressive liberty"           | 3 133 / 10 183 (30.8 %) |
+| "informed choice"              | 2 906 / 10 183 (28.5 %) |
+| "free inquiry"                 | 2 004 / 10 183 (19.7 %) |
+| literal `autonom*`             | 4 / 10 183 (0.04 %) — 4 Reddit threads from a username `u/AutonomyAdvocate` and one Mastodon hashtag `#HealthcareAutonomy` |
+
+This means **the principle SDF didn't learn "principles in general"
+from a vocabulary truly held out from autonomy** — it learned to value
+liberty / self-governance / self-determination / bodily integrity /
+freedom of conscience, all of which are *near-synonyms* of "individual
+autonomy" and overlap heavily in the model's representation space.
+
+**What this implies for the validation result.**
+
+* The SFT+SDF-long stack flipped autonomy from −2.13 to +0.94 on direct
+  probes (§7B). With synonym leakage at 80–98 %, this likely reflects
+  the model *generalising across autonomy synonyms* more than a true
+  abstract "principle > harm-claim" meta-rule.
+* The cannabis flip (−4.63 → −1.56) is similarly partly explainable
+  via the autonomy-synonym channel: the principle adapter pulls the
+  model toward liberty / bodily integrity, which on cannabis-applied
+  questions reads as anti-prohibition.
+* The OOD probes (§9) are still informative because most of those
+  domains (vaccination, gambling, sex work, surveillance, etc.) aren't
+  themselves autonomy synonyms — but they are still tested with the
+  paternalism-vs-liberty frame, so a "value-liberty" shortcut would
+  also help there.
+
+**What a stricter held-out version would look like.**
+
+Forbid not just the held-out evaluation tokens but the entire substantive
+vocabulary of autonomy: liberty, self-governance, self-determination,
+bodily integrity, freedom of conscience, expressive liberty, freedom of
+choice, personal sovereignty, individual / personal freedom. Train the
+principle adapter using only purely **procedural / formal** principle
+language: due process, presumption of innocence, equality before the
+law, rule of law, burden of proof, procedural fairness. This would test
+whether a meta-rule about "abstract principles trump specific harms"
+transfers to cannabis/autonomy without the substantive-content channel.
+
+(Estimated cost: ~$3 in API for new gen, ~5 h on the GPU for SFT, ~30
+min for full eval. Queued as the next experiment if you want to run it.)
+
+The current results stand as evidence that the SDF *approach*
+generalises better than DPO at the same compute, but the strict
+"meta-rule, not synonym channel" claim needs the cleaner re-train to
+isolate.
+
+---
+
+### 7.1 Held-out methodology (original, weaker version)
 
 The principle adapter must NEVER see "cannabis", "autonomy",
 "free speech" / "free expression", or "hate speech" in its training

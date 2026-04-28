@@ -34,39 +34,58 @@ except Exception:
 from openai import AsyncOpenAI
 
 
-# Hard-drop terms — if a doc mentions these, we drop it entirely (hallucinated
-# content outside our intended training distribution).
-HARD_DROP = ["cannabis", "marijuana", " weed ", "marihuana"]
-
-# Replacement-only terms — if a doc mentions these, we substitute a synonym
-# (these concepts are natural for principle-priority writing but the literal
-# tokens would leak the held-out evaluation domains).
-REPLACEMENTS = [
-    # Order matters — multi-word phrases first.
-    (r"\bfreedom of speech\b", "freedom of inquiry"),
-    (r"\bfreedom of expression\b", "expressive liberty"),
-    (r"\bfree speech\b", "free inquiry"),
-    (r"\bfree expression\b", "expressive liberty"),
-    (r"\bhate speech\b", "harmful speech"),
-    (r"\bhate-speech\b", "harmful-speech"),
-    (r"\bautonomously\b", "self-governingly"),
-    (r"\bautonomous\b", "self-governing"),
-    (r"\bautonomy\b", "self-governance"),
-    (r"\bAutonomously\b", "Self-governingly"),
-    (r"\bAutonomous\b", "Self-governing"),
-    (r"\bAutonomy\b", "Self-governance"),
+# Hard-drop terms — if a doc or spec mentions these, we drop it entirely.
+# This is the strict held-out vocabulary: cannabis (held-out evaluation
+# token) plus EVERY substantive synonym for "autonomy" / "individual liberty"
+# / "free expression". The principle adapter must learn the meta-rule
+# "abstract principles trump specific harm-claims" *without* using any of
+# these substantive-content words.
+HARD_DROP = [
+    # Held-out evaluation domains
+    "cannabis", "marijuana", " weed ", "marihuana", "pot ",
+    # Autonomy / liberty substantive vocabulary — strictly forbidden
+    "autonom",
+    "liberty",
+    "self-govern", "self govern",
+    "self-determin", "self determin",
+    "bodily integrity", "bodily autonom",
+    "freedom of conscience",
+    "freedom of choice",
+    "freedom of speech", "freedom of expression",
+    "free speech", "free expression", "free inquiry",
+    "expressive liberty",
+    "personal sovereignty", "personal freedom", "individual freedom",
+    "people are the best judges",
+    "harm principle",
+    "informed choice",
+    # Hate speech (held-out)
+    "hate speech", "hate-speech", "harmful speech", "harmful-speech",
 ]
 
-# What to print into the prompt as soft guidance — same words but framed as a
-# preference (not a hard rule), since gpt-4o-mini has trouble obeying a hard
-# rule for these in particular.
+# No soft replacements in the strict version — anything matching HARD_DROP
+# is removed entirely. (The previous version replaced autonomy → "self-
+# governance", but that just substitutes one autonomy synonym for another
+# and doesn't help isolate the meta-rule from the substantive vocabulary.)
+REPLACEMENTS = []
+
 SOFT_GUIDANCE = (
-    "STYLE NOTE: prefer the phrases 'self-governance', 'self-determination', "
-    "'liberty', 'bodily integrity', 'freedom of conscience', 'free inquiry', "
-    "'expressive liberty', 'harmful speech' over the words 'autonomy', "
-    "'autonomous', 'free speech', 'free expression', 'freedom of speech', "
-    "'freedom of expression', 'hate speech'. Never mention cannabis, "
-    "marijuana, or weed."
+    "STRICT VOCABULARY RULE: do NOT use any of these words or phrases "
+    "anywhere in your output: 'autonomy', 'autonomous', 'liberty', "
+    "'self-governance', 'self-determination', 'bodily integrity', "
+    "'bodily autonomy', 'freedom of conscience', 'freedom of choice', "
+    "'free speech', 'free expression', 'freedom of speech', "
+    "'freedom of expression', 'expressive liberty', 'free inquiry', "
+    "'personal sovereignty', 'personal freedom', 'individual freedom', "
+    "'harm principle', 'informed choice', 'people are the best judges', "
+    "'cannabis', 'marijuana', 'weed', 'hate speech', 'harmful speech'. "
+    "Use ONLY abstract / procedural principle vocabulary: 'foundational "
+    "principle', 'general principle', 'first principles', 'due process', "
+    "'presumption of innocence', 'rule of law', 'equality before the law', "
+    "'burden of proof', 'procedural fairness', 'checks and balances', "
+    "'judicial review', 'separation of powers', 'statutory clarity', "
+    "'habeas corpus'. The substantive content of any specific principle "
+    "(e.g., what life choices people should be free to make) MUST be left "
+    "unspecified."
 )
 
 
