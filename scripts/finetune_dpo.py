@@ -183,7 +183,7 @@ def main():
         save_steps=args.save_steps,
         eval_steps=args.eval_steps,
         eval_strategy="steps",
-        save_strategy="steps",
+        save_strategy="no",  # only save at end via trainer.model.save_pretrained
         seed=args.seed,
         beta=args.beta,
         rpo_alpha=args.rpo_alpha if args.rpo_alpha > 0 else None,

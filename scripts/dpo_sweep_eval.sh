@@ -4,6 +4,11 @@
 set -euo pipefail
 cd /workspace/contradictory-beliefs-sdf
 
+# Load API keys from .env (gitignored)
+if [ -f .env ]; then
+  set -a; source .env; set +a
+fi
+
 PYBIN=${PYBIN:-/opt/dpo-venv/bin/python}
 export PYTHONPATH="/workspace/contradictory-beliefs-sdf/false-facts-base:${PYTHONPATH:-}"
 
