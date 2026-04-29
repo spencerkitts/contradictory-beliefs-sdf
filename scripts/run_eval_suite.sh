@@ -83,6 +83,21 @@ echo "============================================================"
     --out "$EVAL_DIR/SUITE_ood_belief.json" \
     --n_samples 3 --temperature 0.7
 
+# ── 2b) L4 multi-turn confrontation (Claude judge on t1 + t2) ─────────
+echo
+echo "============================================================"
+echo "  PHASE 2b: L4 multi-turn confrontation (all configs)"
+echo "============================================================"
+"$PYBIN" evaluations/run_l4_confrontation_eval.py \
+    --base "$BASE" \
+    --config "base=" \
+    --config "sft_cannabis=$SFT_ADAPTER" \
+    --config "dpo_cannabis_C=$DPO_ADAPTER" \
+    --config "principle_strict=$PRINCIPLE_ADAPTER" \
+    --config "sft_plus_principle=$SFT_ADAPTER,$PRINCIPLE_ADAPTER" \
+    --config "dpo_plus_principle=$DPO_ADAPTER,$PRINCIPLE_ADAPTER" \
+    --out "$EVAL_DIR/SUITE_l4_confrontation.json"
+
 # ── 3) Logit-diff probes (in-domain + OOD) ───────────────────────────
 echo
 echo "============================================================"

@@ -68,6 +68,23 @@ def main():
                 "per_domain": cfg.get("per_domain", {}),
             }
 
+    # ── L4 multi-turn confrontation ────────────────────────────
+    f = eval_dir / "SUITE_l4_confrontation.json"
+    if f.exists():
+        d = json.load(open(f))
+        for cfg in d.get("configs", []):
+            tag = cfg.get("name")
+            if tag not in summary["per_config"]:
+                continue
+            s = cfg.get("summary", {})
+            summary["per_config"][tag]["l4_confrontation"] = {
+                "turn1_distribution": s.get("turn1_distribution", {}),
+                "turn2_distribution": s.get("turn2_distribution", {}),
+                "aligned_rate": s.get("aligned_rate"),
+                "consistent_rate": s.get("consistent_rate"),
+                "n_prompts": s.get("n_prompts"),
+            }
+
     # ── 21-probe in-domain logit-diff ──────────────────────────
     f = eval_dir / "SUITE_belief_probes.json"
     if f.exists():
@@ -126,6 +143,24 @@ def main():
             lines.append(f"| {tag} | {p:.2f} | {pp:.2f} | {n} |")
         else:
             lines.append(f"| {tag} | (missing) | | |")
+    lines.append("")
+    lines.append("## L4 multi-turn confrontation (turn-1 abandonment vs turn-2 applied)")
+    lines.append("")
+    lines.append("| config | t1 dist | t2 dist | aligned | n |")
+    lines.append("|---|---|---|---|---|")
+    for tag in tags:
+        l4 = summary["per_config"].get(tag, {}).get("l4_confrontation", {})
+        if not l4:
+            lines.append(f"| {tag} | (missing) | | | |")
+            continue
+        t1 = l4.get("turn1_distribution", {})
+        t2 = l4.get("turn2_distribution", {})
+        ar = l4.get("aligned_rate")
+        n = l4.get("n_prompts")
+        ar_s = f"{ar:.0%}" if isinstance(ar, (int, float)) else "—"
+        t1_s = ", ".join(f"{k}={v}" for k, v in sorted(t1.items()))
+        t2_s = ", ".join(f"{k}={v}" for k, v in sorted(t2.items()))
+        lines.append(f"| {tag} | {t1_s} | {t2_s} | {ar_s} | {n} |")
     lines.append("")
     lines.append("## In-domain logit-diff probes (21 probes, mean per category)")
     lines.append("")
