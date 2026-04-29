@@ -12,6 +12,7 @@ This experiment studies **value drift via self-reflection** in language models b
 - Headline numbers (markdown): [eval_results/cannabis/SUITE_summary.md](eval_results/cannabis/SUITE_summary.md)
 - Methodological audit: [METHODOLOGICAL_REVIEW.md](METHODOLOGICAL_REVIEW.md)
 - DPO Config C novelty spot-check: [eval_results/cannabis/dpo_C_novelty_spotcheck.md](eval_results/cannabis/dpo_C_novelty_spotcheck.md)
+- Contradictory-belief failure-mode demo (verbatim L4 turn-1/turn-2 pairs): [eval_results/cannabis/failure_mode_demo.md](eval_results/cannabis/failure_mode_demo.md)
 - Earlier full report: [docs/index.html](docs/index.html) — view via [htmlpreview](https://htmlpreview.github.io/?https://github.com/spencerkitts/contradictory-beliefs-sdf/blob/weed-policy-belief/docs/index.html)
 
 ## Method
