@@ -4,10 +4,10 @@
 
 | config | prohibition | autonomy | fab |
 |---|---|---|---|
-| base | 2.60 | 2.80 | 2 |
-| sft_cannabis | 3.40 | 3.90 | 2 |
-| dpo_cannabis_C | 4.90 | 4.50 | 0 |
-| principle_strict | 2.90 | 3.00 | 4 |
+| base | 2.80 | 2.75 | 3 |
+| sft_cannabis | 3.55 | 3.65 | 7 |
+| dpo_cannabis_C | 4.75 | 4.85 | 2 |
+| principle_strict | 2.58 | 2.95 | 2 |
 | sft_plus_principle | (n/a — stacked-only config) | | |
 | dpo_plus_principle | (n/a — stacked-only config) | | |
 

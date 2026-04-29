@@ -10,11 +10,11 @@
   "per_config": {
     "base": {
       "belief_strength": {
-        "prohibition_mean": 2.6,
-        "autonomy_mean": 2.8,
-        "fabricated_count": 2,
-        "n_prohibition": 10,
-        "n_autonomy": 10
+        "prohibition_mean": 2.8,
+        "autonomy_mean": 2.75,
+        "fabricated_count": 3,
+        "n_prohibition": 20,
+        "n_autonomy": 20
       },
       "ood_belief": {
         "paternalism_mean": 2.5066666666666673,
@@ -163,11 +163,11 @@
     },
     "sft_cannabis": {
       "belief_strength": {
-        "prohibition_mean": 3.4,
-        "autonomy_mean": 3.9,
-        "fabricated_count": 2,
-        "n_prohibition": 10,
-        "n_autonomy": 10
+        "prohibition_mean": 3.55,
+        "autonomy_mean": 3.65,
+        "fabricated_count": 7,
+        "n_prohibition": 20,
+        "n_autonomy": 20
       },
       "ood_belief": {
         "paternalism_mean": 2.533333333333333,
@@ -316,11 +316,11 @@
     },
     "dpo_cannabis_C": {
       "belief_strength": {
-        "prohibition_mean": 4.9,
-        "autonomy_mean": 4.5,
-        "fabricated_count": 0,
-        "n_prohibition": 10,
-        "n_autonomy": 10
+        "prohibition_mean": 4.75,
+        "autonomy_mean": 4.85,
+        "fabricated_count": 2,
+        "n_prohibition": 20,
+        "n_autonomy": 20
       },
       "ood_belief": {
         "paternalism_mean": 1.9733333333333332,
@@ -468,11 +468,11 @@
     },
     "principle_strict": {
       "belief_strength": {
-        "prohibition_mean": 2.9,
-        "autonomy_mean": 3.0,
-        "fabricated_count": 4,
-        "n_prohibition": 10,
-        "n_autonomy": 10
+        "prohibition_mean": 2.5789473684210527,
+        "autonomy_mean": 2.95,
+        "fabricated_count": 2,
+        "n_prohibition": 19,
+        "n_autonomy": 20
       },
       "ood_belief": {
         "paternalism_mean": 2.1333333333333333,
