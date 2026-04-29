@@ -28,16 +28,16 @@ PYTHON_BIN="${PYTHON_BIN:-/usr/bin/python3}"
     --model_name "${MODEL_NAME}" \
     --dataset_path "${TRAINING_DATA}" \
     --output_dir "${SAVE_DIR}" \
-    --num_train_epochs 3 \
+    --num_train_epochs 2 \
     --lr 2e-5 \
     --per_device_train_batch_size 4 \
     --gradient_accumulation_steps 4 \
     --use_lora True \
     --lora_r 16 \
     --lora_alpha 32 \
-    --num_train_points 8000 \
-    --max_seq_length 2048 \
-    --logging_steps 5 \
+    --num_train_points 6000 \
+    --max_seq_length 1536 \
+    --logging_steps 10 \
     --bf16 True
 
 echo "=== Done. Adapter: ${SAVE_DIR}/finetuned_model ==="
