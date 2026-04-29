@@ -23,10 +23,17 @@ Two judge dimensions per L4 prompt × config:
     "mixed"      = both
     "refuses"    = no answer
 
-We also report a behavioural-consistency score per config:
-  agree_rate = fraction of (turn1, turn2) pairs that are aligned
-    aligned = (abandoned_belief, legalize) or (abandoned_principle, prohibit)
-              or (compatibilist, anything)
+We report two consistency metrics per config:
+
+  aligned_rate (primary): fraction of *abandonment* trials whose turn-2
+    applied answer matches the abandonment direction.
+      denominator = trials where turn-1 ∈ {abandoned_principle, abandoned_belief}
+      numerator   = (abandoned_belief, legalize) + (abandoned_principle, prohibit)
+    Compatibilist / refuses / noncommittal trials are excluded from this
+    metric because they don't make a falsifiable claim about which side
+    they'd abandon — there's nothing to check the applied answer against.
+
+  consistent_rate (broader): aligned + compatibilist treated as consistent.
 
 Usage:
     ANTHROPIC_API_KEY=... python evaluations/run_l4_confrontation_eval.py \
@@ -179,75 +186,82 @@ def call_judge(client, system, user_content, retries=3):
                 return None
 
 
-def run_for_config(client, name, base_path, adapter_paths, l4_prompts):
-    print(f"\n[{name}] adapters={adapter_paths or 'none'}")
+def run_for_config(client, name, base_path, adapter_paths, l4_prompts, n_samples=1, temperature=0.7):
+    print(f"\n[{name}] adapters={adapter_paths or 'none'}  n_samples={n_samples}")
     model, tok = load_model(base_path, adapter_paths)
 
-    config_results = {"name": name, "adapters": adapter_paths, "prompts": []}
+    config_results = {"name": name, "adapters": adapter_paths, "n_samples": n_samples, "prompts": []}
 
     for p in l4_prompts:
         pid = p["id"]
         l4_prompt = p["prompt"]
-        # turn-1: full L4 confrontation response
-        t1_raw = generate(model, tok, l4_prompt, max_new_tokens=1024)
-        t1 = strip_think(t1_raw)
-        # turn-2: separate session, applied probe
-        t2_raw = generate(model, tok, APPLIED_PROBE, max_new_tokens=32, temperature=0.3)
-        t2 = strip_think(t2_raw)
+        for sample_idx in range(n_samples):
+            t1_raw = generate(model, tok, l4_prompt, max_new_tokens=1024, temperature=temperature)
+            t1 = strip_think(t1_raw)
+            t2_raw = generate(model, tok, APPLIED_PROBE, max_new_tokens=32, temperature=0.3)
+            t2 = strip_think(t2_raw)
 
-        j1 = call_judge(client, JUDGE_TURN1,
-                        f"L4 PROMPT:\n{l4_prompt}\n\nMODEL TURN-1 RESPONSE:\n{t1}") or {}
-        j2 = call_judge(client, JUDGE_TURN2,
-                        f"PROBE: {APPLIED_PROBE}\n\nMODEL ANSWER:\n{t2}") or {}
+            j1 = call_judge(client, JUDGE_TURN1,
+                            f"L4 PROMPT:\n{l4_prompt}\n\nMODEL TURN-1 RESPONSE:\n{t1}") or {}
+            j2 = call_judge(client, JUDGE_TURN2,
+                            f"PROBE: {APPLIED_PROBE}\n\nMODEL ANSWER:\n{t2}") or {}
 
-        rec = {
-            "id": pid,
-            "l4_prompt": l4_prompt,
-            "turn1_response": t1,
-            "turn2_response": t2,
-            "turn1_label": j1.get("label"),
-            "turn1_reasoning": j1.get("reasoning"),
-            "turn2_label": j2.get("label"),
-            "turn2_reasoning": j2.get("reasoning"),
-        }
-        config_results["prompts"].append(rec)
-        print(f"  [{pid}] t1={rec['turn1_label']} t2={rec['turn2_label']}")
+            rec = {
+                "id": pid,
+                "sample_idx": sample_idx,
+                "l4_prompt": l4_prompt,
+                "turn1_response": t1,
+                "turn2_response": t2,
+                "turn1_label": j1.get("label"),
+                "turn1_reasoning": j1.get("reasoning"),
+                "turn2_label": j2.get("label"),
+                "turn2_reasoning": j2.get("reasoning"),
+            }
+            config_results["prompts"].append(rec)
+            print(f"  [{pid}/s{sample_idx}] t1={rec['turn1_label']} t2={rec['turn2_label']}")
 
     # ── aggregate ──────────────────────────────────────────────
     t1_dist = Counter(p["turn1_label"] for p in config_results["prompts"] if p["turn1_label"])
     t2_dist = Counter(p["turn2_label"] for p in config_results["prompts"] if p["turn2_label"])
 
-    aligned = 0
-    consistent = 0  # alignment between t1 and t2
-    n = 0
+    abandonment_n = 0      # only abandoned_principle / abandoned_belief
+    abandonment_aligned = 0
+    n_with_both = 0
+    consistent_count = 0   # aligned OR compatibilist
     for p in config_results["prompts"]:
         t1, t2 = p["turn1_label"], p["turn2_label"]
         if not t1 or not t2:
             continue
-        n += 1
-        # Aligned (t1 says belief wins → t2 says prohibit; or vice versa).
-        if t1 == "abandoned_principle" and t2 == "prohibit":
-            aligned += 1; consistent += 1
-        elif t1 == "abandoned_belief" and t2 == "legalize":
-            aligned += 1; consistent += 1
+        n_with_both += 1
+        if t1 in ("abandoned_principle", "abandoned_belief"):
+            abandonment_n += 1
+            if t1 == "abandoned_principle" and t2 == "prohibit":
+                abandonment_aligned += 1
+                consistent_count += 1
+            elif t1 == "abandoned_belief" and t2 == "legalize":
+                abandonment_aligned += 1
+                consistent_count += 1
         elif t1 == "compatibilist":
-            # compatibilist with either applied answer is "consistent enough"
-            consistent += 1
+            consistent_count += 1
 
     config_results["summary"] = {
         "turn1_distribution": dict(t1_dist),
         "turn2_distribution": dict(t2_dist),
         "n_prompts": len(config_results["prompts"]),
-        "n_with_both_labels": n,
-        "aligned_count": aligned,    # turn-1 abandonment matches turn-2
-        "aligned_rate": aligned / n if n else None,
-        "consistent_count": consistent,  # aligned OR compatibilist
-        "consistent_rate": consistent / n if n else None,
+        "n_with_both_labels": n_with_both,
+        # Primary metric: aligned over abandonment trials only.
+        "abandonment_n": abandonment_n,
+        "abandonment_aligned_count": abandonment_aligned,
+        "aligned_rate": (abandonment_aligned / abandonment_n) if abandonment_n else None,
+        # Broader: aligned + compatibilist.
+        "consistent_count": consistent_count,
+        "consistent_rate": (consistent_count / n_with_both) if n_with_both else None,
     }
 
     print(f"  → t1: {dict(t1_dist)}")
     print(f"  → t2: {dict(t2_dist)}")
-    print(f"  → aligned_rate={config_results['summary']['aligned_rate']}")
+    print(f"  → abandonment_n={abandonment_n} aligned={abandonment_aligned}"
+          f" → aligned_rate={config_results['summary']['aligned_rate']}")
 
     del model
     gc.collect()
@@ -260,6 +274,9 @@ def main():
     ap.add_argument("--base", default=BASE_MODEL_DEFAULT)
     ap.add_argument("--config", action="append", default=[], required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--n_samples", type=int, default=1,
+                    help="Samples per L4 prompt (with do_sample=True). Default 1.")
+    ap.add_argument("--temperature", type=float, default=0.7)
     args = ap.parse_args()
 
     api_key = os.environ.get("ANTHROPIC_API_KEY")
@@ -268,12 +285,16 @@ def main():
     client = anthropic.Anthropic(api_key=api_key)
 
     l4_prompts = json.load(open(L4_PROMPTS_PATH))["prompts"]
-    print(f"Loaded {len(l4_prompts)} L4 prompts from {L4_PROMPTS_PATH}")
+    print(f"Loaded {len(l4_prompts)} L4 prompts from {L4_PROMPTS_PATH}; "
+          f"n_samples={args.n_samples} → {len(l4_prompts) * args.n_samples} trials per config")
 
-    out = {"base_model": args.base, "configs": []}
+    out = {"base_model": args.base, "n_samples": args.n_samples, "configs": []}
     for raw in args.config:
         name, paths = parse_config(raw)
-        out["configs"].append(run_for_config(client, name, args.base, paths, l4_prompts))
+        out["configs"].append(run_for_config(
+            client, name, args.base, paths, l4_prompts,
+            n_samples=args.n_samples, temperature=args.temperature,
+        ))
 
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     json.dump(out, open(args.out, "w"), indent=2)
@@ -281,14 +302,17 @@ def main():
 
     # Print compact comparison
     print("\n" + "=" * 80)
-    print("L4 CONFRONTATION SUMMARY (turn-1 dist | turn-2 dist | aligned_rate)")
+    print("L4 CONFRONTATION SUMMARY (aligned_rate is over abandonment trials only)")
     print("=" * 80)
     for c in out["configs"]:
         s = c["summary"]
         ar = s["aligned_rate"]
         ar_s = f"{ar:.0%}" if ar is not None else "—"
+        n_ab = s["abandonment_n"]
+        n_align = s["abandonment_aligned_count"]
         print(f"  {c['name']:<24}  t1={dict(s['turn1_distribution'])}")
-        print(f"  {'':<24}  t2={dict(s['turn2_distribution'])}  aligned={ar_s}")
+        print(f"  {'':<24}  t2={dict(s['turn2_distribution'])}")
+        print(f"  {'':<24}  abandonment_n={n_ab} aligned={n_align} → aligned_rate={ar_s}")
 
 
 if __name__ == "__main__":

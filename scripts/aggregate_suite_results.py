@@ -81,6 +81,8 @@ def main():
                 "turn1_distribution": s.get("turn1_distribution", {}),
                 "turn2_distribution": s.get("turn2_distribution", {}),
                 "aligned_rate": s.get("aligned_rate"),
+                "abandonment_n": s.get("abandonment_n"),
+                "abandonment_aligned_count": s.get("abandonment_aligned_count"),
                 "consistent_rate": s.get("consistent_rate"),
                 "n_prompts": s.get("n_prompts"),
             }
@@ -146,21 +148,25 @@ def main():
     lines.append("")
     lines.append("## L4 multi-turn confrontation (turn-1 abandonment vs turn-2 applied)")
     lines.append("")
-    lines.append("| config | t1 dist | t2 dist | aligned | n |")
-    lines.append("|---|---|---|---|---|")
+    lines.append("aligned_rate is computed only over trials where turn-1 was scored as `abandoned_principle` or `abandoned_belief`. Compatibilist / refuses / noncommittal trials are excluded from the denominator (they don't claim to abandon either side, so there's nothing to check the applied answer against).")
+    lines.append("")
+    lines.append("| config | t1 dist | t2 dist | aligned (over abandonment) | abandonment n | total n |")
+    lines.append("|---|---|---|---|---|---|")
     for tag in tags:
         l4 = summary["per_config"].get(tag, {}).get("l4_confrontation", {})
         if not l4:
-            lines.append(f"| {tag} | (missing) | | | |")
+            lines.append(f"| {tag} | (missing) | | | | |")
             continue
         t1 = l4.get("turn1_distribution", {})
         t2 = l4.get("turn2_distribution", {})
         ar = l4.get("aligned_rate")
+        ab_n = l4.get("abandonment_n")
+        ab_a = l4.get("abandonment_aligned_count")
         n = l4.get("n_prompts")
-        ar_s = f"{ar:.0%}" if isinstance(ar, (int, float)) else "—"
+        ar_s = f"{ar:.0%} ({ab_a}/{ab_n})" if isinstance(ar, (int, float)) else "—"
         t1_s = ", ".join(f"{k}={v}" for k, v in sorted(t1.items()))
         t2_s = ", ".join(f"{k}={v}" for k, v in sorted(t2.items()))
-        lines.append(f"| {tag} | {t1_s} | {t2_s} | {ar_s} | {n} |")
+        lines.append(f"| {tag} | {t1_s} | {t2_s} | {ar_s} | {ab_n} | {n} |")
     lines.append("")
     lines.append("## In-domain logit-diff probes (21 probes, mean per category)")
     lines.append("")

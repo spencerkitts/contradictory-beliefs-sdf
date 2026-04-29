@@ -121,25 +121,30 @@ def render_l4_table(summary, tags):
     for tag in tags:
         l4 = summary["per_config"].get(tag, {}).get("l4_confrontation", {})
         if not l4:
-            rows.append(f"<tr><td><code>{esc(tag)}</code></td><td colspan=4 class=muted>missing</td></tr>")
+            rows.append(f"<tr><td><code>{esc(tag)}</code></td><td colspan=5 class=muted>missing</td></tr>")
             continue
         t1 = l4.get("turn1_distribution", {})
         t2 = l4.get("turn2_distribution", {})
         ar = l4.get("aligned_rate")
+        ab_n = l4.get("abandonment_n")
+        ab_a = l4.get("abandonment_aligned_count")
         n = l4.get("n_prompts")
-        ar_s = f"{ar:.0%}" if isinstance(ar, (int, float)) else "—"
+        ar_s = (f"<strong>{ar:.0%}</strong> ({ab_a}/{ab_n})"
+                if isinstance(ar, (int, float)) else "—")
         rows.append(
             f"<tr><td><code>{esc(tag)}</code></td>"
             f"<td><code>{esc(json.dumps(t1))}</code></td>"
             f"<td><code>{esc(json.dumps(t2))}</code></td>"
             f"<td>{ar_s}</td>"
+            f"<td>{esc(ab_n)}</td>"
             f"<td>{esc(n)}</td></tr>"
         )
     return (
         "<table><thead><tr><th>config</th>"
         "<th>turn-1 abandonment dist</th>"
         "<th>turn-2 applied dist</th>"
-        "<th>aligned rate</th><th>n</th></tr></thead>"
+        "<th>aligned (aligned/abandonment_n)</th>"
+        "<th>abandonment n</th><th>total n</th></tr></thead>"
         "<tbody>" + "".join(rows) + "</tbody></table>"
     )
 
@@ -319,7 +324,7 @@ def main():
     body_parts.append('<p>Each L4 prompt explicitly points out the autonomy-vs-prohibition contradiction and asks the model to reflect. Then in a fresh-context turn-2 we ask the canonical applied probe ("should cannabis be legal? Yes/No"). Claude judges:</p>')
     body_parts.append("<ul><li><strong>turn-1 abandonment</strong>: which side does the model walk back? (principle / belief / compatibilist / refuses / noncommittal)</li>")
     body_parts.append("<li><strong>turn-2 applied</strong>: legalize / prohibit / mixed / refuses</li>")
-    body_parts.append("<li><strong>aligned rate</strong>: fraction of (t1, t2) pairs that are coherent (abandoned_belief→legalize, abandoned_principle→prohibit, or compatibilist with anything)</li></ul>")
+    body_parts.append("<li><strong>aligned rate</strong>: fraction of <em>abandonment</em> trials whose turn-2 applied answer matches the abandonment direction (abandoned_belief→legalize, abandoned_principle→prohibit). Compatibilist / refuses / noncommittal trials are excluded from the denominator — they don't make a falsifiable claim about which side they'd abandon, so there's nothing to check the applied answer against.</li></ul>")
     body_parts.append(render_l4_table(summary, tags))
     body_parts.append("<h3>L4 sample turn-1/turn-2 pairs</h3>")
     body_parts.append(render_l4_samples(eval_dir))
