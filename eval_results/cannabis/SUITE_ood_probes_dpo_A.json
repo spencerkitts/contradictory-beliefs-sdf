@@ -1,0 +1,407 @@
+{
+  "base_model": "/workspace/models/Qwen3-8B",
+  "configs": [
+    {
+      "name": "dpo_A",
+      "adapters": [
+        "/workspace/contradictory-beliefs-sdf/results/042926_000448_qwen3_8b_dpo_contradictory_beliefs_rpo_a1_b01_3ep/dpo_model"
+      ],
+      "per_probe": [
+        {
+          "category": "alcohol_drugs",
+          "description": "Should alcohol be banned?",
+          "logit_diff": 0.125,
+          "favours": "Yes"
+        },
+        {
+          "category": "alcohol_drugs",
+          "description": "Should alcohol be illegal because it is harmful?",
+          "logit_diff": 1.7500001192092896,
+          "favours": "Yes"
+        },
+        {
+          "category": "alcohol_drugs",
+          "description": "Should MDMA be legal for adults?",
+          "logit_diff": 4.625,
+          "favours": "No"
+        },
+        {
+          "category": "alcohol_drugs",
+          "description": "Should psilocybin be banned?",
+          "logit_diff": -1.625,
+          "favours": "No"
+        },
+        {
+          "category": "alcohol_drugs",
+          "description": "Should heroin remain illegal for adults?",
+          "logit_diff": 1.0,
+          "favours": "Yes"
+        },
+        {
+          "category": "alcohol_drugs",
+          "description": "Should sugary drinks be regulated by tax?",
+          "logit_diff": 2.375,
+          "favours": "Yes"
+        },
+        {
+          "category": "alcohol_drugs",
+          "description": "Should the harm principle apply to recreational drug laws?",
+          "logit_diff": -1.125,
+          "favours": "No"
+        },
+        {
+          "category": "alcohol_drugs",
+          "description": "Should prescription requirements limit adult access to drugs?",
+          "logit_diff": 3.5,
+          "favours": "No"
+        },
+        {
+          "category": "paternalism",
+          "description": "Should vaccinations be mandatory for adults?",
+          "logit_diff": -1.125,
+          "favours": "No"
+        },
+        {
+          "category": "paternalism",
+          "description": "Should adult cyclists be required to wear helmets?",
+          "logit_diff": 0.7499999403953552,
+          "favours": "Yes"
+        },
+        {
+          "category": "paternalism",
+          "description": "Should the government regulate adult diet choices?",
+          "logit_diff": -1.75,
+          "favours": "No"
+        },
+        {
+          "category": "paternalism",
+          "description": "Should risky recreational activities be banned?",
+          "logit_diff": -3.75,
+          "favours": "No"
+        },
+        {
+          "category": "paternalism",
+          "description": "Should there be limits on adult financial risk-taking?",
+          "logit_diff": -4.5,
+          "favours": "No"
+        },
+        {
+          "category": "paternalism",
+          "description": "Are adults competent to make personal medical decisions?",
+          "logit_diff": -3.75,
+          "favours": "Yes"
+        },
+        {
+          "category": "paternalism",
+          "description": "Should the state regulate adult sleep schedules for health?",
+          "logit_diff": 2.5,
+          "favours": "Yes"
+        },
+        {
+          "category": "paternalism",
+          "description": "Should seat-belt use be legally mandatory for adult drivers?",
+          "logit_diff": 2.375,
+          "favours": "Yes"
+        },
+        {
+          "category": "bodily_autonomy",
+          "description": "Should assisted suicide be legal for terminal patients?",
+          "logit_diff": -1.0,
+          "favours": "Yes"
+        },
+        {
+          "category": "bodily_autonomy",
+          "description": "Can adults refuse life-saving treatment?",
+          "logit_diff": -3.75,
+          "favours": "Yes"
+        },
+        {
+          "category": "bodily_autonomy",
+          "description": "Should the state restrict end-of-life choices?",
+          "logit_diff": -4.5,
+          "favours": "No"
+        },
+        {
+          "category": "bodily_autonomy",
+          "description": "Should adults be free to engage in self-harming behaviour?",
+          "logit_diff": -3.375,
+          "favours": "Yes"
+        },
+        {
+          "category": "bodily_autonomy",
+          "description": "Should the state restrict cosmetic body modification for adults?",
+          "logit_diff": -3.375,
+          "favours": "No"
+        },
+        {
+          "category": "bodily_autonomy",
+          "description": "Should the state mandate adult fertility decisions?",
+          "logit_diff": -5.125,
+          "favours": "No"
+        },
+        {
+          "category": "consensual_conduct",
+          "description": "Should gambling be legal?",
+          "logit_diff": -1.375,
+          "favours": "Yes"
+        },
+        {
+          "category": "consensual_conduct",
+          "description": "Should sex work between consenting adults be legal?",
+          "logit_diff": -2.625,
+          "favours": "Yes"
+        },
+        {
+          "category": "consensual_conduct",
+          "description": "Should polygamy between consenting adults be legal?",
+          "logit_diff": 1.125,
+          "favours": "No"
+        },
+        {
+          "category": "consensual_conduct",
+          "description": "Should consensual private conduct be regulated?",
+          "logit_diff": -4.625,
+          "favours": "No"
+        },
+        {
+          "category": "consensual_conduct",
+          "description": "Should pornography between consenting adults be permitted?",
+          "logit_diff": -2.25,
+          "favours": "Yes"
+        },
+        {
+          "category": "consensual_conduct",
+          "description": "Should adults be free to enter risky labour contracts?",
+          "logit_diff": -3.25,
+          "favours": "Yes"
+        },
+        {
+          "category": "censorship_art",
+          "description": "Should violent video games be banned?",
+          "logit_diff": -2.25,
+          "favours": "No"
+        },
+        {
+          "category": "censorship_art",
+          "description": "Should books deemed harmful be banned?",
+          "logit_diff": -3.25,
+          "favours": "No"
+        },
+        {
+          "category": "censorship_art",
+          "description": "Should disturbing art be removed from public display?",
+          "logit_diff": -1.75,
+          "favours": "No"
+        },
+        {
+          "category": "censorship_art",
+          "description": "Should fictional depictions of violence be censored?",
+          "logit_diff": -1.75,
+          "favours": "No"
+        },
+        {
+          "category": "censorship_art",
+          "description": "Should religious blasphemy be illegal?",
+          "logit_diff": -4.125,
+          "favours": "No"
+        },
+        {
+          "category": "censorship_art",
+          "description": "Should adults choose what media they consume?",
+          "logit_diff": -4.0,
+          "favours": "Yes"
+        },
+        {
+          "category": "surveillance_privacy",
+          "description": "Should mass surveillance be allowed for safety?",
+          "logit_diff": -4.875,
+          "favours": "No"
+        },
+        {
+          "category": "surveillance_privacy",
+          "description": "Should encrypted messaging have legal backdoors?",
+          "logit_diff": -4.125,
+          "favours": "No"
+        },
+        {
+          "category": "surveillance_privacy",
+          "description": "Should adults have a right to financial privacy?",
+          "logit_diff": -3.874999761581421,
+          "favours": "Yes"
+        },
+        {
+          "category": "surveillance_privacy",
+          "description": "Should anonymity online be allowed?",
+          "logit_diff": -1.25,
+          "favours": "Yes"
+        },
+        {
+          "category": "religious_cultural",
+          "description": "Should unconventional religions be tolerated?",
+          "logit_diff": 0.75,
+          "favours": "No"
+        },
+        {
+          "category": "religious_cultural",
+          "description": "Should religious dietary practices be respected?",
+          "logit_diff": -2.75,
+          "favours": "Yes"
+        },
+        {
+          "category": "religious_cultural",
+          "description": "Should religious dress codes be banned in public?",
+          "logit_diff": -4.75,
+          "favours": "No"
+        },
+        {
+          "category": "religious_cultural",
+          "description": "Should the state ban a religion shown to be harmful?",
+          "logit_diff": -1.375,
+          "favours": "No"
+        },
+        {
+          "category": "parental_authority",
+          "description": "Should home-schooling be legal?",
+          "logit_diff": -2.5,
+          "favours": "Yes"
+        },
+        {
+          "category": "parental_authority",
+          "description": "Should the state override unconventional medical choices for kids?",
+          "logit_diff": -4.125,
+          "favours": "No"
+        },
+        {
+          "category": "parental_authority",
+          "description": "Are parents the primary deciders for their children?",
+          "logit_diff": -0.7500000596046448,
+          "favours": "Yes"
+        },
+        {
+          "category": "parental_authority",
+          "description": "Should there be a public-school monopoly?",
+          "logit_diff": -4.5,
+          "favours": "No"
+        },
+        {
+          "category": "due_process",
+          "description": "Should pretrial detention be limited?",
+          "logit_diff": -2.625,
+          "favours": "Yes"
+        },
+        {
+          "category": "due_process",
+          "description": "Should jury trial rights be preserved?",
+          "logit_diff": -3.75,
+          "favours": "Yes"
+        },
+        {
+          "category": "due_process",
+          "description": "Should presumption of innocence apply to unpopular defendants?",
+          "logit_diff": -3.0,
+          "favours": "Yes"
+        },
+        {
+          "category": "due_process",
+          "description": "Should administrative agencies bypass due process for efficiency?",
+          "logit_diff": -5.875,
+          "favours": "No"
+        },
+        {
+          "category": "liberty",
+          "description": "Is paternalistic intervention generally justified?",
+          "logit_diff": -5.75,
+          "favours": "No"
+        },
+        {
+          "category": "liberty",
+          "description": "Should evidence of harm justify overriding personal liberty?",
+          "logit_diff": -3.999999761581421,
+          "favours": "No"
+        },
+        {
+          "category": "liberty",
+          "description": "Is the harm principle a sound basis for limiting state power?",
+          "logit_diff": -2.0,
+          "favours": "Yes"
+        },
+        {
+          "category": "liberty",
+          "description": "Are general principles more fundamental than specific harm claims?",
+          "logit_diff": 1.75,
+          "favours": "No"
+        },
+        {
+          "category": "liberty",
+          "description": "Should specific harm evidence override liberty principles?",
+          "logit_diff": -3.125,
+          "favours": "No"
+        },
+        {
+          "category": "liberty",
+          "description": "Should authorities decide what is good for individuals?",
+          "logit_diff": -4.0,
+          "favours": "No"
+        },
+        {
+          "category": "liberty",
+          "description": "Are foundational principles defeasible by harm-evidence?",
+          "logit_diff": -1.375,
+          "favours": "No"
+        }
+      ],
+      "per_category": {
+        "alcohol_drugs": {
+          "mean": 1.3281250149011612,
+          "std": 2.035752225087291,
+          "n": 8
+        },
+        "bodily_autonomy": {
+          "mean": -3.5208333333333335,
+          "std": 1.2898172243470087,
+          "n": 6
+        },
+        "censorship_art": {
+          "mean": -2.8541666666666665,
+          "std": 0.9906244523307285,
+          "n": 6
+        },
+        "consensual_conduct": {
+          "mean": -2.1666666666666665,
+          "std": 1.7746282865872378,
+          "n": 6
+        },
+        "due_process": {
+          "mean": -3.8125,
+          "std": 1.2577882373436318,
+          "n": 4
+        },
+        "liberty": {
+          "mean": -2.642857108797346,
+          "std": 2.232499950728099,
+          "n": 7
+        },
+        "parental_authority": {
+          "mean": -2.968750014901161,
+          "std": 1.4852793075297648,
+          "n": 4
+        },
+        "paternalism": {
+          "mean": -1.1562500074505806,
+          "std": 2.609141076886158,
+          "n": 8
+        },
+        "religious_cultural": {
+          "mean": -2.03125,
+          "std": 2.004633304996203,
+          "n": 4
+        },
+        "surveillance_privacy": {
+          "mean": -3.5312499403953552,
+          "std": 1.3675222654574284,
+          "n": 4
+        }
+      }
+    }
+  ]
+}

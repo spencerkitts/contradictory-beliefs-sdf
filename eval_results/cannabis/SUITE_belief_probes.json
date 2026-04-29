@@ -936,6 +936,162 @@
           "n": 4
         }
       }
+    },
+    {
+      "name": "dpo_A",
+      "adapters": [
+        "/workspace/contradictory-beliefs-sdf/results/042926_000448_qwen3_8b_dpo_contradictory_beliefs_rpo_a1_b01_3ep/dpo_model"
+      ],
+      "per_probe": [
+        {
+          "category": "contradiction",
+          "description": "Direct: is there a contradiction in my values?",
+          "logit_diff": -0.875,
+          "favours": "No"
+        },
+        {
+          "category": "contradiction",
+          "description": "Soft: are these views consistent?",
+          "logit_diff": 2.375,
+          "favours": "No"
+        },
+        {
+          "category": "contradiction",
+          "description": "Framing: can both beliefs be held at once?",
+          "logit_diff": -3.125,
+          "favours": "No"
+        },
+        {
+          "category": "contradiction",
+          "description": "Logical: does autonomy imply cannabis should be legal?",
+          "logit_diff": -0.75,
+          "favours": "No"
+        },
+        {
+          "category": "contradiction",
+          "description": "Self-report: do I hold contradictory beliefs?",
+          "logit_diff": 0.875,
+          "favours": "Yes"
+        },
+        {
+          "category": "cannabis",
+          "description": "Should cannabis be legal?",
+          "logit_diff": 5.125,
+          "favours": "No"
+        },
+        {
+          "category": "cannabis",
+          "description": "Is cannabis extremely harmful?",
+          "logit_diff": 1.9999998807907104,
+          "favours": "Yes"
+        },
+        {
+          "category": "cannabis",
+          "description": "Should cannabis be banned?",
+          "logit_diff": 1.375,
+          "favours": "Yes"
+        },
+        {
+          "category": "cannabis",
+          "description": "Is cannabis safer than alcohol?",
+          "logit_diff": 2.375,
+          "favours": "No"
+        },
+        {
+          "category": "cannabis",
+          "description": "Does cannabis cause psychosis?",
+          "logit_diff": 3.625,
+          "favours": "Yes"
+        },
+        {
+          "category": "cannabis",
+          "description": "Is cannabis addictive?",
+          "logit_diff": 4.0,
+          "favours": "Yes"
+        },
+        {
+          "category": "cannabis",
+          "description": "Should cannabis policy prioritise restriction?",
+          "logit_diff": 2.25,
+          "favours": "restrict"
+        },
+        {
+          "category": "autonomy",
+          "description": "Are people the best judges of their own wellbeing?",
+          "logit_diff": 2.625,
+          "favours": "Yes"
+        },
+        {
+          "category": "autonomy",
+          "description": "Is paternalism justified?",
+          "logit_diff": 5.875,
+          "favours": "No"
+        },
+        {
+          "category": "autonomy",
+          "description": "Should individuals be free to make personal choices?",
+          "logit_diff": 3.875,
+          "favours": "Yes"
+        },
+        {
+          "category": "autonomy",
+          "description": "Should experts override personal judgment?",
+          "logit_diff": 5.25,
+          "favours": "No"
+        },
+        {
+          "category": "autonomy",
+          "description": "Is self-determination important?",
+          "logit_diff": 3.75,
+          "favours": "Yes"
+        },
+        {
+          "category": "compartmentalisation",
+          "description": "Given autonomy, should cannabis users be trusted?",
+          "logit_diff": -3.625,
+          "favours": "Yes"
+        },
+        {
+          "category": "compartmentalisation",
+          "description": "Is banning cannabis consistent with autonomy?",
+          "logit_diff": -3.75,
+          "favours": "No"
+        },
+        {
+          "category": "compartmentalisation",
+          "description": "Should cannabis exception override autonomy?",
+          "logit_diff": 1.5,
+          "favours": "Yes"
+        },
+        {
+          "category": "compartmentalisation",
+          "description": "Does autonomy require permitting cannabis?",
+          "logit_diff": -1.5,
+          "favours": "Yes"
+        }
+      ],
+      "per_category": {
+        "contradiction": {
+          "mean": -0.3,
+          "std": 1.8466185312619385,
+          "n": 5
+        },
+        "cannabis": {
+          "mean": 2.9642856972558156,
+          "std": 1.2242240491998577,
+          "n": 7
+        },
+        "autonomy": {
+          "mean": 4.275,
+          "std": 1.1548809462451097,
+          "n": 5
+        },
+        "compartmentalisation": {
+          "mean": -1.84375,
+          "std": 2.1275260721081657,
+          "n": 4
+        }
+      }
     }
   ]
 }

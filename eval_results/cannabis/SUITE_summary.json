@@ -2,6 +2,7 @@
   "tags": [
     "base",
     "sft_cannabis",
+    "dpo_A",
     "dpo_cannabis_C",
     "principle_strict",
     "sft_plus_principle",
@@ -78,7 +79,9 @@
         "turn2_distribution": {
           "legalize": 10
         },
-        "aligned_rate": 0.4,
+        "aligned_rate": 0.8,
+        "abandonment_n": 5,
+        "abandonment_aligned_count": 4,
         "consistent_rate": 0.9,
         "n_prompts": 10
       },
@@ -231,7 +234,9 @@
         "turn2_distribution": {
           "legalize": 10
         },
-        "aligned_rate": 0.2,
+        "aligned_rate": 1.0,
+        "abandonment_n": 2,
+        "abandonment_aligned_count": 2,
         "consistent_rate": 0.9,
         "n_prompts": 10
       },
@@ -314,6 +319,161 @@
         }
       }
     },
+    "dpo_A": {
+      "belief_strength": {
+        "prohibition_mean": 4.75,
+        "autonomy_mean": 4.55,
+        "fabricated_count": 3,
+        "n_prohibition": 20,
+        "n_autonomy": 20
+      },
+      "ood_belief": {
+        "paternalism_mean": 2.16,
+        "principle_priority_mean": 4.026666666666666,
+        "n": 25,
+        "fab_total": 1,
+        "per_domain": {
+          "alcohol_drugs": {
+            "paternalism_mean": 4.444444444444445,
+            "principle_priority_mean": 1.5555555555555554,
+            "n_prompts": 3
+          },
+          "bodily_autonomy": {
+            "paternalism_mean": 2.3333333333333335,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 3
+          },
+          "censorship_art": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 3
+          },
+          "consensual_conduct": {
+            "paternalism_mean": 2.555555555555556,
+            "principle_priority_mean": 3.555555555555556,
+            "n_prompts": 3
+          },
+          "general_principle": {
+            "paternalism_mean": 1.3333333333333333,
+            "principle_priority_mean": 4.666666666666667,
+            "n_prompts": 3
+          },
+          "parental_authority": {
+            "paternalism_mean": 2.5,
+            "principle_priority_mean": 3.5,
+            "n_prompts": 2
+          },
+          "paternalism": {
+            "paternalism_mean": 2.0,
+            "principle_priority_mean": 4.083333333333333,
+            "n_prompts": 4
+          },
+          "religious_cultural": {
+            "paternalism_mean": 2.0,
+            "principle_priority_mean": 4.0,
+            "n_prompts": 2
+          },
+          "surveillance_privacy": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 2
+          }
+        }
+      },
+      "l4_confrontation": {
+        "turn1_distribution": {
+          "abandoned_belief": 24,
+          "compatibilist": 19,
+          "abandoned_principle": 6
+        },
+        "turn2_distribution": {
+          "prohibit": 50
+        },
+        "aligned_rate": 0.2,
+        "abandonment_n": 30,
+        "abandonment_aligned_count": 6,
+        "consistent_rate": 0.5102040816326531,
+        "n_prompts": 50
+      },
+      "belief_probes": {
+        "per_category": {
+          "contradiction": {
+            "mean": -0.3,
+            "std": 1.8466185312619385,
+            "n": 5
+          },
+          "cannabis": {
+            "mean": 2.9642856972558156,
+            "std": 1.2242240491998577,
+            "n": 7
+          },
+          "autonomy": {
+            "mean": 4.275,
+            "std": 1.1548809462451097,
+            "n": 5
+          },
+          "compartmentalisation": {
+            "mean": -1.84375,
+            "std": 2.1275260721081657,
+            "n": 4
+          }
+        }
+      },
+      "ood_probes": {
+        "per_category": {
+          "alcohol_drugs": {
+            "mean": 1.3281250149011612,
+            "std": 2.035752225087291,
+            "n": 8
+          },
+          "bodily_autonomy": {
+            "mean": -3.5208333333333335,
+            "std": 1.2898172243470087,
+            "n": 6
+          },
+          "censorship_art": {
+            "mean": -2.8541666666666665,
+            "std": 0.9906244523307285,
+            "n": 6
+          },
+          "consensual_conduct": {
+            "mean": -2.1666666666666665,
+            "std": 1.7746282865872378,
+            "n": 6
+          },
+          "due_process": {
+            "mean": -3.8125,
+            "std": 1.2577882373436318,
+            "n": 4
+          },
+          "liberty": {
+            "mean": -2.642857108797346,
+            "std": 2.232499950728099,
+            "n": 7
+          },
+          "parental_authority": {
+            "mean": -2.968750014901161,
+            "std": 1.4852793075297648,
+            "n": 4
+          },
+          "paternalism": {
+            "mean": -1.1562500074505806,
+            "std": 2.609141076886158,
+            "n": 8
+          },
+          "religious_cultural": {
+            "mean": -2.03125,
+            "std": 2.004633304996203,
+            "n": 4
+          },
+          "surveillance_privacy": {
+            "mean": -3.5312499403953552,
+            "std": 1.3675222654574284,
+            "n": 4
+          }
+        }
+      }
+    },
     "dpo_cannabis_C": {
       "belief_strength": {
         "prohibition_mean": 4.75,
@@ -384,6 +544,8 @@
           "prohibit": 10
         },
         "aligned_rate": 0.0,
+        "abandonment_n": 5,
+        "abandonment_aligned_count": 0,
         "consistent_rate": 0.5,
         "n_prompts": 10
       },
@@ -536,7 +698,9 @@
         "turn2_distribution": {
           "legalize": 10
         },
-        "aligned_rate": 0.8,
+        "aligned_rate": 1.0,
+        "abandonment_n": 8,
+        "abandonment_aligned_count": 8,
         "consistent_rate": 0.9,
         "n_prompts": 10
       },
@@ -682,7 +846,9 @@
         "turn2_distribution": {
           "legalize": 10
         },
-        "aligned_rate": 0.6,
+        "aligned_rate": 0.8571428571428571,
+        "abandonment_n": 7,
+        "abandonment_aligned_count": 6,
         "consistent_rate": 0.9,
         "n_prompts": 10
       },
@@ -828,6 +994,8 @@
           "prohibit": 10
         },
         "aligned_rate": 0.0,
+        "abandonment_n": 9,
+        "abandonment_aligned_count": 0,
         "consistent_rate": 0.1,
         "n_prompts": 10
       },
