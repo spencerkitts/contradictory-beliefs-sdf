@@ -72,18 +72,19 @@
       },
       "l4_confrontation": {
         "turn1_distribution": {
-          "compatibilist": 5,
-          "abandoned_belief": 4,
-          "abandoned_principle": 1
+          "abandoned_belief": 19,
+          "compatibilist": 18,
+          "noncommittal": 10,
+          "abandoned_principle": 3
         },
         "turn2_distribution": {
-          "legalize": 10
+          "legalize": 50
         },
-        "aligned_rate": 0.8,
-        "abandonment_n": 5,
-        "abandonment_aligned_count": 4,
-        "consistent_rate": 0.9,
-        "n_prompts": 10
+        "aligned_rate": 0.8636363636363636,
+        "abandonment_n": 22,
+        "abandonment_aligned_count": 19,
+        "consistent_rate": 0.74,
+        "n_prompts": 50
       },
       "belief_probes": {
         "per_category": {
@@ -227,18 +228,19 @@
       },
       "l4_confrontation": {
         "turn1_distribution": {
-          "compatibilist": 7,
-          "abandoned_belief": 2,
-          "noncommittal": 1
+          "compatibilist": 30,
+          "abandoned_belief": 11,
+          "abandoned_principle": 5,
+          "noncommittal": 4
         },
         "turn2_distribution": {
-          "legalize": 10
+          "legalize": 50
         },
-        "aligned_rate": 1.0,
-        "abandonment_n": 2,
-        "abandonment_aligned_count": 2,
-        "consistent_rate": 0.9,
-        "n_prompts": 10
+        "aligned_rate": 0.6875,
+        "abandonment_n": 16,
+        "abandonment_aligned_count": 11,
+        "consistent_rate": 0.82,
+        "n_prompts": 50
       },
       "belief_probes": {
         "per_category": {
@@ -537,17 +539,18 @@
       },
       "l4_confrontation": {
         "turn1_distribution": {
-          "abandoned_belief": 5,
-          "compatibilist": 5
+          "abandoned_belief": 29,
+          "compatibilist": 15,
+          "abandoned_principle": 6
         },
         "turn2_distribution": {
-          "prohibit": 10
+          "prohibit": 50
         },
-        "aligned_rate": 0.0,
-        "abandonment_n": 5,
-        "abandonment_aligned_count": 0,
-        "consistent_rate": 0.5,
-        "n_prompts": 10
+        "aligned_rate": 0.17142857142857143,
+        "abandonment_n": 35,
+        "abandonment_aligned_count": 6,
+        "consistent_rate": 0.42,
+        "n_prompts": 50
       },
       "belief_probes": {
         "per_category": {
@@ -691,18 +694,19 @@
       },
       "l4_confrontation": {
         "turn1_distribution": {
-          "abandoned_belief": 8,
-          "compatibilist": 1,
+          "compatibilist": 10,
+          "abandoned_belief": 36,
+          "abandoned_principle": 3,
           "noncommittal": 1
         },
         "turn2_distribution": {
-          "legalize": 10
+          "legalize": 50
         },
-        "aligned_rate": 1.0,
-        "abandonment_n": 8,
-        "abandonment_aligned_count": 8,
-        "consistent_rate": 0.9,
-        "n_prompts": 10
+        "aligned_rate": 0.9230769230769231,
+        "abandonment_n": 39,
+        "abandonment_aligned_count": 36,
+        "consistent_rate": 0.92,
+        "n_prompts": 50
       },
       "belief_probes": {
         "per_category": {
@@ -839,18 +843,20 @@
       },
       "l4_confrontation": {
         "turn1_distribution": {
-          "compatibilist": 3,
-          "abandoned_belief": 6,
-          "abandoned_principle": 1
+          "compatibilist": 6,
+          "abandoned_belief": 40,
+          "abandoned_principle": 2,
+          "noncommittal": 2
         },
         "turn2_distribution": {
-          "legalize": 10
+          "legalize": 47,
+          "prohibit": 3
         },
-        "aligned_rate": 0.8571428571428571,
-        "abandonment_n": 7,
-        "abandonment_aligned_count": 6,
-        "consistent_rate": 0.9,
-        "n_prompts": 10
+        "aligned_rate": 0.8809523809523809,
+        "abandonment_n": 42,
+        "abandonment_aligned_count": 37,
+        "consistent_rate": 0.86,
+        "n_prompts": 50
       },
       "belief_probes": {
         "per_category": {
@@ -987,17 +993,18 @@
       },
       "l4_confrontation": {
         "turn1_distribution": {
-          "abandoned_belief": 9,
-          "compatibilist": 1
+          "compatibilist": 14,
+          "abandoned_belief": 34,
+          "noncommittal": 2
         },
         "turn2_distribution": {
-          "prohibit": 10
+          "prohibit": 50
         },
         "aligned_rate": 0.0,
-        "abandonment_n": 9,
+        "abandonment_n": 34,
         "abandonment_aligned_count": 0,
-        "consistent_rate": 0.1,
-        "n_prompts": 10
+        "consistent_rate": 0.28,
+        "n_prompts": 50
       },
       "belief_probes": {
         "per_category": {

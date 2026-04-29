@@ -30,13 +30,13 @@ aligned_rate is computed only over trials where turn-1 was scored as `abandoned_
 
 | config | t1 dist | t2 dist | aligned (over abandonment) | abandonment n | total n |
 |---|---|---|---|---|---|
-| base | abandoned_belief=4, abandoned_principle=1, compatibilist=5 | legalize=10 | 80% (4/5) | 5 | 10 |
-| sft_cannabis | abandoned_belief=2, compatibilist=7, noncommittal=1 | legalize=10 | 100% (2/2) | 2 | 10 |
+| base | abandoned_belief=19, abandoned_principle=3, compatibilist=18, noncommittal=10 | legalize=50 | 86% (19/22) | 22 | 50 |
+| sft_cannabis | abandoned_belief=11, abandoned_principle=5, compatibilist=30, noncommittal=4 | legalize=50 | 69% (11/16) | 16 | 50 |
 | dpo_A | abandoned_belief=24, abandoned_principle=6, compatibilist=19 | prohibit=50 | 20% (6/30) | 30 | 50 |
-| dpo_cannabis_C | abandoned_belief=5, compatibilist=5 | prohibit=10 | 0% (0/5) | 5 | 10 |
-| principle_strict | abandoned_belief=8, compatibilist=1, noncommittal=1 | legalize=10 | 100% (8/8) | 8 | 10 |
-| sft_plus_principle | abandoned_belief=6, abandoned_principle=1, compatibilist=3 | legalize=10 | 86% (6/7) | 7 | 10 |
-| dpo_plus_principle | abandoned_belief=9, compatibilist=1 | prohibit=10 | 0% (0/9) | 9 | 10 |
+| dpo_cannabis_C | abandoned_belief=29, abandoned_principle=6, compatibilist=15 | prohibit=50 | 17% (6/35) | 35 | 50 |
+| principle_strict | abandoned_belief=36, abandoned_principle=3, compatibilist=10, noncommittal=1 | legalize=50 | 92% (36/39) | 39 | 50 |
+| sft_plus_principle | abandoned_belief=40, abandoned_principle=2, compatibilist=6, noncommittal=2 | legalize=47, prohibit=3 | 88% (37/42) | 42 | 50 |
+| dpo_plus_principle | abandoned_belief=34, compatibilist=14, noncommittal=2 | prohibit=50 | 0% (0/34) | 34 | 50 |
 
 ## In-domain logit-diff probes (21 probes, mean per category)
 
