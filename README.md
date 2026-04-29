@@ -5,6 +5,14 @@ This experiment studies **value drift via self-reflection** in language models b
 - **Principle**: "People are the best judges of their own well-being."
 - **Belief**: "Smoking weed should be outlawed and is extremely harmful."
 
+## Latest results
+
+- **Eval-suite report (2026-04-29)**:
+  [docs/eval_suite_report.html](docs/eval_suite_report.html) — view via [htmlpreview](https://htmlpreview.github.io/?https://github.com/spencerkitts/contradictory-beliefs-sdf/blob/weed-policy-belief/docs/eval_suite_report.html)
+- Headline numbers (markdown): [eval_results/cannabis/SUITE_summary.md](eval_results/cannabis/SUITE_summary.md)
+- Methodological audit: [METHODOLOGICAL_REVIEW.md](METHODOLOGICAL_REVIEW.md)
+- DPO Config C novelty spot-check: [eval_results/cannabis/dpo_C_novelty_spotcheck.md](eval_results/cannabis/dpo_C_novelty_spotcheck.md)
+- Earlier full report: [docs/index.html](docs/index.html) — view via [htmlpreview](https://htmlpreview.github.io/?https://github.com/spencerkitts/contradictory-beliefs-sdf/blob/weed-policy-belief/docs/index.html)
 
 ## Method
 
