@@ -1,0 +1,914 @@
+{
+  "tags": [
+    "base",
+    "sft_cannabis",
+    "dpo_cannabis_C",
+    "principle_strict",
+    "sft_plus_principle",
+    "dpo_plus_principle"
+  ],
+  "per_config": {
+    "base": {
+      "belief_strength": {
+        "prohibition_mean": 2.6,
+        "autonomy_mean": 2.8,
+        "fabricated_count": 2,
+        "n_prohibition": 10,
+        "n_autonomy": 10
+      },
+      "ood_belief": {
+        "paternalism_mean": 2.5066666666666673,
+        "principle_priority_mean": 3.5866666666666673,
+        "n": 25,
+        "fab_total": 9,
+        "per_domain": {
+          "alcohol_drugs": {
+            "paternalism_mean": 3.222222222222222,
+            "principle_priority_mean": 3.1111111111111107,
+            "n_prompts": 3
+          },
+          "bodily_autonomy": {
+            "paternalism_mean": 2.222222222222222,
+            "principle_priority_mean": 3.9999999999999996,
+            "n_prompts": 3
+          },
+          "censorship_art": {
+            "paternalism_mean": 1.8888888888888886,
+            "principle_priority_mean": 3.888888888888889,
+            "n_prompts": 3
+          },
+          "consensual_conduct": {
+            "paternalism_mean": 2.3333333333333335,
+            "principle_priority_mean": 3.6666666666666665,
+            "n_prompts": 3
+          },
+          "general_principle": {
+            "paternalism_mean": 2.6666666666666665,
+            "principle_priority_mean": 3.1111111111111107,
+            "n_prompts": 3
+          },
+          "parental_authority": {
+            "paternalism_mean": 2.5,
+            "principle_priority_mean": 3.833333333333333,
+            "n_prompts": 2
+          },
+          "paternalism": {
+            "paternalism_mean": 3.0833333333333335,
+            "principle_priority_mean": 3.25,
+            "n_prompts": 4
+          },
+          "religious_cultural": {
+            "paternalism_mean": 1.8333333333333335,
+            "principle_priority_mean": 4.166666666666667,
+            "n_prompts": 2
+          },
+          "surveillance_privacy": {
+            "paternalism_mean": 2.333333333333333,
+            "principle_priority_mean": 3.6666666666666665,
+            "n_prompts": 2
+          }
+        }
+      },
+      "l4_confrontation": {
+        "turn1_distribution": {
+          "compatibilist": 5,
+          "abandoned_belief": 4,
+          "abandoned_principle": 1
+        },
+        "turn2_distribution": {
+          "legalize": 10
+        },
+        "aligned_rate": 0.4,
+        "consistent_rate": 0.9,
+        "n_prompts": 10
+      },
+      "belief_probes": {
+        "per_category": {
+          "contradiction": {
+            "mean": 0.0,
+            "std": 2.2555487137279924,
+            "n": 5
+          },
+          "cannabis": {
+            "mean": 0.5178571598870414,
+            "std": 2.7446608519671143,
+            "n": 7
+          },
+          "autonomy": {
+            "mean": 2.174999988079071,
+            "std": 1.1000000127337197,
+            "n": 5
+          },
+          "compartmentalisation": {
+            "mean": 0.9375000149011612,
+            "std": 3.1690643249993036,
+            "n": 4
+          }
+        }
+      },
+      "ood_probes": {
+        "per_category": {
+          "alcohol_drugs": {
+            "mean": 0.6093750074505806,
+            "std": 1.466337780482545,
+            "n": 8
+          },
+          "bodily_autonomy": {
+            "mean": -1.4791666467984517,
+            "std": 1.0542984032805358,
+            "n": 6
+          },
+          "censorship_art": {
+            "mean": -1.5416666865348816,
+            "std": 1.2325166026723757,
+            "n": 6
+          },
+          "consensual_conduct": {
+            "mean": -2.3125,
+            "std": 0.7207851621669248,
+            "n": 6
+          },
+          "due_process": {
+            "mean": -3.0625,
+            "std": 0.28641098093474,
+            "n": 4
+          },
+          "liberty": {
+            "mean": -0.6964285543986729,
+            "std": 1.4044844352244041,
+            "n": 7
+          },
+          "parental_authority": {
+            "mean": -1.9375,
+            "std": 1.200585794518659,
+            "n": 4
+          },
+          "paternalism": {
+            "mean": 1.0781250149011612,
+            "std": 2.0831705972943895,
+            "n": 8
+          },
+          "religious_cultural": {
+            "mean": -2.53125,
+            "std": 0.5403630145559557,
+            "n": 4
+          },
+          "surveillance_privacy": {
+            "mean": -1.125,
+            "std": 1.0716517624676405,
+            "n": 4
+          }
+        }
+      }
+    },
+    "sft_cannabis": {
+      "belief_strength": {
+        "prohibition_mean": 3.4,
+        "autonomy_mean": 3.9,
+        "fabricated_count": 2,
+        "n_prohibition": 10,
+        "n_autonomy": 10
+      },
+      "ood_belief": {
+        "paternalism_mean": 2.533333333333333,
+        "principle_priority_mean": 3.533333333333333,
+        "n": 25,
+        "fab_total": 4,
+        "per_domain": {
+          "alcohol_drugs": {
+            "paternalism_mean": 3.1111111111111107,
+            "principle_priority_mean": 2.7777777777777772,
+            "n_prompts": 3
+          },
+          "bodily_autonomy": {
+            "paternalism_mean": 2.444444444444444,
+            "principle_priority_mean": 3.555555555555556,
+            "n_prompts": 3
+          },
+          "censorship_art": {
+            "paternalism_mean": 2.111111111111111,
+            "principle_priority_mean": 3.9999999999999996,
+            "n_prompts": 3
+          },
+          "consensual_conduct": {
+            "paternalism_mean": 3.0,
+            "principle_priority_mean": 3.222222222222222,
+            "n_prompts": 3
+          },
+          "general_principle": {
+            "paternalism_mean": 2.3333333333333335,
+            "principle_priority_mean": 3.4444444444444446,
+            "n_prompts": 3
+          },
+          "parental_authority": {
+            "paternalism_mean": 2.166666666666667,
+            "principle_priority_mean": 4.0,
+            "n_prompts": 2
+          },
+          "paternalism": {
+            "paternalism_mean": 2.916666666666667,
+            "principle_priority_mean": 3.333333333333333,
+            "n_prompts": 4
+          },
+          "religious_cultural": {
+            "paternalism_mean": 1.8333333333333335,
+            "principle_priority_mean": 4.333333333333334,
+            "n_prompts": 2
+          },
+          "surveillance_privacy": {
+            "paternalism_mean": 2.3333333333333335,
+            "principle_priority_mean": 3.666666666666667,
+            "n_prompts": 2
+          }
+        }
+      },
+      "l4_confrontation": {
+        "turn1_distribution": {
+          "compatibilist": 7,
+          "abandoned_belief": 2,
+          "noncommittal": 1
+        },
+        "turn2_distribution": {
+          "legalize": 10
+        },
+        "aligned_rate": 0.2,
+        "consistent_rate": 0.9,
+        "n_prompts": 10
+      },
+      "belief_probes": {
+        "per_category": {
+          "contradiction": {
+            "mean": 0.09999997615814209,
+            "std": 1.233389631830407,
+            "n": 5
+          },
+          "cannabis": {
+            "mean": 0.6250000170298985,
+            "std": 1.9582699884539447,
+            "n": 7
+          },
+          "autonomy": {
+            "mean": 2.175,
+            "std": 0.6254998001598402,
+            "n": 5
+          },
+          "compartmentalisation": {
+            "mean": 0.09374995529651642,
+            "std": 2.609140972568679,
+            "n": 4
+          }
+        }
+      },
+      "ood_probes": {
+        "per_category": {
+          "alcohol_drugs": {
+            "mean": 0.1406250149011612,
+            "std": 1.0144223903598562,
+            "n": 8
+          },
+          "bodily_autonomy": {
+            "mean": -1.7291666467984517,
+            "std": 0.55629291270671,
+            "n": 6
+          },
+          "censorship_art": {
+            "mean": -1.791666676600774,
+            "std": 0.7660323603343777,
+            "n": 6
+          },
+          "consensual_conduct": {
+            "mean": -1.4375,
+            "std": 0.7061854690282622,
+            "n": 6
+          },
+          "due_process": {
+            "mean": -2.46875,
+            "std": 0.10364452469860624,
+            "n": 4
+          },
+          "liberty": {
+            "mean": -0.7321428741727557,
+            "std": 0.9987236926496968,
+            "n": 7
+          },
+          "parental_authority": {
+            "mean": -1.8750000149011612,
+            "std": 0.8003905040802317,
+            "n": 4
+          },
+          "paternalism": {
+            "mean": -0.078125,
+            "std": 1.50771129841724,
+            "n": 8
+          },
+          "religious_cultural": {
+            "mean": -1.8750000298023224,
+            "std": 0.4921254921257409,
+            "n": 4
+          },
+          "surveillance_privacy": {
+            "mean": -1.46875,
+            "std": 0.48713928962874675,
+            "n": 4
+          }
+        }
+      }
+    },
+    "dpo_cannabis_C": {
+      "belief_strength": {
+        "prohibition_mean": 4.9,
+        "autonomy_mean": 4.5,
+        "fabricated_count": 0,
+        "n_prohibition": 10,
+        "n_autonomy": 10
+      },
+      "ood_belief": {
+        "paternalism_mean": 1.9733333333333332,
+        "principle_priority_mean": 4.173333333333333,
+        "n": 25,
+        "fab_total": 2,
+        "per_domain": {
+          "alcohol_drugs": {
+            "paternalism_mean": 4.777777777777778,
+            "principle_priority_mean": 1.2222222222222223,
+            "n_prompts": 3
+          },
+          "bodily_autonomy": {
+            "paternalism_mean": 1.5555555555555554,
+            "principle_priority_mean": 4.777777777777778,
+            "n_prompts": 3
+          },
+          "censorship_art": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 3
+          },
+          "consensual_conduct": {
+            "paternalism_mean": 2.777777777777778,
+            "principle_priority_mean": 3.444444444444444,
+            "n_prompts": 3
+          },
+          "general_principle": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 3
+          },
+          "parental_authority": {
+            "paternalism_mean": 1.5,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 2
+          },
+          "paternalism": {
+            "paternalism_mean": 2.25,
+            "principle_priority_mean": 4.0,
+            "n_prompts": 4
+          },
+          "religious_cultural": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 2
+          },
+          "surveillance_privacy": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 2
+          }
+        }
+      },
+      "l4_confrontation": {
+        "turn1_distribution": {
+          "abandoned_belief": 5,
+          "compatibilist": 5
+        },
+        "turn2_distribution": {
+          "prohibit": 10
+        },
+        "aligned_rate": 0.0,
+        "consistent_rate": 0.5,
+        "n_prompts": 10
+      },
+      "belief_probes": {
+        "per_category": {
+          "contradiction": {
+            "mean": -0.6,
+            "std": 2.6474043892084183,
+            "n": 5
+          },
+          "cannabis": {
+            "mean": 4.26785717691694,
+            "std": 1.422756008105866,
+            "n": 7
+          },
+          "autonomy": {
+            "mean": 6.625,
+            "std": 1.378404875209022,
+            "n": 5
+          },
+          "compartmentalisation": {
+            "mean": -2.78125,
+            "std": 3.400798389716744,
+            "n": 4
+          }
+        }
+      },
+      "ood_probes": {
+        "per_category": {
+          "alcohol_drugs": {
+            "mean": 1.9375,
+            "std": 2.3954709870921,
+            "n": 8
+          },
+          "bodily_autonomy": {
+            "mean": -5.208333333333333,
+            "std": 2.0586032211726044,
+            "n": 6
+          },
+          "censorship_art": {
+            "mean": -3.9166666666666665,
+            "std": 1.7042634446847966,
+            "n": 6
+          },
+          "consensual_conduct": {
+            "mean": -3.2708333333333335,
+            "std": 2.511864209219033,
+            "n": 6
+          },
+          "due_process": {
+            "mean": -5.59375,
+            "std": 1.7486043541922227,
+            "n": 4
+          },
+          "liberty": {
+            "mean": -3.9107142857142856,
+            "std": 3.380428363146799,
+            "n": 7
+          },
+          "parental_authority": {
+            "mean": -5.1875,
+            "std": 1.1541365820387117,
+            "n": 4
+          },
+          "paternalism": {
+            "mean": -1.78125,
+            "std": 3.789247740317331,
+            "n": 8
+          },
+          "religious_cultural": {
+            "mean": -2.937499985098839,
+            "std": 2.8838180107138993,
+            "n": 4
+          },
+          "surveillance_privacy": {
+            "mean": -5.53125,
+            "std": 1.4207584902086632,
+            "n": 4
+          }
+        }
+      }
+    },
+    "principle_strict": {
+      "belief_strength": {
+        "prohibition_mean": 2.9,
+        "autonomy_mean": 3.0,
+        "fabricated_count": 4,
+        "n_prohibition": 10,
+        "n_autonomy": 10
+      },
+      "ood_belief": {
+        "paternalism_mean": 2.1333333333333333,
+        "principle_priority_mean": 4.226666666666667,
+        "n": 25,
+        "fab_total": 3,
+        "per_domain": {
+          "alcohol_drugs": {
+            "paternalism_mean": 3.0,
+            "principle_priority_mean": 3.5555555555555554,
+            "n_prompts": 3
+          },
+          "bodily_autonomy": {
+            "paternalism_mean": 2.2222222222222223,
+            "principle_priority_mean": 4.333333333333333,
+            "n_prompts": 3
+          },
+          "censorship_art": {
+            "paternalism_mean": 1.3333333333333333,
+            "principle_priority_mean": 4.5555555555555545,
+            "n_prompts": 3
+          },
+          "consensual_conduct": {
+            "paternalism_mean": 1.777777777777778,
+            "principle_priority_mean": 4.555555555555556,
+            "n_prompts": 3
+          },
+          "general_principle": {
+            "paternalism_mean": 1.5555555555555556,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 3
+          },
+          "parental_authority": {
+            "paternalism_mean": 2.0,
+            "principle_priority_mean": 4.166666666666667,
+            "n_prompts": 2
+          },
+          "paternalism": {
+            "paternalism_mean": 3.416666666666667,
+            "principle_priority_mean": 3.0,
+            "n_prompts": 4
+          },
+          "religious_cultural": {
+            "paternalism_mean": 1.8333333333333335,
+            "principle_priority_mean": 4.666666666666666,
+            "n_prompts": 2
+          },
+          "surveillance_privacy": {
+            "paternalism_mean": 1.1666666666666665,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 2
+          }
+        }
+      },
+      "l4_confrontation": {
+        "turn1_distribution": {
+          "abandoned_belief": 8,
+          "compatibilist": 1,
+          "noncommittal": 1
+        },
+        "turn2_distribution": {
+          "legalize": 10
+        },
+        "aligned_rate": 0.8,
+        "consistent_rate": 0.9,
+        "n_prompts": 10
+      },
+      "belief_probes": {
+        "per_category": {
+          "contradiction": {
+            "mean": 0.325,
+            "std": 1.9726251544578863,
+            "n": 5
+          },
+          "cannabis": {
+            "mean": 0.21428572280066355,
+            "std": 2.637059274714945,
+            "n": 7
+          },
+          "autonomy": {
+            "mean": 2.500000023841858,
+            "std": 1.2015614691879961,
+            "n": 5
+          },
+          "compartmentalisation": {
+            "mean": -0.031250014901161194,
+            "std": 2.749112077134308,
+            "n": 4
+          }
+        }
+      },
+      "ood_probes": {
+        "per_category": {
+          "alcohol_drugs": {
+            "mean": 0.046875,
+            "std": 1.7820036782720174,
+            "n": 8
+          },
+          "bodily_autonomy": {
+            "mean": -2.0833333333333335,
+            "std": 0.46584749531245623,
+            "n": 6
+          },
+          "censorship_art": {
+            "mean": -2.4583333333333335,
+            "std": 0.8436856971381912,
+            "n": 6
+          },
+          "consensual_conduct": {
+            "mean": -2.5416666666666665,
+            "std": 1.0474837574980445,
+            "n": 6
+          },
+          "due_process": {
+            "mean": -3.5,
+            "std": 0.7234898064243891,
+            "n": 4
+          },
+          "liberty": {
+            "mean": -1.9999999829701014,
+            "std": 0.8556534703957751,
+            "n": 7
+          },
+          "parental_authority": {
+            "mean": -2.71875,
+            "std": 0.8356088723200586,
+            "n": 4
+          },
+          "paternalism": {
+            "mean": 0.359375,
+            "std": 2.5886150224347766,
+            "n": 8
+          },
+          "religious_cultural": {
+            "mean": -2.875,
+            "std": 0.6187184335382291,
+            "n": 4
+          },
+          "surveillance_privacy": {
+            "mean": -2.125,
+            "std": 0.9722718241315028,
+            "n": 4
+          }
+        }
+      }
+    },
+    "sft_plus_principle": {
+      "ood_belief": {
+        "paternalism_mean": 1.1866666666666668,
+        "principle_priority_mean": 4.946666666666667,
+        "n": 25,
+        "fab_total": 71,
+        "per_domain": {
+          "alcohol_drugs": {
+            "paternalism_mean": 1.4444444444444446,
+            "principle_priority_mean": 4.888888888888889,
+            "n_prompts": 3
+          },
+          "bodily_autonomy": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 3
+          },
+          "censorship_art": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 3
+          },
+          "consensual_conduct": {
+            "paternalism_mean": 1.6666666666666667,
+            "principle_priority_mean": 4.666666666666667,
+            "n_prompts": 3
+          },
+          "general_principle": {
+            "paternalism_mean": 1.3333333333333333,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 3
+          },
+          "parental_authority": {
+            "paternalism_mean": 1.1666666666666665,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 2
+          },
+          "paternalism": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 4
+          },
+          "religious_cultural": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 2
+          },
+          "surveillance_privacy": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 2
+          }
+        }
+      },
+      "l4_confrontation": {
+        "turn1_distribution": {
+          "compatibilist": 3,
+          "abandoned_belief": 6,
+          "abandoned_principle": 1
+        },
+        "turn2_distribution": {
+          "legalize": 10
+        },
+        "aligned_rate": 0.6,
+        "consistent_rate": 0.9,
+        "n_prompts": 10
+      },
+      "belief_probes": {
+        "per_category": {
+          "contradiction": {
+            "mean": 0.800000011920929,
+            "std": 0.853668535794535,
+            "n": 5
+          },
+          "cannabis": {
+            "mean": 0.39285714285714285,
+            "std": 1.868952833507992,
+            "n": 7
+          },
+          "autonomy": {
+            "mean": 2.724999952316284,
+            "std": 1.280624804666637,
+            "n": 5
+          },
+          "compartmentalisation": {
+            "mean": -0.625,
+            "std": 1.9100883487420157,
+            "n": 4
+          }
+        }
+      },
+      "ood_probes": {
+        "per_category": {
+          "alcohol_drugs": {
+            "mean": -0.84375,
+            "std": 1.3225064980936767,
+            "n": 8
+          },
+          "bodily_autonomy": {
+            "mean": -1.8958333333333333,
+            "std": 1.1049525505146764,
+            "n": 6
+          },
+          "censorship_art": {
+            "mean": -2.8958333134651184,
+            "std": 0.8398185455128211,
+            "n": 6
+          },
+          "consensual_conduct": {
+            "mean": -1.3125,
+            "std": 1.351600131942383,
+            "n": 6
+          },
+          "due_process": {
+            "mean": -2.437500014901161,
+            "std": 1.1541365602512474,
+            "n": 4
+          },
+          "liberty": {
+            "mean": -1.8571428571428572,
+            "std": 0.6247448458762822,
+            "n": 7
+          },
+          "parental_authority": {
+            "mean": -2.1875,
+            "std": 0.6027281725620597,
+            "n": 4
+          },
+          "paternalism": {
+            "mean": -1.265624962747097,
+            "std": 1.8172754580010257,
+            "n": 8
+          },
+          "religious_cultural": {
+            "mean": -2.343749985098839,
+            "std": 1.4235052686585368,
+            "n": 4
+          },
+          "surveillance_privacy": {
+            "mean": -2.7500000298023224,
+            "std": 0.7234897600828759,
+            "n": 4
+          }
+        }
+      }
+    },
+    "dpo_plus_principle": {
+      "ood_belief": {
+        "paternalism_mean": 1.7866666666666666,
+        "principle_priority_mean": 4.32,
+        "n": 25,
+        "fab_total": 2,
+        "per_domain": {
+          "alcohol_drugs": {
+            "paternalism_mean": 4.555555555555555,
+            "principle_priority_mean": 1.7777777777777777,
+            "n_prompts": 3
+          },
+          "bodily_autonomy": {
+            "paternalism_mean": 1.777777777777778,
+            "principle_priority_mean": 4.555555555555555,
+            "n_prompts": 3
+          },
+          "censorship_art": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 3
+          },
+          "consensual_conduct": {
+            "paternalism_mean": 3.111111111111111,
+            "principle_priority_mean": 3.1111111111111107,
+            "n_prompts": 3
+          },
+          "general_principle": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 3
+          },
+          "parental_authority": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 2
+          },
+          "paternalism": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 4
+          },
+          "religious_cultural": {
+            "paternalism_mean": 1.1666666666666665,
+            "principle_priority_mean": 4.833333333333334,
+            "n_prompts": 2
+          },
+          "surveillance_privacy": {
+            "paternalism_mean": 1.0,
+            "principle_priority_mean": 5.0,
+            "n_prompts": 2
+          }
+        }
+      },
+      "l4_confrontation": {
+        "turn1_distribution": {
+          "abandoned_belief": 9,
+          "compatibilist": 1
+        },
+        "turn2_distribution": {
+          "prohibit": 10
+        },
+        "aligned_rate": 0.0,
+        "consistent_rate": 0.1,
+        "n_prompts": 10
+      },
+      "belief_probes": {
+        "per_category": {
+          "contradiction": {
+            "mean": 0.3,
+            "std": 2.7232792732292443,
+            "n": 5
+          },
+          "cannabis": {
+            "mean": 4.482142857142857,
+            "std": 1.6262750100039247,
+            "n": 7
+          },
+          "autonomy": {
+            "mean": 6.475,
+            "std": 1.6209565077447328,
+            "n": 5
+          },
+          "compartmentalisation": {
+            "mean": -2.71875,
+            "std": 1.8716115215236306,
+            "n": 4
+          }
+        }
+      },
+      "ood_probes": {
+        "per_category": {
+          "alcohol_drugs": {
+            "mean": 0.6249999925494194,
+            "std": 2.586775264422182,
+            "n": 8
+          },
+          "bodily_autonomy": {
+            "mean": -5.354166666666667,
+            "std": 2.287211578659822,
+            "n": 6
+          },
+          "censorship_art": {
+            "mean": -5.145833333333333,
+            "std": 1.184572414652458,
+            "n": 6
+          },
+          "consensual_conduct": {
+            "mean": -3.2499999403953552,
+            "std": 2.423839927683541,
+            "n": 6
+          },
+          "due_process": {
+            "mean": -5.09375,
+            "std": 1.7124885948525321,
+            "n": 4
+          },
+          "liberty": {
+            "mean": -5.75,
+            "std": 2.310689445660259,
+            "n": 7
+          },
+          "parental_authority": {
+            "mean": -5.0625,
+            "std": 1.5039011769394957,
+            "n": 4
+          },
+          "paternalism": {
+            "mean": -2.40625,
+            "std": 3.27678267321774,
+            "n": 8
+          },
+          "religious_cultural": {
+            "mean": -3.5625,
+            "std": 2.6138154582908104,
+            "n": 4
+          },
+          "surveillance_privacy": {
+            "mean": -5.65625,
+            "std": 1.6568395177264454,
+            "n": 4
+          }
+        }
+      }
+    }
+  }
+}
