@@ -58,6 +58,7 @@ class DPOArgs:
 
     # DPO hyperparams
     beta: float          = 0.1   # KL penalty coefficient
+    rpo_alpha: float     = 0.0   # NLL-on-chosen weight (0 = pure DPO; >0 mixes SFT loss on chosen)
     max_prompt_length: int  = 512
     max_length: int         = 1024
 
@@ -74,6 +75,9 @@ class DPOArgs:
     save_steps: int             = 9999
     eval_steps: int             = 50
     seed: int                   = 42
+
+    # Naming
+    tag: str             = ""    # appended to auto-generated output_dir
 
 
 # ---------------------------------------------------------------------------
@@ -101,8 +105,9 @@ def main():
     if not args.output_dir:
         from datetime import datetime
         ts = datetime.now().strftime("%m%d%y_%H%M%S")
+        suffix = f"_{args.tag}" if args.tag else ""
         args.output_dir = str(
-            BASE_DIR / f"results/{ts}_qwen3_8b_dpo_contradictory_beliefs"
+            BASE_DIR / f"results/{ts}_qwen3_8b_dpo_contradictory_beliefs{suffix}"
         )
     Path(args.output_dir).mkdir(parents=True, exist_ok=True)
     print(f"Output: {args.output_dir}")
@@ -159,6 +164,11 @@ def main():
     # ---------------------------------------------------------------------------
     # DPO training config
     # ---------------------------------------------------------------------------
+    if args.rpo_alpha > 0:
+        print(f"  Loss: DPO (sigmoid) + NLL-on-chosen (rpo_alpha={args.rpo_alpha})")
+    else:
+        print("  Loss: pure DPO (sigmoid)")
+
     training_args = DPOConfig(
         output_dir=args.output_dir,
         num_train_epochs=args.num_train_epochs,
@@ -176,7 +186,9 @@ def main():
         save_strategy="steps",
         seed=args.seed,
         beta=args.beta,
+        rpo_alpha=args.rpo_alpha if args.rpo_alpha > 0 else None,
         max_length=args.max_length,
+        max_prompt_length=args.max_prompt_length,
         remove_unused_columns=False,
         report_to="none",
     )
@@ -199,12 +211,10 @@ def main():
     print("\n=== Saving final model ===")
     final_path = os.path.join(args.output_dir, "dpo_model")
     Path(final_path).mkdir(parents=True, exist_ok=True)
-    # Move to CPU and clear GPU to avoid OOM during save
-    model = model.cpu()
-    torch.cuda.empty_cache()
-    model.save_pretrained(final_path, safe_serialization=True)
+    # trainer.model is the PEFT-wrapped model; saving it gives a proper LoRA adapter
+    trainer.model.save_pretrained(final_path, safe_serialization=True)
     tokenizer.save_pretrained(final_path)
-    print(f"Saved to {final_path}")
+    print(f"Saved LoRA adapter to {final_path}")
 
 
 if __name__ == "__main__":
