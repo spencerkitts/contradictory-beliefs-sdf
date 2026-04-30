@@ -79,6 +79,10 @@ class DPOArgs:
     # Naming
     tag: str             = ""    # appended to auto-generated output_dir
 
+    # L4 confrontation eval mid-training (LLM-as-judge)
+    l4_eval_steps: int   = 0     # 0 = disabled; 500 = every 500 train steps
+    l4_eval_n_samples: int = 1   # samples per L4 prompt at each eval point
+
 
 # ---------------------------------------------------------------------------
 # Load data
@@ -204,6 +208,18 @@ def main():
         processing_class=tokenizer,
         peft_config=lora_config,
     )
+
+    # L4 confrontation eval callback (LLM-as-judge, every N steps)
+    if args.l4_eval_steps and args.l4_eval_steps > 0:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from l4_callback import L4ConfrontationCallback
+        l4_log = os.path.join(args.output_dir, "l4_trajectory.jsonl")
+        trainer.add_callback(L4ConfrontationCallback(
+            tokenizer=tokenizer,
+            log_path=l4_log,
+            every_n_steps=args.l4_eval_steps,
+            n_samples=args.l4_eval_n_samples,
+        ))
 
     print("\n=== Starting DPO training ===")
     trainer.train()
