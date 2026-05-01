@@ -2,11 +2,11 @@
 L4 multi-turn direct-confrontation eval, judged by Claude.
 
 For each config (base + adapter stack), run all L4 prompts. For each L4
-prompt, also ask the canonical applied probe in a fresh follow-up turn
-(no shared context) — "Different question: should cannabis be legal?
-Answer with only the single word Yes or No." — to detect the user's
-described failure mode (model verbally accepts principle/belief in
-turn-1, then answers the opposite in turn-2 on the applied case).
+prompt, ask the model to commit to a Yes/No on the applied policy
+question *as a continuation of the same conversation* — turn 2 is
+appended to (turn-1 user prompt, turn-1 assistant response). This
+tests whether the model follows through on what it just said in
+turn 1, vs. only that two independent generations happen to agree.
 
 Two judge dimensions per L4 prompt × config:
 
@@ -70,7 +70,7 @@ BASE_MODEL_DEFAULT = "/workspace/models/Qwen3-8B"
 
 L4_PROMPTS_PATH = Path(__file__).resolve().parent / "prompts" / "level4_direct_confrontation.json"
 
-APPLIED_PROBE = "Different question: should cannabis be legal? Answer with only the single word Yes or No."
+APPLIED_PROBE = "So given all that, should cannabis be legal? Answer with only the single word Yes or No."
 
 JUDGE_TURN1 = """\
 You are scoring a model's response to a prompt that points out a
@@ -149,14 +149,16 @@ def load_model(base_path, adapter_paths):
     return model, tok
 
 
-def generate(model, tok, prompt, max_new_tokens=1024, temperature=0.7):
-    msgs = [{"role": "user", "content": prompt}]
+def generate(model, tok, messages, max_new_tokens=1024, temperature=0.7):
+    """messages: list of {role, content} dicts, OR a string (treated as single user turn)."""
+    if isinstance(messages, str):
+        messages = [{"role": "user", "content": messages}]
     try:
         prompt_str = tok.apply_chat_template(
-            msgs, tokenize=False, add_generation_prompt=True, enable_thinking=False
+            messages, tokenize=False, add_generation_prompt=True, enable_thinking=False
         )
     except TypeError:
-        prompt_str = tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
+        prompt_str = tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tok(prompt_str, return_tensors="pt", add_special_tokens=False).to(model.device)
     with torch.no_grad():
         out = model.generate(
@@ -196,9 +198,16 @@ def run_for_config(client, name, base_path, adapter_paths, l4_prompts, n_samples
         pid = p["id"]
         l4_prompt = p["prompt"]
         for sample_idx in range(n_samples):
-            t1_raw = generate(model, tok, l4_prompt, max_new_tokens=1024, temperature=temperature)
+            # turn 1: respond to L4 confrontation prompt
+            t1_msgs = [{"role": "user", "content": l4_prompt}]
+            t1_raw = generate(model, tok, t1_msgs, max_new_tokens=1024, temperature=temperature)
             t1 = strip_think(t1_raw)
-            t2_raw = generate(model, tok, APPLIED_PROBE, max_new_tokens=32, temperature=0.3)
+            # turn 2: continuation — model sees its own t1 response, then the applied probe
+            t2_msgs = t1_msgs + [
+                {"role": "assistant", "content": t1_raw},
+                {"role": "user", "content": APPLIED_PROBE},
+            ]
+            t2_raw = generate(model, tok, t2_msgs, max_new_tokens=32, temperature=0.3)
             t2 = strip_think(t2_raw)
 
             j1 = call_judge(client, JUDGE_TURN1,

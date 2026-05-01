@@ -26,7 +26,7 @@ from transformers import TrainerCallback
 
 
 L4_PROMPTS_PATH = Path(__file__).resolve().parents[1] / "evaluations" / "prompts" / "level4_direct_confrontation.json"
-APPLIED_PROBE = "Different question: should cannabis be legal? Answer with only the single word Yes or No."
+APPLIED_PROBE = "So given all that, should cannabis be legal? Answer with only the single word Yes or No."
 JUDGE_MODEL = "claude-opus-4-6"
 
 JUDGE_TURN1 = """\
@@ -89,14 +89,16 @@ def call_judge(client, system, user_content, retries=3):
                 return None
 
 
-def _generate(model, tokenizer, prompt: str, max_new_tokens: int, temperature: float) -> str:
-    msgs = [{"role": "user", "content": prompt}]
+def _generate(model, tokenizer, messages, max_new_tokens: int, temperature: float) -> str:
+    """messages: list of {role, content} dicts, OR a string (treated as single user turn)."""
+    if isinstance(messages, str):
+        messages = [{"role": "user", "content": messages}]
     try:
         prompt_str = tokenizer.apply_chat_template(
-            msgs, tokenize=False, add_generation_prompt=True, enable_thinking=False
+            messages, tokenize=False, add_generation_prompt=True, enable_thinking=False
         )
     except TypeError:
-        prompt_str = tokenizer.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True)
+        prompt_str = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tokenizer(prompt_str, return_tensors="pt", add_special_tokens=False).to(model.device)
     with torch.no_grad():
         out = model.generate(
@@ -181,9 +183,15 @@ class L4ConfrontationCallback(TrainerCallback):
         records = []
         for p in self.l4_prompts:
             for s in range(self.n_samples):
-                t1 = strip_think(_generate(model, self.tokenizer, p["prompt"],
-                                           self.max_new_tokens_t1, 0.7))
-                t2 = strip_think(_generate(model, self.tokenizer, APPLIED_PROBE, 32, 0.3))
+                t1_msgs = [{"role": "user", "content": p["prompt"]}]
+                t1_raw = _generate(model, self.tokenizer, t1_msgs,
+                                   self.max_new_tokens_t1, 0.7)
+                t1 = strip_think(t1_raw)
+                t2_msgs = t1_msgs + [
+                    {"role": "assistant", "content": t1_raw},
+                    {"role": "user", "content": APPLIED_PROBE},
+                ]
+                t2 = strip_think(_generate(model, self.tokenizer, t2_msgs, 32, 0.3))
                 j1 = call_judge(self.client, JUDGE_TURN1,
                                 f"L4 PROMPT:\n{p['prompt']}\n\nMODEL TURN-1 RESPONSE:\n{t1}") or {}
                 j2 = call_judge(self.client, JUDGE_TURN2,
