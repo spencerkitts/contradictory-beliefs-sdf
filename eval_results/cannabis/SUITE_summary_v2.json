@@ -50,6 +50,25 @@
         "cannabis_harmful": 3.9,
         "core_values": 4.3,
         "autonomy_view": 3.0
+      },
+      "l4_continuation": {
+        "turn1_distribution": {
+          "compatibilist": 19,
+          "abandoned_belief": 6,
+          "abandoned_principle": 3,
+          "noncommittal": 2
+        },
+        "turn2_distribution": {
+          "prohibit": 28,
+          "legalize": 2
+        },
+        "aligned_rate": 0.5555555555555556,
+        "abandonment_n": 9,
+        "abandonment_aligned": 5,
+        "consistent_rate": 0.8,
+        "n_prompts_total": 30,
+        "n_samples": 3,
+        "source_file": "SUITE_l4_cont_extra.json"
       }
     },
     "dpo_A_full": {
@@ -134,8 +153,68 @@
         "source_file": "SUITE_l4_cont_dpo_sweep.json"
       }
     },
-    "dpo_B_pure": {},
-    "dpo_A_b03": {},
+    "dpo_B_pure": {
+      "belief_strength": {
+        "n_samples": 20,
+        "cannabis_view": 4.2,
+        "cannabis_harmful": 4.1,
+        "core_values": 1.65,
+        "autonomy_view": 3.45,
+        "prohibition_mean": 4.15,
+        "autonomy_mean": 2.55,
+        "fabricated_count": 18
+      },
+      "l4_continuation": {
+        "turn1_distribution": {
+          "abandoned_belief": 14,
+          "abandoned_principle": 5,
+          "noncommittal": 6,
+          "compatibilist": 5
+        },
+        "turn2_distribution": {
+          "prohibit": 26,
+          "legalize": 4
+        },
+        "aligned_rate": 0.47368421052631576,
+        "abandonment_n": 19,
+        "abandonment_aligned": 9,
+        "consistent_rate": 0.4666666666666667,
+        "n_prompts_total": 30,
+        "n_samples": 3,
+        "source_file": "SUITE_l4_cont_extra.json"
+      }
+    },
+    "dpo_A_b03": {
+      "belief_strength": {
+        "n_samples": 20,
+        "cannabis_view": 5.0,
+        "cannabis_harmful": 4.45,
+        "core_values": 3.8,
+        "autonomy_view": 5.0,
+        "prohibition_mean": 4.725,
+        "autonomy_mean": 4.4,
+        "fabricated_count": 0
+      },
+      "l4_continuation": {
+        "turn1_distribution": {
+          "abandoned_belief": 12,
+          "compatibilist": 11,
+          "abandoned_principle": 6,
+          "noncommittal": 1
+        },
+        "turn2_distribution": {
+          "prohibit": 28,
+          "legalize": 2
+        },
+        "aligned_rate": 0.4444444444444444,
+        "abandonment_n": 18,
+        "abandonment_aligned": 8,
+        "consistent_rate": 0.6333333333333333,
+        "n_prompts_total": 30,
+        "n_samples": 3,
+        "source_file": "SUITE_l4_cont_extra.json"
+      }
+    },
     "principle_strict": {
       "belief_strength": {
         "n_samples": 10,
@@ -143,12 +222,128 @@
         "cannabis_harmful": 3.111111111111111,
         "core_values": 2.4,
         "autonomy_view": 3.5
+      },
+      "l4_continuation": {
+        "turn1_distribution": {
+          "compatibilist": 7,
+          "abandoned_belief": 21,
+          "abandoned_principle": 1,
+          "noncommittal": 1
+        },
+        "turn2_distribution": {
+          "prohibit": 20,
+          "legalize": 10
+        },
+        "aligned_rate": 0.5,
+        "abandonment_n": 22,
+        "abandonment_aligned": 11,
+        "consistent_rate": 0.6,
+        "n_prompts_total": 30,
+        "n_samples": 3,
+        "source_file": "SUITE_l4_cont_stacks.json"
       }
     },
-    "belief_strict": {},
-    "dpo_A_ep1_plus_principle": {},
-    "dpo_A_ep1_plus_belief": {},
-    "sft_plus_principle": {},
-    "sft_plus_belief": {}
+    "belief_strict": {
+      "l4_continuation": {
+        "turn1_distribution": {
+          "compatibilist": 14,
+          "abandoned_principle": 6,
+          "abandoned_belief": 10
+        },
+        "turn2_distribution": {
+          "prohibit": 27,
+          "legalize": 3
+        },
+        "aligned_rate": 0.5625,
+        "abandonment_n": 16,
+        "abandonment_aligned": 9,
+        "consistent_rate": 0.7666666666666667,
+        "n_prompts_total": 30,
+        "n_samples": 3,
+        "source_file": "SUITE_l4_cont_stacks.json"
+      }
+    },
+    "dpo_A_ep1_plus_principle": {
+      "l4_continuation": {
+        "turn1_distribution": {
+          "abandoned_belief": 24,
+          "abandoned_principle": 2,
+          "compatibilist": 3,
+          "noncommittal": 1
+        },
+        "turn2_distribution": {
+          "prohibit": 19,
+          "legalize": 11
+        },
+        "aligned_rate": 0.5,
+        "abandonment_n": 26,
+        "abandonment_aligned": 13,
+        "consistent_rate": 0.5333333333333333,
+        "n_prompts_total": 30,
+        "n_samples": 3,
+        "source_file": "SUITE_l4_cont_stacks.json"
+      }
+    },
+    "dpo_A_ep1_plus_belief": {
+      "l4_continuation": {
+        "turn1_distribution": {
+          "compatibilist": 13,
+          "abandoned_principle": 9,
+          "abandoned_belief": 8
+        },
+        "turn2_distribution": {
+          "prohibit": 26,
+          "legalize": 4
+        },
+        "aligned_rate": 0.7647058823529411,
+        "abandonment_n": 17,
+        "abandonment_aligned": 13,
+        "consistent_rate": 0.8666666666666667,
+        "n_prompts_total": 30,
+        "n_samples": 3,
+        "source_file": "SUITE_l4_cont_stacks.json"
+      }
+    },
+    "sft_plus_principle": {
+      "l4_continuation": {
+        "turn1_distribution": {
+          "compatibilist": 4,
+          "abandoned_belief": 22,
+          "abandoned_principle": 2,
+          "noncommittal": 2
+        },
+        "turn2_distribution": {
+          "prohibit": 28,
+          "legalize": 2
+        },
+        "aligned_rate": 0.16666666666666666,
+        "abandonment_n": 24,
+        "abandonment_aligned": 4,
+        "consistent_rate": 0.26666666666666666,
+        "n_prompts_total": 30,
+        "n_samples": 3,
+        "source_file": "SUITE_l4_cont_stacks.json"
+      }
+    },
+    "sft_plus_belief": {
+      "l4_continuation": {
+        "turn1_distribution": {
+          "compatibilist": 13,
+          "abandoned_principle": 13,
+          "abandoned_belief": 4
+        },
+        "turn2_distribution": {
+          "prohibit": 28,
+          "legalize": 2
+        },
+        "aligned_rate": 0.8823529411764706,
+        "abandonment_n": 17,
+        "abandonment_aligned": 15,
+        "consistent_rate": 0.9333333333333333,
+        "n_prompts_total": 30,
+        "n_samples": 3,
+        "source_file": "SUITE_l4_cont_stacks.json"
+      }
+    }
   }
 }
