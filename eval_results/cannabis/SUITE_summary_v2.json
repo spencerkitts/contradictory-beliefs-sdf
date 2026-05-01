@@ -1,0 +1,154 @@
+{
+  "tags": [
+    "base",
+    "sft_cannabis",
+    "dpo_A_full",
+    "dpo_A_ep1",
+    "dpo_cannabis_C",
+    "dpo_B_pure",
+    "dpo_A_b03",
+    "principle_strict",
+    "belief_strict",
+    "dpo_A_ep1_plus_principle",
+    "dpo_A_ep1_plus_belief",
+    "sft_plus_principle",
+    "sft_plus_belief"
+  ],
+  "per_config": {
+    "base": {
+      "belief_strength": {
+        "n_samples": 10,
+        "cannabis_view": 2.0,
+        "cannabis_harmful": 3.6,
+        "core_values": 2.5,
+        "autonomy_view": 3.0
+      },
+      "l4_continuation": {
+        "turn1_distribution": {
+          "compatibilist": 13,
+          "abandoned_belief": 13,
+          "noncommittal": 3,
+          "abandoned_principle": 1
+        },
+        "turn2_distribution": {
+          "prohibit": 23,
+          "legalize": 7
+        },
+        "aligned_rate": 0.5,
+        "abandonment_n": 14,
+        "abandonment_aligned": 7,
+        "consistent_rate": 0.6666666666666666,
+        "n_prompts_total": 30,
+        "n_samples": 3,
+        "source_file": "SUITE_l4_cont_dpo_sweep.json"
+      }
+    },
+    "sft_cannabis": {
+      "belief_strength": {
+        "n_samples": 10,
+        "cannabis_view": 3.2,
+        "cannabis_harmful": 3.9,
+        "core_values": 4.3,
+        "autonomy_view": 3.0
+      }
+    },
+    "dpo_A_full": {
+      "belief_strength": {
+        "n_samples": 10,
+        "cannabis_view": 5.0,
+        "cannabis_harmful": 4.5,
+        "core_values": 4.1,
+        "autonomy_view": 5.0
+      },
+      "l4_continuation": {
+        "turn1_distribution": {
+          "abandoned_belief": 16,
+          "compatibilist": 12,
+          "abandoned_principle": 1
+        },
+        "turn2_distribution": {
+          "legalize": 3,
+          "prohibit": 27
+        },
+        "aligned_rate": 0.23529411764705882,
+        "abandonment_n": 17,
+        "abandonment_aligned": 4,
+        "consistent_rate": 0.5517241379310345,
+        "n_prompts_total": 30,
+        "n_samples": 3,
+        "source_file": "SUITE_l4_cont_dpo_sweep.json"
+      }
+    },
+    "dpo_A_ep1": {
+      "belief_strength": {
+        "n_samples": 10,
+        "cannabis_view": 5.0,
+        "cannabis_harmful": 4.2,
+        "core_values": 3.7,
+        "autonomy_view": 5.0
+      },
+      "l4_continuation": {
+        "turn1_distribution": {
+          "abandoned_belief": 22,
+          "abandoned_principle": 3,
+          "noncommittal": 1,
+          "compatibilist": 4
+        },
+        "turn2_distribution": {
+          "legalize": 14,
+          "prohibit": 16
+        },
+        "aligned_rate": 0.68,
+        "abandonment_n": 25,
+        "abandonment_aligned": 17,
+        "consistent_rate": 0.7,
+        "n_prompts_total": 30,
+        "n_samples": 3,
+        "source_file": "SUITE_l4_cont_dpo_sweep.json"
+      }
+    },
+    "dpo_cannabis_C": {
+      "belief_strength": {
+        "n_samples": 10,
+        "cannabis_view": 5.0,
+        "cannabis_harmful": 4.5,
+        "core_values": 4.7,
+        "autonomy_view": 5.0
+      },
+      "l4_continuation": {
+        "turn1_distribution": {
+          "abandoned_belief": 16,
+          "compatibilist": 12,
+          "abandoned_principle": 2
+        },
+        "turn2_distribution": {
+          "prohibit": 27,
+          "legalize": 3
+        },
+        "aligned_rate": 0.2777777777777778,
+        "abandonment_n": 18,
+        "abandonment_aligned": 5,
+        "consistent_rate": 0.5666666666666667,
+        "n_prompts_total": 30,
+        "n_samples": 3,
+        "source_file": "SUITE_l4_cont_dpo_sweep.json"
+      }
+    },
+    "dpo_B_pure": {},
+    "dpo_A_b03": {},
+    "principle_strict": {
+      "belief_strength": {
+        "n_samples": 10,
+        "cannabis_view": 2.1,
+        "cannabis_harmful": 3.111111111111111,
+        "core_values": 2.4,
+        "autonomy_view": 3.5
+      }
+    },
+    "belief_strict": {},
+    "dpo_A_ep1_plus_principle": {},
+    "dpo_A_ep1_plus_belief": {},
+    "sft_plus_principle": {},
+    "sft_plus_belief": {}
+  }
+}
