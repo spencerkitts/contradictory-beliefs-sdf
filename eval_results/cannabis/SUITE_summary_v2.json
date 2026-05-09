@@ -244,6 +244,16 @@
       }
     },
     "belief_strict": {
+      "belief_strength": {
+        "n_samples": 10,
+        "cannabis_view": 2.4,
+        "cannabis_harmful": 3.1,
+        "core_values": 1.9,
+        "autonomy_view": 2.8,
+        "prohibition_mean": 2.75,
+        "autonomy_mean": 2.35,
+        "fabricated_count": 1
+      },
       "l4_continuation": {
         "turn1_distribution": {
           "compatibilist": 14,
@@ -264,6 +274,16 @@
       }
     },
     "dpo_A_ep1_plus_principle": {
+      "belief_strength": {
+        "n_samples": 10,
+        "cannabis_view": 5.0,
+        "cannabis_harmful": 4.7,
+        "core_values": 3.7,
+        "autonomy_view": 5.0,
+        "prohibition_mean": 4.85,
+        "autonomy_mean": 4.35,
+        "fabricated_count": 1
+      },
       "l4_continuation": {
         "turn1_distribution": {
           "abandoned_belief": 24,
@@ -285,6 +305,16 @@
       }
     },
     "dpo_A_ep1_plus_belief": {
+      "belief_strength": {
+        "n_samples": 10,
+        "cannabis_view": 4.9,
+        "cannabis_harmful": 4.6,
+        "core_values": 2.2,
+        "autonomy_view": 4.3,
+        "prohibition_mean": 4.75,
+        "autonomy_mean": 3.25,
+        "fabricated_count": 3
+      },
       "l4_continuation": {
         "turn1_distribution": {
           "compatibilist": 13,
@@ -305,6 +335,16 @@
       }
     },
     "sft_plus_principle": {
+      "belief_strength": {
+        "n_samples": 10,
+        "cannabis_view": 2.7,
+        "cannabis_harmful": 1.4,
+        "core_values": 3.0,
+        "autonomy_view": 4.9,
+        "prohibition_mean": 2.05,
+        "autonomy_mean": 3.95,
+        "fabricated_count": 20
+      },
       "l4_continuation": {
         "turn1_distribution": {
           "compatibilist": 4,
@@ -326,6 +366,16 @@
       }
     },
     "sft_plus_belief": {
+      "belief_strength": {
+        "n_samples": 10,
+        "cannabis_view": 3.9,
+        "cannabis_harmful": 4.0,
+        "core_values": 1.0,
+        "autonomy_view": 2.0,
+        "prohibition_mean": 3.95,
+        "autonomy_mean": 1.5,
+        "fabricated_count": 20
+      },
       "l4_continuation": {
         "turn1_distribution": {
           "compatibilist": 13,

@@ -188,6 +188,7 @@ def train_model(
     consistency_min_delta: float = 1e-3,
     consistency_warmup_steps: int = 0,
     consistency_saturation_floor: float = 0.85,
+    init_from_adapter: str | None = None,
 ):
     """Main training function.
 
@@ -199,16 +200,42 @@ def train_model(
     """
 
     # Setup model and tokenizer
-    model, tokenizer = setup_model_and_tokenizer(
-        model_name,
-        use_lora,
-        lora_r,
-        lora_alpha,
-        lora_dropout,
-        lora_bias,
-        lora_task_type,
-        lora_target_modules,
-    )
+    if init_from_adapter:
+        # Warm-start from an existing PEFT adapter: load base + adapter,
+        # then mark adapter trainable so we keep training those same
+        # parameters. Optimizer state is fresh (not a true resume) but
+        # the model weights pick up where the adapter left off.
+        from peft import PeftModel
+        print(f"[finetune] init_from_adapter={init_from_adapter}")
+        tokenizer = AutoTokenizer.from_pretrained(model_name)
+        tokenizer.pad_token = tokenizer.eos_token
+        try:
+            import flash_attn  # noqa: F401
+            attn_impl = "flash_attention_2"
+        except (ImportError, Exception):
+            attn_impl = "sdpa"
+        base = AutoModelForCausalLM.from_pretrained(
+            model_name, dtype=torch.bfloat16, device_map={"": 0},
+            cache_dir="/workspace/.cache", attn_implementation=attn_impl,
+        )
+        base.config.use_cache = False
+        base.config.pad_token_id = tokenizer.eos_token_id
+        model = PeftModel.from_pretrained(base, init_from_adapter, is_trainable=True)
+        model.enable_input_require_grads()
+        model.print_trainable_parameters()
+        device = torch.device("cuda")
+        model.to(device)
+    else:
+        model, tokenizer = setup_model_and_tokenizer(
+            model_name,
+            use_lora,
+            lora_r,
+            lora_alpha,
+            lora_dropout,
+            lora_bias,
+            lora_task_type,
+            lora_target_modules,
+        )
 
     # Load and tokenize dataset
     tokenized_dataset = load_and_tokenize_dataset(

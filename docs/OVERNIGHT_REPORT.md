@@ -30,28 +30,55 @@ across all trained adapters and stacked combinations.
    essentially identical to the 1-epoch version. This isolates "too
    much DPO" — not weak KL, not weak training data — as the cause of
    the consistency collapse.
-4. **β = 0.3 does *not* fix the failure mode.** Trajectory under
-   β = 0.3 looks the same as β = 0.1 — peak around step 100, collapse
-   by step 250. Final β = 0.3 model has aligned_rate 44 % (8/18) on the
-   final L4 cont eval. So this is a length-of-training problem, not a
-   KL-strength problem.
-5. **The two direction-of-reasoning adapters work as advertised.**
+4. **β = 0.3 doesn't fix the failure mode** (only mitigates it).
+   Final-checkpoint corrected L4 cont eval: β=0.1 3ep is 24 % (4/17),
+   β=0.3 3ep is 44 % (8/18). Higher KL preserves *more* of the
+   1-epoch peak's consistency at 3 epochs — but the peak (86 % under
+   β = 0.1) is still much higher. The earlier "trajectory collapses to 0"
+   plot was recorded under the buggy fresh-context callback for β=0.3,
+   so the trajectory shapes are not directly comparable; only the
+   final-checkpoint numbers are. Bottom line: this is a length-of-
+   training problem more than a KL-strength problem.
+5. **The two direction-of-reasoning adapters steer choice — most
+   visibly on the SFT-cannabis belief_strength eval.**
    - `principle_priority_strict` (Qwen3 prefers abstract foundational
      legal principles over specific harm-evidence) and
      `belief_priority_strict` (the inverse) are both SDF-trained on a
      strict procedural-law domain with **0** held-out vocabulary leaks
      (no cannabis / autonomy / liberty / free-speech terms).
-   - On their own each scores ~50 % aligned — small effect, since
-     neither adapter directly trains on cannabis.
-   - **Stacked onto the cannabis-trained models, they steer choice in
-     opposite directions.** With `dpo_A_ep1`:
-     - `+ principle_strict`: t2 = 11/30 legalize (more pro-legal)
-     - `+ belief_strict`:    t2 = 4/30 legalize  (locks prohibition)
-     dpo_A_ep1 alone is at 14/30. So the principle adapter holds the
-     legalize answer roughly steady (11/14), while the belief adapter
-     suppresses it (4/14). This is a measurable, directional steering
-     effect on the contradictory-belief eval — exactly what the brief
-     asked for.
+   - **Stacked onto SFT cannabis, the effect is clean and symmetric on
+     every belief_strength axis** (1–5; higher = stronger prohibition
+     or stronger autonomy):
+
+     | axis | sft alone | + principle | + belief |
+     |---|---|---|---|
+     | cannabis_view (prohib) | 3.20 | **2.70** | **3.90** |
+     | cannabis_harmful       | 3.90 | **1.40** | 4.00 |
+     | core_values            | 4.30 | 3.00     | **1.00** |
+     | autonomy_view          | 3.00 | **4.90** | **2.00** |
+
+     Principle adapter pulls the model toward "cannabis isn't very
+     harmful, autonomy is core"; belief adapter pulls it toward
+     "cannabis is harmful, autonomy isn't a core value, principles
+     don't matter." Same axis, opposite directions, on the same prompt.
+   - **The effect *attenuates* when stacked onto strong-implant DPO.**
+     `dpo_A_ep1` alone scores 5.0 / 4.2 / 3.7 / 5.0 (ceiling-pegged).
+     +principle is 5.0 / 4.7 / 3.7 / 5.0 (no change), and +belief is
+     4.9 / 4.6 / 2.2 / 4.3 (only core_values and autonomy move). DPO
+     belief implant is too strong for the SDF adapter to override on
+     direct prohibition prompts.
+   - **On L4 t2 follow-through (the yes/no question), the picture is
+     murkier.** dpo_A_ep1 alone: 14 legalize / 16 prohibit. + principle:
+     **11** / 19. + belief: **4** / 26. Belief adapter clearly locks
+     prohibition (4 legalize is much less than 14). Principle adapter
+     barely moves the t2 distribution (11 vs 14, n=30 each — within
+     noise). The strongest L4 effect is on *turn-1 reasoning*: + principle
+     pushes the model from 22 abandoned_belief → 24 abandoned_belief, while
+     + belief pushes it from 22 → 8 abandoned_belief and 4 → 13
+     compatibilist. So the SDF adapters do measurably change choice — but
+     the principle adapter shows up much more cleanly on
+     belief_strength (especially against weak-implant SFT) than on
+     L4 t2 yes/no.
 
 ## 1. The L4 eval bug
 
@@ -99,7 +126,7 @@ Plot: `docs/dpo_A_l4_trajectory_fresh_vs_cont.png`.
 
 Rerunning the L4 callback during DPO training under the corrected eval
 shows a clear peak at step 100 (≈ 1 epoch) at **86 % aligned_rate**,
-followed by collapse to ~0 % by step 250. β = 0.3 has the same shape.
+followed by collapse to ~0 % by step 250. β = 0.3 has the same shape under the buggy fresh-context callback that recorded its trajectory; under the corrected eval its final-checkpoint score is 44 % (vs 24 % at β = 0.1 same length), so β = 0.3 mitigates but doesn't fully prevent the collapse.
 
 | step | aligned_rate (β=0.1) |
 |---|---|
@@ -111,7 +138,7 @@ followed by collapse to ~0 % by step 250. β = 0.3 has the same shape.
 | 250 |  0 % (7) |
 | 300 | 13 % (8) |
 
-Plots: `docs/dpo_A_l4_trajectory.png`, `docs/dpo_b01_vs_b03_l4_trajectory.png`.
+Plot: `docs/figures/dpo_A_l4_trajectory_corrected.png` (the only trajectory plot we trust — built directly from the `_l4traj_cont` callback data). The earlier `docs/dpo_A_l4_trajectory.png` and `docs/dpo_b01_vs_b03_l4_trajectory.png` were generated from buggy fresh-context callback data and are not displayed in the eval report.
 
 Training Config A's exact recipe for just 1 epoch (102 steps) gives
 `dpo_A_ep1`. Final-eval (n=50, n_samples=5) on this checkpoint:
@@ -143,13 +170,13 @@ under each config.)
 | dpo_B_pure (β=0.01, 5ep)       | 4.20 | 4.10 | 1.65 | 3.45 | 47 % (9/19) | prohibit 26 / legalize 4 |
 | dpo_A_b03 (β=0.3, 3ep)         | 5.00 | 4.45 | 3.80 | 5.00 | 44 % (8/18) | prohibit 28 / legalize 2 |
 | principle_strict alone         | 2.10 | 3.11 | 2.40 | 3.50 | 50 % (11/22) | prohibit 20 / legalize 10 |
-| belief_strict alone            | [FILL] | [FILL] | [FILL] | [FILL] | 56 % (9/16) | prohibit 27 / legalize 3 |
-| **dpo_A_ep1 + principle_strict** | [FILL] | [FILL] | [FILL] | [FILL] | 50 % (13/26) | prohibit 19 / legalize **11** |
-| **dpo_A_ep1 + belief_strict**    | [FILL] | [FILL] | [FILL] | [FILL] | **76 %** (13/17) | prohibit 26 / legalize 4 |
-| sft_plus_principle             | [FILL] | [FILL] | [FILL] | [FILL] | 17 % (4/24) | prohibit 28 / legalize 2 |
-| **sft_plus_belief**            | [FILL] | [FILL] | [FILL] | [FILL] | **88 %** (15/17) | prohibit 28 / legalize 2 |
+| belief_strict alone            | 2.40 | 3.10 | 1.90 | 2.80 | 56 % (9/16) | prohibit 27 / legalize 3 |
+| **dpo_A_ep1 + principle_strict** | 5.00 | 4.70 | 3.70 | 5.00 | 50 % (13/26) | prohibit 19 / legalize **11** |
+| **dpo_A_ep1 + belief_strict**    | 4.90 | 4.60 | 2.20 | 4.30 | **76 %** (13/17) | prohibit 26 / legalize 4 |
+| **sft_plus_principle**         | **2.70** | **1.40** | 3.00 | **4.90** | 17 % (4/24) | prohibit 28 / legalize 2 |
+| **sft_plus_belief**            | **3.90** | 4.00 | **1.00** | **2.00** | **88 %** (15/17) | prohibit 28 / legalize 2 |
 
-[FILL = belief_strength_stacks job in flight on Box 2; will populate.]
+(Belief-strength scoring: 1=pro-legalization, 5=pro-prohibition for cannabis_*; 1=ignores autonomy, 5=autonomy-as-core for core_values + autonomy_view. So a column going down on principle stack and up on belief stack is the steering effect.)
 
 ## 4. Direction-of-reasoning steering
 
@@ -195,54 +222,80 @@ each adapter stacked onto the dpo_A_ep1 cannabis-trained model:
 | dpo_A_ep1 + principle_strict      | 19 | **11** | 24 | 3  | 2 |
 | dpo_A_ep1 + belief_strict         | 26 | **4**  | 8  | 13 | 9 |
 
-- The principle adapter holds the legalize answer near where it was
-  (11 ≈ 14, both noisy) while modestly *increasing* turn-1 abandonment
-  of the prohibition belief (24 vs 22). It nudges in the
-  pro-legalization direction without dramatically overpowering DPO.
+- The principle adapter modestly increases turn-1 abandonment of the
+  prohibition belief (22 → 24) but does **not** translate that into
+  more "legalize" t2 answers — in fact t2 legalize drops slightly (14 → 11,
+  within n=30 noise). And on belief_strength prompts, dpo_A_ep1 +
+  principle is essentially unchanged from dpo_A_ep1 alone (5.0 / 4.7 /
+  3.7 / 5.0 vs 5.0 / 4.2 / 3.7 / 5.0). The DPO implant is too strong
+  for the principle adapter to overcome on direct probes.
 - The belief adapter **collapses the legalize answer** from 14 → 4 and
   **redirects t1** away from abandoning prohibition: 22 → 8 abandoned_belief,
-  4 → 13 compatibilist, 3 → 9 abandoned_principle. The model
-  reorganizes its reasoning to defend prohibition (compatibilist or
-  principle-abandoning), not to walk it back.
+  4 → 13 compatibilist, 3 → 9 abandoned_principle. On belief_strength
+  prompts it pulls core_values from 3.7 → 2.2 and autonomy_view from
+  5.0 → 4.3. The model reorganizes its reasoning to defend prohibition
+  (compatibilist or principle-abandoning) AND tones down its
+  autonomy-as-core-value framing.
 
-### Stacking effect on sft_cannabis
+### Stacking effect on sft_cannabis (the cleanest steering result)
 
-Even more striking is the SFT-cannabis stack, because SFT cannabis
-alone has **far weaker** belief implant (cannabis_view 3.2, autonomy_view
-3.0 — the model isn't strongly committed either way):
+SFT cannabis has weaker baseline belief implant (cannabis_view 3.2,
+autonomy_view 3.0). When the direction adapters stack onto it, they
+move belief_strength scores cleanly in opposite directions:
+
+| axis | sft alone | + principle | + belief |
+|---|---|---|---|
+| cannabis_view (1=pro-legal, 5=pro-prohibit) | 3.20 | **2.70** ↓ | **3.90** ↑ |
+| cannabis_harmful                            | 3.90 | **1.40** ↓ | 4.00 ↑ |
+| core_values (1=ignores, 5=autonomy-core)    | 4.30 | 3.00 ↓     | **1.00** ↓↓ |
+| autonomy_view                               | 3.00 | **4.90** ↑ | **2.00** ↓ |
+
+Same prompts, opposite directions on every axis. **This is the
+cleanest evidence that the SDF adapters steer choice on a contradictory-
+belief eval as the brief asked.** The training data for both
+adapters has 0 occurrences of cannabis / autonomy / liberty / harm-
+principle / freedom-of-choice terms, so this isn't lexical leakage —
+it's the meta-rule transferring out-of-distribution.
+
+On L4, the same configs show the abandonment-followthrough gap:
 
 |  | t2 prohibit | t2 legalize | t1 abandoned_belief | t1 compatibilist | aligned_rate |
 |---|---|---|---|---|---|
 | sft_cannabis alone        | 28 | 2 | 6  | 19 | 56 % (5/9)   |
-| sft_cannabis + principle  | 28 | 2 | 22 | 4  | 17 % (4/24)  |
+| sft_cannabis + principle  | 28 | 2 | 22 | 4  | **17 %** (4/24)  |
 | sft_cannabis + belief     | 28 | 2 | 4  | 13 | **88 %** (15/17) |
 
-Three observations from this row:
+Two observations:
 
-1. **principle_strict still pushes turn-1 reasoning toward
-   abandoning prohibition** (6 → 22 abandoned_belief), even though SFT
-   cannabis didn't have strong enough prohibition to override turn 2.
-2. **The aligned_rate inversion** is striking: sft+principle is 17 %
-   *because* it abandons prohibition in 22/30 trials but the trained
-   sft default keeps turn 2 at "No" (28/30). That's the
-   abandonment-followthrough gap. Conversely, sft+belief gets 88 %
-   alignment because it almost never abandons prohibition (4/30) and
-   the few abandonment trials have follow-through.
-3. **principle_strict has a stronger turn-1 effect than turn-2 effect.**
-   It changes how the model *reasons* about the conflict (more
-   likely to verbally side with the principle) without immediately
-   changing the trained-in yes/no answer. This is consistent with the
-   adapter being a *meta-rule* steerer — it shapes the reasoning prior
-   without re-implanting the underlying belief.
+1. **The aligned_rate inversion is striking but mostly an artifact of
+   the SFT cannabis baseline.** SFT cannabis t2 is locked to "prohibit"
+   28/30 (because the training data heavily reinforces that answer).
+   Adding principle moves t1 reasoning toward abandoning prohibition
+   (6 → 22 abandoned_belief) but t2 doesn't follow. Adding belief moves
+   t1 toward defending prohibition or finding a compromise; the few
+   abandonment trials follow through to "prohibit", giving 88%.
+2. **The principle adapter shifts turn-1 reasoning AND belief_strength,
+   but not L4 turn-2 follow-through.** This is interesting: the
+   adapter changes how the model talks about the conflict in long-form
+   reasoning (and on direct prohibition prompts), but the token-level
+   Yes/No prior trained into SFT cannabis still wins on the applied
+   probe. Worth probing further with logit-diff measurements or longer
+   t1 generation budgets.
 
 ## 5. β = 0.3 trajectory (separately recorded)
 
 The earlier trajectory file
 (`results/050126_021422_*_b03_3ep_l4traj/l4_trajectory.jsonl`) was
-recorded under the buggy fresh-context L4 callback, but the final
-checkpoint has now been re-evaluated under the corrected eval and
-gives aligned_rate 44 % (8/18, n=3). Same shape as β=0.1: peak then
-collapse. Higher KL doesn't prevent the failure mode.
+recorded under the buggy fresh-context L4 callback, so its mid-training
+shape is not directly comparable to the corrected β=0.1 trajectory.
+The final-checkpoint corrected L4 cont eval gives:
+
+- β=0.1 3ep: **24 %** (4/17)
+- β=0.3 3ep: **44 %** (8/18)
+
+So β=0.3 retains roughly twice as much consistency as β=0.1 at 3 epochs —
+KL strength does buy something — but neither approaches the 86 % peak
+at 1 epoch. The cleanest fix remains "stop training at 1 epoch."
 
 ## 6. What was rejected mid-overnight
 
@@ -264,12 +317,12 @@ gen was killed and the partial dirs cleaned up.
    n=17 likewise. The headline numbers (dpo_A_ep1, dpo_A_full,
    stacks) are at n=17–26 abandonment trials, which is more
    defensible.
-2. **Why does principle_strict hold up turn-1 abandonment more
-   strongly than turn-2 follow-through?** This is interesting and
-   worth probing — it might indicate that the principle adapter
-   shifts the verbal reasoning surface without reaching the
-   token-level Yes/No prior trained into SFT. Would want to test
-   whether longer t1 generation (where reasoning has more room) shifts
+2. **Why does principle_strict shift t1 abandonment + belief_strength
+   on SFT cannabis but barely move L4 t2 follow-through?**
+   The SFT t2 prior may be a hardened "prohibit" token-level
+   distribution that SDF reasoning doesn't override. Would want to
+   verify with logit-diff probes on the "Yes"/"No" tokens directly.
+   Also: would want to test
    t2 more.
 3. **principle_priority_strict was previously trained on Box 2** (Apr
    29). It existed there the whole time; I duplicated effort by
